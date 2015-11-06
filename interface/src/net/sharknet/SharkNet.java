@@ -19,8 +19,6 @@ public interface SharkNet {
     
     public Iterator<SNInterest> getMyInterests();
     
-    public Iterator<SNPeer> getStranger();
-    
     public Iterator<SNPeer> getContacts();
     
     public Iterator<SNPeer> getFriends();
