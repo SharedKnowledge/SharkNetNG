@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="system_modules_settings_kb_options">
+        <item>random data</item>
+        <item>alice bob</item>
+    </string-array>
+    <string-array name="system_modules_settings_kb_options_values">
+        <item>random</item>
+        <item>aliceBob</item>
+    </string-array>
+
+    <string-array name="system_modules_settings_connection_options">
+        <item>NFC</item>
+        <item>Bluetooth</item>
+        <item>Wifi-Direct</item>
+    </string-array>
+    <string-array name="system_modules_settings_connection_options_values">
+        <item>nfc</item>
+        <item>bt</item>
+        <item>wifiDirect</item>
+    </string-array>
+</resources>
