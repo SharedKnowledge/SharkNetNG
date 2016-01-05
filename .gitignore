@@ -1,2 +1,3 @@
-/Interface/nbproject/private/
-/interface/nbproject/private/
+.idea
+.gradle
+*/local.properties
