@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.system_modules.intro.IntroActivity;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 import static android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 
@@ -62,6 +63,8 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         menu = installActionBarAndSideNavDrawer();
         fillSideNavDrawerWithModules(menu, SideNav.system_modules, UNIQUE_GROUP_ID_SYSTEM_MODULES, R.string.sidenav_menu_cat_system);
         fillSideNavDrawerWithModules(menu, SideNav.modules, UNIQUE_GROUP_ID_MODULES, R.string.sidenav_menu_cat_modules);
+
+        LogManager.addEntry("sys", this.getLocalClassName() + " loaded", 0);
     }
 
     private Menu installActionBarAndSideNavDrawer() {

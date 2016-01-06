@@ -3,10 +3,14 @@ package de.htw_berlin.sharkandroidstack.android;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
+
 public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        LogManager.init();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 

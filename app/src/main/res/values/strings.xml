@@ -27,6 +27,7 @@
 
     <!--   log -->
     <string name="title_activity_log">Log</string>
+    <string name="activity_log_next_button">next</string>
 
     <!--   mariodemo -->
     <string name="mariodemo_menu_item_example">Settings</string>
