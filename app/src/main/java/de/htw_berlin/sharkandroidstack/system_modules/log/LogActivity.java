@@ -15,8 +15,13 @@ import java.util.List;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 
+/*
+* open certain log on activity start by intent extra:
+* intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
+* */
 public class LogActivity extends ParentActivity {
 
+    public static final String OPEN_LOG_ID_ON_START = "activity_log_open_log_id_on_start";
     Spinner spinner;
     ArrayAdapter logAdapter;
 
@@ -26,7 +31,7 @@ public class LogActivity extends ParentActivity {
             String readableName = ((TextView) view).getText().toString();
             String name = LogManager.findLogIdByName(readableName);
 
-            List<LogManager.LogEntry> allEntries = LogManager.getAllEntries(name);
+            final List<LogManager.LogEntry> allEntries = LogManager.getAllEntries(name);
             logAdapter.clear();
             logAdapter.addAll(allEntries);
             logAdapter.notifyDataSetChanged();
@@ -59,19 +64,30 @@ public class LogActivity extends ParentActivity {
 
         setLayoutResource(R.layout.system_module_log_activity);
 
+        initSpinner();
+        initListener();
+        initLogViewAndAdapter();
+
+        final Button nextButton = (Button) findViewById(R.id.activity_log_next_button);
+        nextButton.setOnClickListener(nextButtonClickListener);
+    }
+
+    private void initSpinner() {
         final List<String> allNames = LogManager.getAllNames();
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, allNames);
         spinner = (Spinner) findViewById(R.id.activity_log_spinner);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(itemClickListener);
+    }
 
-        List<String> all = LogManager.getAllLogIds();
+    private void initListener() {
+        final List<String> all = LogManager.getAllLogIds();
         for (String a : all) {
             LogManager.addListener(logChangeLister, a);
         }
+    }
 
-        final ListView log = (ListView) findViewById(R.id.activity_log_text);
-
+    private void initLogViewAndAdapter() {
         logAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -80,17 +96,27 @@ public class LogActivity extends ParentActivity {
                 final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
                 LogManager.LogEntry item = (LogManager.LogEntry) this.getItem(position);
-                text1.setText("Priority: " + item.prio + "");
+                text1.setText("Priority: " + item.prio);
                 text2.setText(item.msg);
 
                 return view;
             }
         };
 
+        final ListView log = (ListView) findViewById(R.id.activity_log_text);
         log.setAdapter(logAdapter);
+    }
 
-        final Button nextButton = (Button) findViewById(R.id.activity_log_next_button);
-        nextButton.setOnClickListener(nextButtonClickListener);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String initialLog = getIntent().getStringExtra(OPEN_LOG_ID_ON_START);
+        if(initialLog != null) {
+            int index = LogManager.getAllLogIds().indexOf(initialLog);
+            if(index != -1) {
+                spinner.setSelection(index);
+            }
+        }
     }
 
     //TODO: implement kb log

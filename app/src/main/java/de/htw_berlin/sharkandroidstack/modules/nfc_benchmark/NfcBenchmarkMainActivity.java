@@ -2,35 +2,33 @@ package de.htw_berlin.sharkandroidstack.modules.nfc_benchmark;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import net.sharkfw.system.Util;
-
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.Utils;
-import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.setup.SharkStack;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 
 public class NfcBenchmarkMainActivity extends ParentActivity {
+
+    public static String LOG_ID = "nfc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayoutResource(R.layout.module_nfc_benchmark_activity);
         setOptionsMenu(R.menu.module_nfcbenchmark_menu);
+
+        LogManager.registerLog(LOG_ID, "nfc benchmark");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        LogManager.addEntry(LOG_ID, "test", 1);
     }
 
     @Override
@@ -41,8 +39,10 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
         switch (id) {
             case R.id.nfcbenchmark_menu_item_log:
                 Intent intent = new Intent(this, LogActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
                 startActivity(intent);
-                break;
+                return true;
             case R.id.nfcbenchmark_menu_item_benchmark:
                 msg = "Example";
                 break;
