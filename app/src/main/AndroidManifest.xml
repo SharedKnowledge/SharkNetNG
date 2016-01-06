@@ -31,20 +31,20 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".system_modules.log.LogActivity"
-            android:label="@string/title_activity_log"
+            android:label="@string/side_nav_item_log"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".android.PKIManagerActivity"/>
         <activity
             android:name=".system_modules.settings.SettingsActivity"
-            android:label="@string/title_activity_settings"
+            android:label="@string/side_nav_item_settings"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".modules.mariodemo.MarioDemoMainActivity"
-            android:label="@string/title_activity_mariodemo"
+            android:label="@string/side_nav_item_mariodemo"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".modules.wifidirect.WifiDirectMainActivity"
-            android:label="@string/title_activity_wifi_direct_main"
+            android:label="@string/side_nav_item_wifidirect"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

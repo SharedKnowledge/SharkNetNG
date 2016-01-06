@@ -83,12 +83,12 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         return navigationView.getMenu();
     }
 
-    private void fillSideNavDrawerWithModules(Menu menu, String[][] entries, int uniqueGroupId, int categoryNameResource) {
-        SubMenu test = menu.addSubMenu(categoryNameResource);
+    private void fillSideNavDrawerWithModules(Menu menu, Object[][] entries, int uniqueGroupId, int categoryNameResource) {
+        SubMenu subMenu = menu.addSubMenu(categoryNameResource);
         for (int i = 0; i < entries.length; i++) {
-            String[] entry = entries[i];
+            Object[] entry = entries[i];
             int uniqueItemId = i + uniqueGroupId;
-            test.add(uniqueGroupId, uniqueItemId, i, entry[0]);
+            subMenu.add(uniqueGroupId, uniqueItemId, i, (Integer) entry[0]);
         }
         menu.setGroupCheckable(uniqueGroupId, true, true);
     }
@@ -163,27 +163,23 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         drawer.closeDrawer(GravityCompat.START);
 
         int normalizedItemId = item.getItemId() - item.getGroupId();
-        String[][] entries = item.getGroupId() == UNIQUE_GROUP_ID_SYSTEM_MODULES ? SideNav.system_modules : SideNav.modules;
-        String[] entry = entries[normalizedItemId];
-        String entryName = entry[0];
-        String className = entry[1];
+        Object[][] entries = item.getGroupId() == UNIQUE_GROUP_ID_SYSTEM_MODULES ? SideNav.system_modules : SideNav.modules;
+        Object[] entry = entries[normalizedItemId];
+        Integer entryName = (Integer) entry[0];
+        Class className = (Class) entry[1];
 
         if (className == null) {
             return false;
         }
 
         try {
-            Class aClass = Class.forName(getBaseContext().getPackageName() + "." + className);
-            Intent intent = new Intent(this, aClass);
+            Intent intent = new Intent(this, className);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra(EXTRA_MENU_ITEM_ID, item.getItemId());
             this.startActivity(intent);
             return true;
-        } catch (ClassNotFoundException e) {
-            Toast.makeText(this, "Class not found for item '" + entryName + "'", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "No activity declared in AndroidManifest for item " + entryName + "'", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No activity declared in AndroidManifest for item " + getString(entryName) + "'", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return false;

@@ -1,19 +1,22 @@
 package de.htw_berlin.sharkandroidstack.android;
 
+import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.mariodemo.MarioDemoMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc_benchmark.NfcBenchmarkMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.wifidirect.WifiDirectMainActivity;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsActivity;
+
 public class SideNav {
 
-    // TODO: use string resources, check whether classes instead of strings can be used
-    public final static String[][] system_modules = new String[][]{
-            new String[]{"Settings", "system_modules.settings.SettingsActivity"},
-            new String[]{"Log", "system_modules.log.LogActivity"},
+    public final static Object[][] system_modules = new Object[][]{
+            new Object[]{R.string.side_nav_item_settings, SettingsActivity.class},
+            new Object[]{R.string.side_nav_item_log, LogActivity.class},
     };
 
-    public final static String[][] modules = new String[][]{
-            new String[]{"Wifi Direct Demo", null},
-            new String[]{"Bluetooth Chat", null},
-            new String[]{"PKI Manager", null},
-            new String[]{"NFC Benchmark", "modules.nfc_benchmark.NfcBenchmarkMainActivity"},
-            new String[]{"Mario Demo", "modules.mariodemo.MarioDemoMainActivity"},
-            new String[]{"WifiDirect", "modules.wifidirect.WifiDirectMainActivity"},
+    public final static Object[][] modules = new Object[][]{
+            new Object[]{R.string.side_nav_item_nfcbenchmark, NfcBenchmarkMainActivity.class},
+            new Object[]{R.string.side_nav_item_mariodemo, MarioDemoMainActivity.class},
+            new Object[]{R.string.side_nav_item_wifidirect, WifiDirectMainActivity.class},
     };
 }
