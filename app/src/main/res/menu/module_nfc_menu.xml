@@ -7,6 +7,11 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/nfc_menu_item_welcome"
+        android:title="@string/nfc_welcome"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/nfc_menu_item_benchmark"
         android:title="@string/nfc_benchmark"
         app:showAsAction="never" />

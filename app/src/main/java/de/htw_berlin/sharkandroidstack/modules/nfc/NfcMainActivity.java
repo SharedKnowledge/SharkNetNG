@@ -39,15 +39,19 @@ public class NfcMainActivity extends ParentActivity {
             case R.id.nfc_menu_item_log:
                 intent = new Intent(this, LogActivity.class);
                 intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
-                return true;
-            case R.id.nfc_menu_item_benchmark:
-                intent = new Intent(this, LogActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
+                return true;
+            case R.id.nfc_menu_item_welcome:
+                clearView();
+                setLayoutResource(R.layout.module_nfc_activity);
+                break;
+            case R.id.nfc_menu_item_benchmark:
+                clearView();
+                setFragment(new NfcBenchmarkFragment());
                 break;
         }
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }

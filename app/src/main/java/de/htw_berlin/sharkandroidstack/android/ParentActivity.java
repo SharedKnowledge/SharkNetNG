@@ -37,6 +37,7 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
     public static final String EXTRA_MENU_ITEM_ID = "EXTRA_MENU_ITEM_ID";
 
     private int layoutInUse = LAYOUT_OPTION_NULL;
+    private Fragment usedFragment;
     private int optionsMenuResource = 0;
 
     private Menu menu;
@@ -127,13 +128,6 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         optionsMenuResource = resource;
     }
 
-    private void checkIfLayoutIsUsed(int layoutOption) {
-        if (layoutInUse != LAYOUT_OPTION_NULL) {
-            throw new IllegalStateException("Layout already set.");
-        }
-        layoutInUse = layoutOption;
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -197,8 +191,25 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
     }
 
     protected void setFragment(Fragment fragment) {
+        usedFragment = fragment;
         checkIfLayoutIsUsed(LAYOUT_OPTION_FRAGMENT);
 
         getFragmentManager().beginTransaction().replace(R.id.include, fragment).commit();
+    }
+
+    protected void clearView() {
+        layoutInUse = LAYOUT_OPTION_NULL;
+        if (usedFragment != null) {
+            getFragmentManager().beginTransaction().remove(usedFragment).commit();
+        }
+        RelativeLayout includeContainer = (RelativeLayout) findViewById(R.id.include);
+        includeContainer.removeAllViews();
+    }
+
+    private void checkIfLayoutIsUsed(int layoutOption) {
+        if (layoutInUse != LAYOUT_OPTION_NULL) {
+            throw new IllegalStateException("Layout already set.");
+        }
+        layoutInUse = layoutOption;
     }
 }
