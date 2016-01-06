@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nfcbenchmark_menu_item_log"
+        android:title="@string/nfcbenchmark_log"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nfcbenchmark_menu_item_benchmark"
+        android:title="@string/nfcbenchmark_benchmark"
+        app:showAsAction="never" />
+</menu>

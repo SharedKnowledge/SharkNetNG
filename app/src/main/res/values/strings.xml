@@ -30,4 +30,8 @@
     <!--   mariodemo -->
     <string name="mariodemo_menu_item_example">Settings</string>
     <string name="marioodemo_menu_item_details">Favorite</string>
+
+    <!--   nfc benchmark -->
+    <string name="nfcbenchmark_log">Log</string>
+    <string name="nfcbenchmark_benchmark">start Benchmark</string>
 </resources>
