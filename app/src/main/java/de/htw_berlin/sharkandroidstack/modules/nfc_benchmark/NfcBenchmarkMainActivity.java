@@ -6,7 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import net.sharkfw.system.Util;
+
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.setup.SharkStack;
@@ -45,12 +48,10 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TODO: set custom layout...
         setLayoutResource(R.layout.module_nfc_benchmark_activity);
-        //setContentView(R.layout.activity_main);
 
         TextView inputHeader = (TextView) findViewById(R.id.inputHeader);
-        inputHeader.setText("Your Name: " + getDeviceId() + ", Input:");
+        inputHeader.setText("Your Name: " + Utils.deviceId + ", Input:");
     }
 
     @Override
@@ -74,7 +75,7 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
         if (sharkStack == null) {
             kbTextViewWriter = KbTextViewWriter.getInstance();
 
-            sharkStack = new SharkStack(this, getDeviceId()).setTextViewWriter(kbTextViewWriter).start();
+            sharkStack = new SharkStack(this, Utils.deviceId).setTextViewWriter(kbTextViewWriter).start();
 
             kbTextViewWriter.setOutputTextView((TextView) findViewById(R.id.outputTextView));
             View toggleLogView = findViewById(R.id.toogleLog);
@@ -92,7 +93,5 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
         }
     }
 
-    private String getDeviceId() {
-        return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
+
 }
