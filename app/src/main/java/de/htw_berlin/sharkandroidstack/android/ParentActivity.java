@@ -175,6 +175,7 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         try {
             Class aClass = Class.forName(getBaseContext().getPackageName() + "." + className);
             Intent intent = new Intent(this, aClass);
+            intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra(EXTRA_MENU_ITEM_ID, item.getItemId());
             this.startActivity(intent);
             return true;
