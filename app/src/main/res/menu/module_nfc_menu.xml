@@ -2,12 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/nfcbenchmark_menu_item_log"
-        android:title="@string/nfcbenchmark_log"
+        android:id="@+id/nfc_menu_item_log"
+        android:title="@string/nfc_log"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/nfcbenchmark_menu_item_benchmark"
-        android:title="@string/nfcbenchmark_benchmark"
+        android:id="@+id/nfc_menu_item_benchmark"
+        android:title="@string/nfc_benchmark"
         app:showAsAction="never" />
 </menu>

@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc_benchmark;
+package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,17 +10,17 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 
-public class NfcBenchmarkMainActivity extends ParentActivity {
+public class NfcMainActivity extends ParentActivity {
 
     public static String LOG_ID = "nfc";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setLayoutResource(R.layout.module_nfc_benchmark_activity);
-        setOptionsMenu(R.menu.module_nfcbenchmark_menu);
+        setLayoutResource(R.layout.module_nfc_activity);
+        setOptionsMenu(R.menu.module_nfc_menu);
 
-        LogManager.registerLog(LOG_ID, "nfc benchmark");
+        LogManager.registerLog(LOG_ID, "nfc module");
     }
 
     @Override
@@ -36,11 +36,11 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
 
         Intent intent = null;
         switch (id) {
-            case R.id.nfcbenchmark_menu_item_log:
+            case R.id.nfc_menu_item_log:
                 intent = new Intent(this, LogActivity.class);
                 intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
                 return true;
-            case R.id.nfcbenchmark_menu_item_benchmark:
+            case R.id.nfc_menu_item_benchmark:
                 intent = new Intent(this, LogActivity.class);
                 startActivity(intent);
                 break;

@@ -8,18 +8,18 @@
 
     <ImageView
         android:id="@+id/activty_nfc_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/module_nfcbenchmark_arrow" />
+        android:src="@drawable/module_nfc_arrow" />
 
     <TextView
         android:layout_below="@id/activty_nfc_arrow"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/nfcbenchmark_click_to_start" />
+        android:text="@string/nfc_click_to_start" />
 </RelativeLayout>
