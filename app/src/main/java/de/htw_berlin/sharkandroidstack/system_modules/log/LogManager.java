@@ -58,6 +58,17 @@ public class LogManager {
         }
     }
 
+    public static void unregisterLog(String logId) {
+        int index = logIds.indexOf(logId);
+        if (index != -1) {
+            logIds.remove(index);
+            logNames.remove(index);
+            logEntries.remove(index);
+            listeners.remove(index);
+        }
+    }
+
+
     public static void addEntry(String logId, Object msg, int prio) {
         int index = findIndexByLogId(logId);
 
