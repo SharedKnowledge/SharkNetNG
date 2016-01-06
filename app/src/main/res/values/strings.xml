@@ -35,4 +35,5 @@
     <!--   nfc benchmark -->
     <string name="nfcbenchmark_log">Log</string>
     <string name="nfcbenchmark_benchmark">start Benchmark</string>
+    <string name="nfcbenchmark_click_to_start">Click here to start.</string>
 </resources>

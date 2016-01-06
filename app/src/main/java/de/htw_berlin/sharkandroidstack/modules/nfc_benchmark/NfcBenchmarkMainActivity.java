@@ -3,7 +3,6 @@ package de.htw_berlin.sharkandroidstack.modules.nfc_benchmark;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
@@ -35,23 +34,20 @@ public class NfcBenchmarkMainActivity extends ParentActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        String msg = "";
+        Intent intent = null;
         switch (id) {
             case R.id.nfcbenchmark_menu_item_log:
-                Intent intent = new Intent(this, LogActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                intent = new Intent(this, LogActivity.class);
                 intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
-                startActivity(intent);
                 return true;
             case R.id.nfcbenchmark_menu_item_benchmark:
-                msg = "Example";
+                intent = new Intent(this, LogActivity.class);
+                startActivity(intent);
                 break;
         }
 
-        if (!msg.isEmpty()) {
-            Toast.makeText(this, "You pressed on '" + msg + "'", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }
