@@ -4,9 +4,10 @@ import android.annotation.TargetApi;
 import android.nfc.cardemulation.HostApduService;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.EditText;
 
 import java.util.Arrays;
+
+import de.htw_berlin.sharkandroidstack.Utils;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SmartCardEmulationService extends HostApduService {
@@ -14,7 +15,7 @@ public class SmartCardEmulationService extends HostApduService {
     public static final int DEFAULT_MAX_LENGTH = 200;
     public static final byte[] WELCOME_MESSAGE = "Hello".getBytes();
 
-    private static EditText input;
+    //    private static EditText input;
     byte[] byteBuffer;
 
     @Override
@@ -43,7 +44,9 @@ public class SmartCardEmulationService extends HostApduService {
 
     byte[] getNextMessage(int maxLength) {
         if (null == byteBuffer) {
-            byteBuffer = input.getText().toString().getBytes();
+            byte[] message = Utils.generateRandomString(30).getBytes();
+            System.out.println("Mario: out < " + new String(message) + " | " + Arrays.toString(message));
+            byteBuffer = message;
         }
 
         return getBytesFromBuffer(maxLength);
@@ -63,9 +66,9 @@ public class SmartCardEmulationService extends HostApduService {
         return currentBuffer;
     }
 
-    public static void setInput(EditText input) {
-        SmartCardEmulationService.input = input;
-    }
+//    public static void setInput(EditText input) {
+//        SmartCardEmulationService.input = input;
+//    }
 
     private boolean selectAidApdu(byte[] apdu) {
         //TODO: how does this work?

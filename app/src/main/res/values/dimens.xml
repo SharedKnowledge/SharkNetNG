@@ -5,4 +5,6 @@
     <dimen name="nav_header_spacing">5dp</dimen>
     <dimen name="nav_header_top">20dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="padding_horizontal">16dp</dimen>
 </resources>

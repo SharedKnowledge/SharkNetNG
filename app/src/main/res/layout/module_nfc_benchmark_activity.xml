@@ -3,11 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <Button
+        android:id="@+id/activity_nfc_benchmark_button_start"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/nfc_click_to_start" />
+        android:background="@null"
+        android:drawableRight="@android:drawable/ic_media_play"
+        android:paddingTop="@dimen/padding_horizontal"
+        android:paddingBottom="@dimen/padding_horizontal"
+        android:text="@string/activity_nfc_benchmark_start" />
+
+    <ProgressBar
+        android:id="@+id/activity_nfc_benchmark_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_nfc_benchmark_button_start"
+        android:max="100"
+        android:progress="1"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/activity_nfc_benchmark_results"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_nfc_benchmark_button_start"
+        android:visibility="gone" />
+
+
 </RelativeLayout>

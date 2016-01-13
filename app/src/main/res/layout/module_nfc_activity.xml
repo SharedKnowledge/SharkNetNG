@@ -7,19 +7,33 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <ImageView
-        android:id="@+id/activty_nfc_arrow"
+        android:id="@+id/activity_nfc_arrow"
         android:layout_width="60dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
         android:src="@drawable/module_nfc_arrow" />
 
     <TextView
-        android:layout_below="@id/activty_nfc_arrow"
-        android:layout_alignParentRight="true"
+        android:id="@+id/activtiy_nfc_start_here"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/activity_nfc_arrow"
         android:text="@string/nfc_click_to_start" />
+
+    <TextView
+        android:id="@+id/activity_nfc_support"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+    <Button
+        android:id="@+id/activity_nfc_enable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/activity_nfc_enable" />
 </RelativeLayout>

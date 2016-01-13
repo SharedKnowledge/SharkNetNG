@@ -35,6 +35,11 @@
     <!--   nfc -->
     <string name="nfc_log">Log</string>
     <string name="nfc_welcome">back to start</string>
-    <string name="nfc_benchmark">start Benchmark</string>
+    <string name="nfc_benchmark">Benchmark</string>
     <string name="nfc_click_to_start">click here to start</string>
+    <string name="activity_nfc_benchmark_start">start benchmark</string>
+    <string name="activity_nfc_benchmark_stop">abort benchmark</string>
+    <string name="service_description">APDU service</string>
+    <string name="aid_description">AID description</string>
+    <string name="activity_nfc_enable">Enable NFC first</string>
 </resources>
