@@ -7,19 +7,25 @@ import android.os.Bundle;
 
 import java.util.Arrays;
 
-import de.htw_berlin.sharkandroidstack.Utils;
-
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SmartCardEmulationService extends HostApduService {
 
-    public static final int DEFAULT_MAX_LENGTH = 200;
+    public static int DEFAULT_MAX_LENGTH = 200;
     public static final byte[] WELCOME_MESSAGE = "Hello".getBytes();
 
-    //    private static EditText input;
+    private static OnMessageSend src;
     byte[] byteBuffer;
 
     @Override
+    public void onDeactivated(int reason) {
+    }
+
+    @Override
     public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
+        if (src == null) {
+            throw new IllegalStateException("Source of input is not set");
+        }
+
         if (selectAidApdu(apdu)) {
             return WELCOME_MESSAGE;
         }
@@ -38,13 +44,9 @@ public class SmartCardEmulationService extends HostApduService {
         return DEFAULT_MAX_LENGTH;
     }
 
-    @Override
-    public void onDeactivated(int reason) {
-    }
-
     byte[] getNextMessage(int maxLength) {
         if (null == byteBuffer) {
-            byte[] message = Utils.generateRandomString(30).getBytes();
+            byte[] message = src.getNextMessage();
             System.out.println("Mario: out < " + new String(message) + " | " + Arrays.toString(message));
             byteBuffer = message;
         }
@@ -66,9 +68,9 @@ public class SmartCardEmulationService extends HostApduService {
         return currentBuffer;
     }
 
-//    public static void setInput(EditText input) {
-//        SmartCardEmulationService.input = input;
-//    }
+    public static void setSource(OnMessageSend src) {
+        SmartCardEmulationService.src = src;
+    }
 
     private boolean selectAidApdu(byte[] apdu) {
         //TODO: how does this work?

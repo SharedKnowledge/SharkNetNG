@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
@@ -52,6 +54,15 @@ public class NfcMainActivity extends ParentActivity {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         checkNfcSupport();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (nfcAdapter != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            nfcAdapter.disableReaderMode(this);
+        }
     }
 
     private void checkNfcSupport() {
@@ -125,18 +136,13 @@ public class NfcMainActivity extends ParentActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
-        System.out.println("Mario: prepare receiving");
-
-        // http://stackoverflow.com/questions/27939030/alternative-way-for-enablereadermode-to-work-with-android-apis-lesser-than-19
-        final int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
+        final int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
         nfcAdapter.enableReaderMode(this, readerCallback, flags, null);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareSending() {
-        System.out.println("Mario: prepare sending");
-
-        //SmartCardEmulationService.setInput(input);
+    void prepareSending(OnMessageSend src) {
+        SmartCardEmulationService.setSource(src);
         nfcAdapter.disableReaderMode(this);
     }
 

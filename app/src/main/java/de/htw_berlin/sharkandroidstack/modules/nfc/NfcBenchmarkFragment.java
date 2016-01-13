@@ -2,44 +2,36 @@ package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
-import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
+import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
-
-import static android.R.drawable.ic_media_pause;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
 
     NfcMainActivity activity;
-    Button startButton;
-    ProgressBar progressBar;
-    ListView results;
 
-    final View.OnClickListener startClickListener = new View.OnClickListener() {
+    MyReaderCallback readerCallback;
+    MyStartButtonClickListener buttonClickListener;
+
+    final static OnMessageSend benchmarkSource = new OnMessageSend() {
         @Override
-        public void onClick(View v) {
-            TextView view = (TextView) v;
-            view.setText(R.string.activity_nfc_benchmark_stop);
-            view.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
-
-            activity.prepareSending();
+        public byte[] getNextMessage() {
+            byte[] message = Utils.generateRandomString(30).getBytes();
+            System.out.println("Mario: out > " + new String(message) + " | " + Arrays.toString(message));
+            return message;
         }
     };
 
@@ -63,40 +55,20 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
-    final NfcAdapter.ReaderCallback readerCallback = new NfcAdapter.ReaderCallback() {
-        @Override
-        public void onTagDiscovered(Tag tag) {
-            IsoDep isoDep = IsoDep.get(tag);
-            if (isoDep == null) {
-                return;
-            }
-
-            System.out.println("Mario: Tag discovered " + tag);
-//            NfcBenchmarkFragment.this.getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    outputStringBuilder = new StringBuilder();
-//                    output.setText(outputStringBuilder.toString());
-//                }
-//            });
-
-            IsoDepTransceiver transceiver = new IsoDepTransceiver(isoDep, onMessageReceived);
-            Thread thread = new Thread(transceiver);
-            thread.start();
-        }
-    };
-
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.module_nfc_benchmark_activity, container, false);
-        startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
-        startButton.setOnClickListener(startClickListener);
 
-        progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
-        results = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
+        final View root = inflater.inflate(R.layout.module_nfc_benchmark_activity, container, false);
+        final ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
+        final ListView results = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
+
+        final View description = root.findViewById(R.id.activity_nfc_benchmark_description);
+        final Button startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
 
         activity = (NfcMainActivity) NfcBenchmarkFragment.this.getActivity();
+
+        buttonClickListener = new MyStartButtonClickListener(progressBar, results, description, benchmarkSource, activity);
+        startButton.setOnClickListener(buttonClickListener);
 
         return root;
     }
@@ -109,6 +81,10 @@ public class NfcBenchmarkFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        if (readerCallback == null) {
+            readerCallback = new MyReaderCallback(onMessageReceived);
+        }
         activity.prepareReceiving(readerCallback);
     }
 
