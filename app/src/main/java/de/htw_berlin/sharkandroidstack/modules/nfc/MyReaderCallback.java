@@ -12,9 +12,11 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class MyReaderCallback implements NfcAdapter.ReaderCallback {
     private OnMessageReceived onMessageReceived;
+    private MyResultAdapter adapter;
 
-    public MyReaderCallback(OnMessageReceived onMessageReceived) {
+    public MyReaderCallback(OnMessageReceived onMessageReceived, MyResultAdapter adapter) {
         this.onMessageReceived = onMessageReceived;
+        this.adapter = adapter;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
             return;
         }
 
-        System.out.println("Mario: Tag discovered " + tag);
+        adapter.addTagDiscovered(tag);
 //            NfcBenchmarkFragment.this.getActivity().runOnUiThread(new Runnable() {
 //                @Override
 //                public void run() {

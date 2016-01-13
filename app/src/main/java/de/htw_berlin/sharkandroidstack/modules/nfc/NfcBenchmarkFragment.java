@@ -4,14 +4,14 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
-import java.util.Arrays;
+import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.Utils;
@@ -25,12 +25,13 @@ public class NfcBenchmarkFragment extends Fragment {
 
     MyReaderCallback readerCallback;
     MyStartButtonClickListener buttonClickListener;
+    MyResultAdapter resultAdapter;
 
-    final static OnMessageSend benchmarkSource = new OnMessageSend() {
+    final OnMessageSend benchmarkSource = new OnMessageSend() {
         @Override
         public byte[] getNextMessage() {
             byte[] message = Utils.generateRandomString(30).getBytes();
-            System.out.println("Mario: out > " + new String(message) + " | " + Arrays.toString(message));
+            resultAdapter.addMessageOut(message);
             return message;
         }
     };
@@ -38,36 +39,32 @@ public class NfcBenchmarkFragment extends Fragment {
     final OnMessageReceived onMessageReceived = new OnMessageReceived() {
         @Override
         public void onMessage(final byte[] message) {
-            System.out.println("Mario: in > " + new String(message) + " | " + Arrays.toString(message));
-//            NfcBenchmarkFragment.this.getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    outputStringBuilder.append(new String(message));
-//                    output.setText(outputStringBuilder.toString());
-//                }
-//            });
+            resultAdapter.addMessageIn(message);
         }
 
         @Override
         public void onError(Exception exception) {
             exception.printStackTrace();
-            onMessage(("Finished with error: " + exception.getMessage()).getBytes());
+            resultAdapter.addMessageError(exception.getMessage());
         }
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        resultAdapter = new MyResultAdapter(this.getActivity());
 
-        final View root = inflater.inflate(R.layout.module_nfc_benchmark_activity, container, false);
+        final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
         final ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
         final ListView results = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
+        results.setAdapter(resultAdapter);
 
-        final View description = root.findViewById(R.id.activity_nfc_benchmark_description);
+        final TextView description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
+        description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
         final Button startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
 
         activity = (NfcMainActivity) NfcBenchmarkFragment.this.getActivity();
 
-        buttonClickListener = new MyStartButtonClickListener(progressBar, results, description, benchmarkSource, activity);
+        buttonClickListener = new MyStartButtonClickListener(progressBar, results, description, benchmarkSource, activity, startButton);
         startButton.setOnClickListener(buttonClickListener);
 
         return root;
@@ -83,7 +80,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new MyReaderCallback(onMessageReceived);
+            readerCallback = new MyReaderCallback(onMessageReceived, resultAdapter);
         }
         activity.prepareReceiving(readerCallback);
     }

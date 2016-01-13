@@ -43,5 +43,5 @@
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
     <string name="activity_nfc_enable">Enable NFC first</string>
-    <string name="activity_nfc_benchmark_description">Benchmark can be started before connecting phones. If test is not aborted, it will run 30 seconds.</string>
+    <string name="activity_nfc_benchmark_description">Start Benchmark by pressing <i>\"start\"</i> on ONE device before connecting phones. Test will run for 30 seconds if not aborted by pressing <i>\"abort\"</i> or phones are disconnected.</string>
 </resources>
