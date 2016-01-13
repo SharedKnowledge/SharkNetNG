@@ -49,6 +49,7 @@ public class IsoDepTransceiver implements Runnable {
 
             isoDep.close();
         } catch (TagLostException ignore) {
+            onMessageReceived.tagLost();
         } catch (IOException e) {
             onMessageReceived.onError(e);
         }

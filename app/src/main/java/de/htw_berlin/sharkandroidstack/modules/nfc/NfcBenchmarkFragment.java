@@ -47,6 +47,11 @@ public class NfcBenchmarkFragment extends Fragment {
             exception.printStackTrace();
             resultAdapter.addMessageError(exception.getMessage());
         }
+
+        @Override
+        public void tagLost() {
+            resultAdapter.addTagChanged("Tag lost");
+        }
     };
 
     @Override

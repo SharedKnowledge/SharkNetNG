@@ -47,7 +47,6 @@ public class SmartCardEmulationService extends HostApduService {
     byte[] getNextMessage(int maxLength) {
         if (null == byteBuffer) {
             byte[] message = src.getNextMessage();
-            System.out.println("Mario: out < " + new String(message) + " | " + Arrays.toString(message));
             byteBuffer = message;
         }
 

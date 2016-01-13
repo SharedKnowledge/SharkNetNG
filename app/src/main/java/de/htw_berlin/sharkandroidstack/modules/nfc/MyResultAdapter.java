@@ -1,7 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +60,9 @@ public class MyResultAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void addTagDiscovered(Tag tag) {
+    public void addTagChanged(String message) {
         int count = data.size() + 1;
-        data.add(new MyDataHolder("Tag discovered / " + count, tag.toString()));
+        data.add(new MyDataHolder("tag changed / " + count, message));
         notifyDataSetChanged();
     }
 

@@ -26,14 +26,7 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
             return;
         }
 
-        adapter.addTagDiscovered(tag);
-//            NfcBenchmarkFragment.this.getActivity().runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    outputStringBuilder = new StringBuilder();
-//                    output.setText(outputStringBuilder.toString());
-//                }
-//            });
+        adapter.addTagChanged(tag.toString());
 
         IsoDepTransceiver transceiver = new IsoDepTransceiver(isoDep, onMessageReceived);
         Thread thread = new Thread(transceiver);
