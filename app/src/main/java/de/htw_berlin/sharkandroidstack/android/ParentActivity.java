@@ -103,6 +103,10 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
     protected void onResume() {
         super.onResume();
 
+        highlightMenuItem();
+    }
+
+    private void highlightMenuItem() {
         menuItemId = getIntent().getIntExtra(EXTRA_MENU_ITEM_ID, -1);
 
         if (menuItemId < 0) {
@@ -191,8 +195,8 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
     }
 
     protected void setFragment(Fragment fragment) {
-        usedFragment = fragment;
         checkIfLayoutIsUsed(LAYOUT_OPTION_FRAGMENT);
+        usedFragment = fragment;
 
         getFragmentManager().beginTransaction().replace(R.id.include, fragment).commit();
     }
@@ -201,6 +205,7 @@ public class ParentActivity extends AppCompatActivity implements OnNavigationIte
         layoutInUse = LAYOUT_OPTION_NULL;
         if (usedFragment != null) {
             getFragmentManager().beginTransaction().remove(usedFragment).commit();
+            usedFragment = null;
         }
         RelativeLayout includeContainer = (RelativeLayout) findViewById(R.id.include);
         includeContainer.removeAllViews();

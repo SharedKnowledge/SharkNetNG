@@ -55,6 +55,14 @@ public class NfcMainActivity extends ParentActivity {
     }
 
     private void checkNfcSupport() {
+        TextView supportMessage = (TextView) findViewById(R.id.activity_nfc_support);
+        Button enableButton = (Button) findViewById(R.id.activity_nfc_enable);
+
+        if (supportMessage == null) {
+            // activity has different fragment or layout resource set, which does not have this elements; skip
+            return;
+        }
+
         String reason = null;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             reason = "Your Android Version is too old (Found API: " + Build.VERSION.SDK_INT + "). " +
@@ -62,9 +70,6 @@ public class NfcMainActivity extends ParentActivity {
         } else if (nfcAdapter == null) {
             reason = "NFC Adapter not found";
         }
-
-        TextView supportMessage = (TextView) findViewById(R.id.activity_nfc_support);
-        Button enableButton = (Button) findViewById(R.id.activity_nfc_enable);
 
         enableButton.setVisibility(GONE);
         supportMessage.setVisibility(GONE);
