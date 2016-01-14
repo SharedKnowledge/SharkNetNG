@@ -18,6 +18,7 @@ public class SmartCardEmulationService extends HostApduService {
 
     @Override
     public void onDeactivated(int reason) {
+        src.onDeactivated(reason);
     }
 
     @Override
@@ -63,7 +64,6 @@ public class SmartCardEmulationService extends HostApduService {
         final byte[] currentBuffer = Arrays.copyOfRange(byteBuffer, 0, length);
 
         byteBuffer = Arrays.copyOfRange(byteBuffer, length, byteBuffer.length);
-
         return currentBuffer;
     }
 

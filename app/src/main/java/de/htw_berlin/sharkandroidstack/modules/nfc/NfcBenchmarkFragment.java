@@ -102,9 +102,9 @@ public class NfcBenchmarkFragment extends Fragment {
 
         resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
 
-        resultAdapter = new MyResultAdapter(getContext());
+        resultAdapter = new MyResultAdapter(getActivity());
         onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, getActivity());
-        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList);
+        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList, getActivity());
         resultList.setAdapter(resultAdapter);
 
         buttonClickListener = new MyStartButtonClickListener(this);

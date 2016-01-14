@@ -174,5 +174,16 @@ public class MyResultAdapter extends BaseAdapter {
         public String getData() {
             return data;
         }
+
+        @Override
+        public String toString() {
+            return "MyDataHolder{" +
+                    "count=" + count +
+                    ", direction=" + direction +
+                    ", type=" + type +
+                    ", rawData=" + Arrays.toString(rawData) +
+                    ", data='" + data + '\'' +
+                    '}';
+        }
     }
 }
