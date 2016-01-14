@@ -11,12 +11,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.Utils;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
-public class MyResultAdapter extends BaseAdapter {
+public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMessageReceived {
 
     private final ArrayList<MyDataHolder> data = new ArrayList<>();
 
     private final LayoutInflater layoutInflater;
+    private int msgLength;
 
     public MyResultAdapter(Context context) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,6 +87,36 @@ public class MyResultAdapter extends BaseAdapter {
         int count = data.size() + 1;
         data.add(new MyDataHolder("error / " + count, message));
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onMessage(final byte[] message) {
+        addMessageIn(message);
+    }
+
+    @Override
+    public void onError(Exception exception) {
+        exception.printStackTrace();
+        addMessageError(exception.getMessage());
+    }
+
+    @Override
+    public void tagLost() {
+        addTagChanged("Tag lost");
+    }
+
+    @Override
+    public byte[] getNextMessage() {
+        byte[] message = Utils.generateRandomString(getMsgLength()).getBytes();
+        return message;
+    }
+
+    public int getMsgLength() {
+        return msgLength;
+    }
+
+    public void setMsgLength(int msgLength) {
+        this.msgLength = msgLength;
     }
 
     private class MyViewHolder {

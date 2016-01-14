@@ -7,7 +7,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 import static android.R.drawable.ic_media_pause;
 import static android.R.drawable.ic_media_play;
@@ -25,19 +24,19 @@ public class MyStartButtonClickListener implements View.OnClickListener {
     private final ProgressBar progressBar;
     private final ListView results;
     private final View description;
-    private final OnMessageSend benchmarkSource;
     private NfcMainActivity activity;
     private Button button;
+    private MyResultAdapter resultAdapter;
 
     int currentState = STATE_RESET;
 
-    public MyStartButtonClickListener(ProgressBar progressBar, ListView results, View description, OnMessageSend benchmarkSource, NfcMainActivity activity, Button startButton) {
+    public MyStartButtonClickListener(ProgressBar progressBar, ListView results, View description, NfcMainActivity activity, Button startButton, MyResultAdapter resultAdapter) {
         this.progressBar = progressBar;
         this.results = results;
         this.description = description;
-        this.benchmarkSource = benchmarkSource;
         this.activity = activity;
         button = startButton;
+        this.resultAdapter = resultAdapter;
     }
 
     final CountDownTimer timer = new CountDownTimer(TIMER_END, TICK_INTERVAL) {
@@ -82,7 +81,7 @@ public class MyStartButtonClickListener implements View.OnClickListener {
         progressBar.setVisibility(View.VISIBLE);
         results.setVisibility(View.VISIBLE);
 
-        activity.prepareSending(benchmarkSource);
+        activity.prepareSending(resultAdapter);
 
         currentState = RUNNING;
     }

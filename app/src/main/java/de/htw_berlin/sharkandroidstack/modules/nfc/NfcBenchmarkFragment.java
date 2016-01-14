@@ -15,12 +15,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.Utils;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
+    public static final int DEFAULT_MESSAGE_LENGTH = 512;
 
     //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
     //TODO: change MyStartButtonClickListener state on other device + clarify description/button
@@ -34,38 +32,11 @@ public class NfcBenchmarkFragment extends Fragment {
     MyStartButtonClickListener buttonClickListener;
     MyResultAdapter resultAdapter;
 
-    final OnMessageSend benchmarkSource = new OnMessageSend() {
-        @Override
-        public byte[] getNextMessage() {
-            int length = Integer.valueOf(msgLengthOutput.getText().toString());
-            byte[] message = Utils.generateRandomString(length).getBytes();
-            resultAdapter.addMessageOut(message);
-            return message;
-        }
-    };
-
-    final OnMessageReceived onMessageReceived = new OnMessageReceived() {
-        @Override
-        public void onMessage(final byte[] message) {
-            resultAdapter.addMessageIn(message);
-        }
-
-        @Override
-        public void onError(Exception exception) {
-            exception.printStackTrace();
-            resultAdapter.addMessageError(exception.getMessage());
-        }
-
-        @Override
-        public void tagLost() {
-            resultAdapter.addTagChanged("Tag lost");
-        }
-    };
-
     final SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             msgLengthOutput.setText(progress);
+            resultAdapter.setMsgLength(progress);
         }
 
         @Override
@@ -84,12 +55,12 @@ public class NfcBenchmarkFragment extends Fragment {
         final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
 
         activity = (NfcMainActivity) NfcBenchmarkFragment.this.getActivity();
+        msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
         resultAdapter = new MyResultAdapter(this.getActivity());
 
-        msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
         final SeekBar msgLengthInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_msg_length_input);
         msgLengthInput.setOnSeekBarChangeListener(seekBarChangeListener);
-        msgLengthInput.setProgress(512);
+        msgLengthInput.setProgress(DEFAULT_MESSAGE_LENGTH);
 
         final ProgressBar progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
         final ListView results = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
@@ -100,7 +71,7 @@ public class NfcBenchmarkFragment extends Fragment {
         results.setAdapter(resultAdapter);
         description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
 
-        buttonClickListener = new MyStartButtonClickListener(progressBar, results, description, benchmarkSource, activity, startButton);
+        buttonClickListener = new MyStartButtonClickListener(progressBar, results, description, activity, startButton, resultAdapter);
         startButton.setOnClickListener(buttonClickListener);
 
         return root;
@@ -116,7 +87,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new MyReaderCallback(onMessageReceived, resultAdapter);
+            readerCallback = new MyReaderCallback(resultAdapter, resultAdapter);
         }
         activity.prepareReceiving(readerCallback);
     }
