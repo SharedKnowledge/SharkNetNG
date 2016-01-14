@@ -40,5 +40,23 @@
         android:layout_below="@id/activity_nfc_benchmark_progress"
         android:visibility="gone" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_nfc_benchmark_description"
+        android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/activity_nfc_benchmark_msg_length_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="1024" />
+
+        <TextView
+            android:id="@+id/activity_nfc_benchmark_msg_length_output"
+            android:layout_width="40sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
 </RelativeLayout>
