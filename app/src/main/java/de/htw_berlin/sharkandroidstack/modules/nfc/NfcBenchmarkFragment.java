@@ -21,6 +21,11 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
 
+    //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
+    //TODO: change MyStartButtonClickListener state on other device + clarify description/button
+    //TODO: stats more expressive + final stats
+    //TODO: migrate chat
+
     NfcMainActivity activity;
 
     MyReaderCallback readerCallback;

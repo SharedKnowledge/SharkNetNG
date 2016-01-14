@@ -11,7 +11,7 @@ import java.util.Arrays;
 public class SmartCardEmulationService extends HostApduService {
 
     public static int DEFAULT_MAX_LENGTH = 200;
-    public static final byte[] WELCOME_MESSAGE = "Hello".getBytes();
+    public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
 
     private static OnMessageSend src;
     byte[] byteBuffer;
@@ -27,7 +27,7 @@ public class SmartCardEmulationService extends HostApduService {
         }
 
         if (selectAidApdu(apdu)) {
-            return WELCOME_MESSAGE;
+            return INITIAL_TYPE_OF_SERVICE;
         }
 
         int maxLength = getMaxLength(apdu);

@@ -36,7 +36,7 @@ public class IsoDepTransceiver implements Runnable {
             isoDep.connect();
             final byte[] selectAidApdu = createSelectAidApdu(AID_ANDROID);
             byte[] response = isoDep.transceive(selectAidApdu);
-            if (!Arrays.equals(response, SmartCardEmulationService.WELCOME_MESSAGE)) {
+            if (!Arrays.equals(response, SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE)) {
                 return;
             }
 
