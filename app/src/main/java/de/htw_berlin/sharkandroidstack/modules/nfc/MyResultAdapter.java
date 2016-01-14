@@ -1,38 +1,25 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
-import android.app.Activity;
 import android.content.Context;
-import android.nfc.Tag;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.Utils;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
-public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMessageReceived {
+public class MyResultAdapter extends BaseAdapter {
 
     private final ArrayList<MyDataHolder> data = new ArrayList<>();
 
     private final LayoutInflater layoutInflater;
-    private final WeakReference<Activity> activityReference;
-    private final WeakReference<ListView> listReference;
-    private int msgLength;
 
-    public MyResultAdapter(Activity activity, ListView list) {
-        activityReference = new WeakReference<>(activity);
-        listReference = new WeakReference<>(list);
-        layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public MyResultAdapter(Context context) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -52,7 +39,6 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
 
     public void clear() {
         data.clear();
-        notifyForUpdate();
     }
 
     @Override
@@ -73,71 +59,9 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
         return convertView;
     }
 
-    private void notifyForUpdate() {
-        final ListView listView = listReference.get();
-
-        if (Looper.myLooper() == Looper.getMainLooper()) {
-            notifyDataSetChanged();
-            listView.smoothScrollToPosition(data.size() - 1);
-            return;
-        }
-
-        Activity activity = activityReference.get();
-        if (activity != null) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MyResultAdapter.this.notifyDataSetChanged();
-                    listView.smoothScrollToPosition(data.size() - 1);
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onMessage(final byte[] message) {
-        int count = data.size() + 1;
-        data.add(new MyDataHolder(count, MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message));
-        notifyForUpdate();
-    }
-
-
-    @Override
-    public void onError(Exception exception) {
-        exception.printStackTrace();
-
-        int count = data.size() + 1;
-        data.add(new MyDataHolder(count, MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_ERROR, exception.getMessage()));
-        notifyForUpdate();
-    }
-
-    @Override
-    public void tagLost() {
-        int count = data.size() + 1;
-        data.add(new MyDataHolder(count, MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_LOST_TAG));
-        notifyForUpdate();
-    }
-
-    @Override
-    public void newTag(Tag tag) {
-        int count = data.size() + 1;
-        data.add(new MyDataHolder(count, MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_NEW_TAG, tag.toString()));
-        notifyForUpdate();
-    }
-
-    @Override
-    public byte[] getNextMessage() {
-        byte[] message = Utils.generateRandomString(msgLength).getBytes();
-
-        int count = data.size() + 1;
-        data.add(new MyDataHolder(count, MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message));
-        notifyForUpdate();
-
-        return message;
-    }
-
-    public void setMsgLength(int msgLength) {
-        this.msgLength = msgLength;
+    public void add(MyDataHolder dataHolder) {
+        dataHolder.setCount(data.size() + 1);
+        data.add(dataHolder);
     }
 
     private class MyViewHolder {
@@ -180,7 +104,7 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
         }
     }
 
-    private static class MyDataHolder {
+    public static class MyDataHolder {
         public static final int TYPE_ERROR = 1;
         public static final int TYPE_NEW_TAG = 2;
         public static final int TYPE_LOST_TAG = 3;
@@ -195,15 +119,13 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
         private byte[] rawData;
         private String data;
 
-        public MyDataHolder(int count, int direction, int type, byte[] rawData) {
-            this.count = count;
+        public MyDataHolder(int direction, int type, byte[] rawData) {
             this.setDirection(direction);
             this.setType(type);
             this.rawData = rawData;
         }
 
-        public MyDataHolder(int count, int direction, int type, String data) {
-            this.count = count;
+        public MyDataHolder(int direction, int type, String data) {
             this.setDirection(direction);
             this.setType(type);
             this.data = data;
@@ -213,6 +135,10 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
             this.count = count;
             this.setDirection(direction);
             this.setType(type);
+        }
+
+        public void setCount(int count) {
+            this.count = count;
         }
 
         public int getCount() {

@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
 
+import android.nfc.Tag;
 import android.nfc.TagLostException;
 import android.nfc.tech.IsoDep;
 
@@ -9,25 +10,25 @@ import java.util.Arrays;
 public class IsoDepTransceiver implements Runnable {
 
     public static final String ISO_DEP_MAX_LENGTH = "Iso-Dep-Max-Length: ";
+    public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
+    public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
+    private final Thread thread;
+
+    private Tag tag;
     private IsoDep isoDep;
     private OnMessageReceived onMessageReceived;
 
-    public IsoDepTransceiver(IsoDep isoDep, OnMessageReceived onMessageReceived) {
+    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived) {
+        this.tag = tag;
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
-    }
 
-    private static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
-    private static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+        onMessageReceived.newTag(tag);
 
-    private byte[] createSelectAidApdu(byte[] aid) {
-        byte[] result = new byte[6 + aid.length];
-        System.arraycopy(CLA_INS_P1_P2, 0, result, 0, CLA_INS_P1_P2.length);
-        result[4] = (byte) aid.length;
-        System.arraycopy(aid, 0, result, 5, aid.length);
-        result[result.length - 1] = 0;
-        return result;
+        thread = new Thread(this);
+        thread.setName(IsoDepTransceiver.class.getSimpleName() + "-Thread");
+        thread.start();
     }
 
     @Override
@@ -49,9 +50,24 @@ public class IsoDepTransceiver implements Runnable {
 
             isoDep.close();
         } catch (TagLostException ignore) {
-            onMessageReceived.tagLost();
+            onMessageReceived.tagLost(tag);
         } catch (IOException e) {
             onMessageReceived.onError(e);
+        }
+    }
+
+    private byte[] createSelectAidApdu(byte[] aid) {
+        byte[] result = new byte[6 + aid.length];
+        System.arraycopy(CLA_INS_P1_P2, 0, result, 0, CLA_INS_P1_P2.length);
+        result[4] = (byte) aid.length;
+        System.arraycopy(aid, 0, result, 5, aid.length);
+        result[result.length - 1] = 0;
+        return result;
+    }
+
+    public void stop() {
+        if (!thread.isInterrupted()) {
+            thread.interrupt();
         }
     }
 }

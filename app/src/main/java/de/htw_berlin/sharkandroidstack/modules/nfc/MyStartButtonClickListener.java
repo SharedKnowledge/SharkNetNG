@@ -40,4 +40,10 @@ public class MyStartButtonClickListener implements View.OnClickListener {
             MyStartButtonClickListener.this.onClick(startButton);
         }
     }
+
+    public void forceStart(Button startButton) {
+        while (currentState != RUNNING) {
+            MyStartButtonClickListener.this.onClick(startButton);
+        }
+    }
 };

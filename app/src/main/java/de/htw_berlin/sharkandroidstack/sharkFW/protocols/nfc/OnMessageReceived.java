@@ -8,7 +8,7 @@ public interface OnMessageReceived {
 
     void onError(Exception exception);
 
-    void tagLost();
+    void tagLost(Tag tag);
 
     void newTag(Tag tag);
 }

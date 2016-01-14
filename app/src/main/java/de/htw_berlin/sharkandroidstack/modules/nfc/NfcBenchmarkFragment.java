@@ -34,7 +34,6 @@ public class NfcBenchmarkFragment extends Fragment {
     //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
     //TODO: change MyStartButtonClickListener state on other device + clarify description/button
     //TODO: stats more expressive + final stats
-    //TODO: migrate chat
 
     TextView msgLengthOutput;
     Button startButton;
@@ -46,7 +45,17 @@ public class NfcBenchmarkFragment extends Fragment {
     MyReaderCallback readerCallback;
     MyStartButtonClickListener buttonClickListener;
     MyResultAdapter resultAdapter;
+    OnMessageReceivedImpl onMessageReceivedCallback;
+    OnMessageSendImpl onMessageSendCallback;
 
+    final Runnable updateList = new Runnable() {
+        @Override
+        public void run() {
+            buttonClickListener.forceStart(startButton);
+            resultAdapter.notifyDataSetChanged();
+            resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
+        }
+    };
 
     final CountDownTimer timer = new CountDownTimer(TIMER_END, TICK_INTERVAL) {
 
@@ -66,7 +75,7 @@ public class NfcBenchmarkFragment extends Fragment {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             msgLengthOutput.setText(progress + "");
-            resultAdapter.setMsgLength(progress);
+            onMessageSendCallback.setMsgLength(progress);
         }
 
         @Override
@@ -80,6 +89,7 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
@@ -91,7 +101,10 @@ public class NfcBenchmarkFragment extends Fragment {
         description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
 
         resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
-        resultAdapter = new MyResultAdapter(this.getActivity(), resultList);
+
+        resultAdapter = new MyResultAdapter(getContext());
+        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, getActivity());
+        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList);
         resultList.setAdapter(resultAdapter);
 
         buttonClickListener = new MyStartButtonClickListener(this);
@@ -117,7 +130,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new MyReaderCallback(resultAdapter, resultAdapter);
+            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
         }
         ((NfcMainActivity) getActivity()).prepareReceiving(readerCallback);
     }
@@ -142,7 +155,7 @@ public class NfcBenchmarkFragment extends Fragment {
 
         timer.start();
 
-        ((NfcMainActivity) getActivity()).prepareSending(resultAdapter);
+        ((NfcMainActivity) getActivity()).prepareSending(onMessageSendCallback);
     }
 
     public void setStateToStopped() {
