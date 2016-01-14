@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -20,10 +22,12 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
     private final ArrayList<MyDataHolder> data = new ArrayList<>();
 
     private final LayoutInflater layoutInflater;
+    private final WeakReference<Activity> activityReference;
     private int msgLength;
 
-    public MyResultAdapter(Context context) {
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public MyResultAdapter(Activity activity) {
+        activityReference = new WeakReference<>(activity);
+        layoutInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -67,26 +71,38 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
     public void addTagChanged(String message) {
         int count = data.size() + 1;
         data.add(new MyDataHolder("tag changed / " + count, message));
-        notifyDataSetChanged();
+        notifyForUpdate();
     }
 
     public void addMessageIn(byte[] message) {
         int count = data.size() + 1;
         data.add(new MyDataHolder("incoming / " + count, message));
-        notifyDataSetChanged();
-
+        notifyForUpdate();
     }
 
     public void addMessageOut(byte[] message) {
         int count = data.size() + 1;
         data.add(new MyDataHolder("outgoing / " + count, message));
-        notifyDataSetChanged();
+        notifyForUpdate();
     }
 
     public void addMessageError(String message) {
         int count = data.size() + 1;
         data.add(new MyDataHolder("error / " + count, message));
-        notifyDataSetChanged();
+
+        notifyForUpdate();
+    }
+
+    private void notifyForUpdate() {
+        Activity activity = activityReference.get();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MyResultAdapter.this.notifyDataSetChanged();
+                }
+            });
+        }
     }
 
     @Override
@@ -107,12 +123,9 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
 
     @Override
     public byte[] getNextMessage() {
-        byte[] message = Utils.generateRandomString(getMsgLength()).getBytes();
+        byte[] message = Utils.generateRandomString(msgLength).getBytes();
+        addMessageOut(message);
         return message;
-    }
-
-    public int getMsgLength() {
-        return msgLength;
     }
 
     public void setMsgLength(int msgLength) {
@@ -146,6 +159,10 @@ public class MyResultAdapter extends BaseAdapter implements OnMessageSend, OnMes
         String stats;
         byte[] raw;
         String data;
+        // count
+        // raw / info
+        // direction . in, out
+        // type . error, new tag, tag lost, data
 
         public MyDataHolder(String stats, byte[] raw) {
             this.stats = stats;

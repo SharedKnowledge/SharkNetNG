@@ -35,7 +35,7 @@ public class NfcBenchmarkFragment extends Fragment {
     final SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            msgLengthOutput.setText(progress);
+            msgLengthOutput.setText(progress + "");
             resultAdapter.setMsgLength(progress);
         }
 
