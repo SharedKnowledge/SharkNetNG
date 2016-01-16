@@ -7,26 +7,43 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <Button
-        android:id="@+id/activity_nfc_benchmark_button_start"
+    <RelativeLayout
+        android:id="@+id/activity_nfc_benchmark_header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:paddingBottom="@dimen/padding_horizontal"
-        android:paddingTop="@dimen/padding_horizontal" />
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/activity_nfc_benchmark_button_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingBottom="@dimen/padding_horizontal"
+            android:paddingTop="@dimen/padding_horizontal" />
+
+        <Button
+            android:id="@+id/activity_nfc_benchmark_button_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:text="@string/activity_nfc_benchmark_button_back"
+            android:drawableLeft="@android:drawable/ic_media_previous"
+            android:paddingBottom="@dimen/padding_horizontal"
+            android:paddingTop="@dimen/padding_horizontal" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/activity_nfc_benchmark_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_button_start" />
+        android:layout_below="@id/activity_nfc_benchmark_header" />
 
     <ProgressBar
         android:id="@+id/activity_nfc_benchmark_progress"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_button_start"
+        android:layout_below="@id/activity_nfc_benchmark_header"
         android:max="30"
         android:progress="1" />
 
