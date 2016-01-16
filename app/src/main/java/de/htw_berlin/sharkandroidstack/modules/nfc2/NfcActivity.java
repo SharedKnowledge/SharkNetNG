@@ -14,11 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.OnMessageSendImpl;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
 public class NfcActivity extends ParentActivity {
@@ -88,19 +87,7 @@ public class NfcActivity extends ParentActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareSending(EditText input, NfcAdapter nfcAdapter) {
-        SmartCardEmulationService.setSource(new OnMessageSend() {
-            @Override
-            public byte[] getNextMessage() {
-                byte[] message = Utils.generateRandomString(512).getBytes();
-                System.out.println("mario: send " + new String(message));
-                return message;
-            }
-
-            @Override
-            public void onDeactivated(int reason) {
-                System.out.println("mario: deactivated " + reason);
-            }
-        });
+        SmartCardEmulationService.setSource(new OnMessageSendImpl(null, null, null));
         nfcAdapter.disableReaderMode(this);
     }
 
@@ -115,7 +102,6 @@ public class NfcActivity extends ParentActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareReceiving(final TextView output, NfcAdapter nfcAdapter) {
-        // http://stackoverflow.com/questions/27939030/alternative-way-for-enablereadermode-to-work-with-android-apis-lesser-than-19
         final OnMessageReceived onMessageReceived = new OnMessageReceived() {
             @Override
             public void onMessage(final byte[] message) {
