@@ -8,9 +8,11 @@ import android.os.Build;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.OnMessageReceived;
-import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.SmartCardEmulationService;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class HceActivity extends NfcActivity {
@@ -19,7 +21,19 @@ public class HceActivity extends NfcActivity {
 
     @Override
     void prepareSending(EditText input, NfcAdapter nfcAdapter) {
-        SmartCardEmulationService.setInput(input);
+        SmartCardEmulationService.setSource(new OnMessageSend() {
+            @Override
+            public byte[] getNextMessage() {
+                byte[] message = Utils.generateRandomString(512).getBytes();
+                System.out.println("mario: send " + new String(message));
+                return message;
+            }
+
+            @Override
+            public void onDeactivated(int reason) {
+                System.out.println("mario: deactivated " + reason);
+            }
+        });
         nfcAdapter.disableReaderMode(this);
     }
 

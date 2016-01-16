@@ -6,6 +6,8 @@ import android.nfc.tech.IsoDep;
 import java.io.IOException;
 import java.util.Arrays;
 
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
+
 public class IsoDepTransceiver implements Runnable {
 
     public static final String ISO_DEP_MAX_LENGTH = "Iso-Dep-Max-Length: ";
@@ -36,7 +38,7 @@ public class IsoDepTransceiver implements Runnable {
             isoDep.connect();
             final byte[] selectAidApdu = createSelectAidApdu(AID_ANDROID);
             byte[] response = isoDep.transceive(selectAidApdu);
-            if (!Arrays.equals(response, SmartCardEmulationService.WELCOME_MESSAGE)) {
+            if (!Arrays.equals(response, SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE)) {
                 return;
             }
 
