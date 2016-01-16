@@ -26,6 +26,9 @@ public class NfcBenchmarkFragment extends Fragment {
 
     public static final int DEFAULT_MESSAGE_LENGTH = 512;
 
+    // TODO: progress only after first sent, run until timelimit after first connection made
+    // TODO: on received: show progress with stats afterwards + reset on new receiving data
+
     //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
     //TODO: change MyStartButtonClickListener state on other device + clarify description/button
     //TODO: stats more expressive + final stats
