@@ -6,6 +6,7 @@ import android.nfc.tech.IsoDep;
 import java.io.IOException;
 import java.util.Arrays;
 
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
 public class IsoDepTransceiver implements Runnable {

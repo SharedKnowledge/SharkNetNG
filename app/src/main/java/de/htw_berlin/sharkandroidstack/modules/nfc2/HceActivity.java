@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.IsoDepTransceiver;
-import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.OnMessageReceived;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
@@ -65,6 +65,16 @@ public class HceActivity extends NfcActivity {
             public void onError(Exception exception) {
                 exception.printStackTrace();
                 onMessage(("Finished with error: " + exception.getMessage()).getBytes());
+            }
+
+            @Override
+            public void tagLost(Tag tag) {
+                System.out.println("mario: tag lost");
+            }
+
+            @Override
+            public void newTag(Tag tag) {
+                System.out.println("mario: new tag");
             }
         };
 
