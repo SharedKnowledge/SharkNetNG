@@ -54,6 +54,10 @@ public class NfcMainActivity extends ParentActivity {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         checkNfcSupport();
+
+        //TODO: for testing
+        clearView();
+        setFragment(new NfcBenchmarkFragment());
     }
 
     @Override
