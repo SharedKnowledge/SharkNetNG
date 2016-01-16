@@ -1,11 +1,14 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.annotation.TargetApi;
-import android.nfc.NfcAdapter;
+import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Html;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -13,9 +16,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
 import static android.R.drawable.ic_media_pause;
 import static android.R.drawable.ic_media_play;
@@ -24,71 +24,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NfcBenchmarkFragment extends ParentActivity {
-
-    public static NfcAdapter nfcAdapter;
-
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setLayoutResource(R.layout.module_nfc_benchmark_fragment);
-        //  setOptionsMenu(R.menu.module_nfc_menu);
-
-        NfcBenchmarkFragment root = this;
-
-        msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
-        progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
-
-        description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
-        description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
-
-        resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
-
-        resultAdapter = new MyResultAdapter(this);
-        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, this);
-        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList, this);
-        resultList.setAdapter(resultAdapter);
-
-        buttonClickListener = new MyStartButtonClickListener(this);
-        startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
-        startButton.setOnClickListener(buttonClickListener);
-
-        msgLengthInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_msg_length_input);
-        msgLengthInput.setOnSeekBarChangeListener(seekBarChangeListener);
-        msgLengthInput.setProgress(DEFAULT_MESSAGE_LENGTH);
-
-        setStateToReset();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (readerCallback == null) {
-            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
-        }
-        prepareReceiving(readerCallback);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (nfcAdapter != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            nfcAdapter.disableReaderMode(this);
-        }
-    }
-
-    void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
-        final int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
-        nfcAdapter.enableReaderMode(this, readerCallback, flags, null);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareSending(OnMessageSend src) {
-        SmartCardEmulationService.setSource(src);
-        nfcAdapter.disableReaderMode(this);
-    }
+public class NfcBenchmarkFragment extends Fragment {
 
     public static final int TIMER_END = 30000;
     public static final int TICK_INTERVAL = 1000;
@@ -154,57 +90,57 @@ public class NfcBenchmarkFragment extends ParentActivity {
     };
 
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
-//
-//        msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
-//        progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
-//
-//        description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
-//        description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
-//
-//        resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
-//
-//        resultAdapter = new MyResultAdapter(getActivity());
-//        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, getActivity());
-//        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList, getActivity());
-//        resultList.setAdapter(resultAdapter);
-//
-//        buttonClickListener = new MyStartButtonClickListener(this);
-//        startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
-//        startButton.setOnClickListener(buttonClickListener);
-//
-//        msgLengthInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_msg_length_input);
-//        msgLengthInput.setOnSeekBarChangeListener(seekBarChangeListener);
-//        msgLengthInput.setProgress(DEFAULT_MESSAGE_LENGTH);
-//
-//        setStateToReset();
-//
-//        return root;
-//    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
 
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        if (readerCallback == null) {
-//            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
-//        }
-//        ((NfcMainActivity) getActivity()).prepareReceiving(readerCallback);
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//    }
+        msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
+        progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
 
-    public void setStateToRunning() {
+        description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
+        description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
+
+        resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
+
+        resultAdapter = new MyResultAdapter(getActivity());
+        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, getActivity());
+        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList, getActivity());
+        resultList.setAdapter(resultAdapter);
+
+        buttonClickListener = new MyStartButtonClickListener(this);
+        startButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
+        startButton.setOnClickListener(buttonClickListener);
+
+        msgLengthInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_msg_length_input);
+        msgLengthInput.setOnSeekBarChangeListener(seekBarChangeListener);
+        msgLengthInput.setProgress(DEFAULT_MESSAGE_LENGTH);
+
+        setStateToReset();
+
+        return root;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (readerCallback == null) {
+            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
+        }
+        ((NfcMainActivity) getActivity()).prepareReceiving(readerCallback);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    public void setStateToRunning(boolean sending) {
         startButton.setText(R.string.activity_nfc_benchmark_stop);
         startButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
 
@@ -219,7 +155,9 @@ public class NfcBenchmarkFragment extends ParentActivity {
 
         timer.start();
 
-        this.prepareSending(onMessageSendCallback);
+        if (sending) {
+            ((NfcMainActivity) getActivity()).prepareSending(onMessageSendCallback);
+        }
     }
 
     public void setStateToStopped() {

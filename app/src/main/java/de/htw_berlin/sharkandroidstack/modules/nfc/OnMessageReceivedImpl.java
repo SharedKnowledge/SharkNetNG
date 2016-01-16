@@ -22,6 +22,7 @@ public class OnMessageReceivedImpl implements OnMessageReceived {
 
     @Override
     public void onMessage(byte[] message) {
+        System.out.println("Mario: " + new String(message));
         adapter.add(new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message));
         update();
     }

@@ -21,7 +21,7 @@ public class MyStartButtonClickListener implements View.OnClickListener {
     public void onClick(View v) {
         switch (currentState) {
             case STATE_RESET:
-                nfcBenchmarkFragment.setStateToRunning();
+                nfcBenchmarkFragment.setStateToRunning(true);
                 currentState = RUNNING;
                 return;
             case RUNNING:
@@ -42,8 +42,10 @@ public class MyStartButtonClickListener implements View.OnClickListener {
     }
 
     public void forceStart(Button startButton) {
-        while (currentState != RUNNING) {
-            MyStartButtonClickListener.this.onClick(startButton);
-        }
+        nfcBenchmarkFragment.setStateToRunning(false);
+        currentState = RUNNING;
+//        while (currentState != RUNNING) {
+//            MyStartButtonClickListener.this.onClick(startButton);
+//        }
     }
 };
