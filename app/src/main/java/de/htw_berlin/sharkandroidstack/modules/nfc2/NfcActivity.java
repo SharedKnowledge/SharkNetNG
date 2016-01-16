@@ -1,6 +1,5 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc2;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
@@ -11,8 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 
-public abstract class NfcActivity extends Activity {
+public abstract class NfcActivity extends ParentActivity {
 
     private final View.OnClickListener exitOnClickListener = new View.OnClickListener() {
         @Override
