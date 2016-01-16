@@ -10,23 +10,6 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/exitButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:drawable/dialog_holo_light_frame"
-            android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
-            android:text="exit"
-            android:textColor="@android:color/holo_red_dark" />
-
-        <TextView
-            android:id="@+id/modeTextView"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:gravity="center"
-            android:layout_height="wrap_content" />
-
-        <Button
             android:id="@+id/sendButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,25 +27,11 @@
         android:layout_below="@+id/buttons"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Send:" />
-
-        <EditText
-            android:id="@+id/inputTextView"
+        <ListView
+            android:id="@+id/activity_nfc_benchmark_results"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="top"
-            android:isScrollContainer="false"
-            android:padding="5dp"
-            android:scrollbars="vertical" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Received:" />
+            android:layout_weight="1" />
 
         <ScrollView
             android:layout_width="fill_parent"

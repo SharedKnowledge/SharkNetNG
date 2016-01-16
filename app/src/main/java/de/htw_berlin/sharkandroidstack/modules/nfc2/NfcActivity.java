@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,15 +39,13 @@ public class NfcActivity extends ParentActivity {
                 Button button = (Button) view;
                 button.setTextColor(Color.DKGRAY);
                 button.setText(button.getText() + "...");
-                prepareSending(input, nfcAdapter);
+                prepareSending(nfcAdapter);
             }
         }
     };
 
-    private EditText input;
     private TextView output;
 
-    private Button exitButton;
     private Button sendButton;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +57,8 @@ public class NfcActivity extends ParentActivity {
     public void onResume() {
         super.onResume();
 
-        if (input == null || output == null) {
-            input = (EditText) findViewById(R.id.inputTextView);
+        if (output == null) {
             output = (TextView) findViewById(R.id.outputTextView);
-        }
-
-        if (exitButton == null) {
-            exitButton = (Button) findViewById(R.id.exitButton);
-            exitButton.setOnClickListener(exitOnClickListener);
         }
 
         if (sendButton == null) {
@@ -86,7 +77,7 @@ public class NfcActivity extends ParentActivity {
     StringBuilder outputStringBuilder = new StringBuilder();
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareSending(EditText input, NfcAdapter nfcAdapter) {
+    void prepareSending(NfcAdapter nfcAdapter) {
         SmartCardEmulationService.setSource(new OnMessageSendImpl(null, null, null));
         nfcAdapter.disableReaderMode(this);
     }
