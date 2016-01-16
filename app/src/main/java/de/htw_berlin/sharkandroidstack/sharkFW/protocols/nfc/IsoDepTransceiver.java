@@ -13,22 +13,22 @@ public class IsoDepTransceiver implements Runnable {
     public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
     public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
-    private final Thread thread;
+//    private final Thread thread;
 
-    private Tag tag;
+    //  private Tag tag;
     private IsoDep isoDep;
     private OnMessageReceived onMessageReceived;
 
     public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived) {
-        this.tag = tag;
+        // this.tag = tag;
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
 
         onMessageReceived.newTag(tag);
 
-        thread = new Thread(this);
-        thread.setName(IsoDepTransceiver.class.getSimpleName() + "-Thread");
-        thread.start();
+//        thread = new Thread(this);
+//        thread.setName(IsoDepTransceiver.class.getSimpleName() + "-Thread");
+//        thread.start();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class IsoDepTransceiver implements Runnable {
 
             isoDep.close();
         } catch (TagLostException ignore) {
-            onMessageReceived.tagLost(tag);
+            onMessageReceived.tagLost(null);
         } catch (IOException e) {
             onMessageReceived.onError(e);
         }
@@ -66,8 +66,8 @@ public class IsoDepTransceiver implements Runnable {
     }
 
     public void stop() {
-        if (!thread.isInterrupted()) {
-            thread.interrupt();
-        }
+//        if (!thread.isInterrupted()) {
+//            thread.interrupt();
+//        }
     }
 }

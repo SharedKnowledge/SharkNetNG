@@ -20,14 +20,18 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
 
     @Override
     public void onTagDiscovered(Tag tag) {
+        System.out.println("mario new tag");
         IsoDep isoDep = IsoDep.get(tag);
         if (isoDep == null) {
             return;
         }
 
-        if (transceiver != null) {
-            transceiver.stop();
-        }
-        transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
+//        if (transceiver != null) {
+//            transceiver.stop();
+//        }
+//        transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
+        IsoDepTransceiver transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
+        Thread thread = new Thread(transceiver);
+        thread.start();
     }
 };

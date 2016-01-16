@@ -127,7 +127,7 @@ public class NfcMainActivity extends ParentActivity {
                 break;
             case R.id.nfc_menu_item_benchmark:
                 clearView();
-                setFragment(new NfcBenchmarkFragment());
+                //setFragment(new NfcBenchmarkFragment());
                 break;
         }
 
