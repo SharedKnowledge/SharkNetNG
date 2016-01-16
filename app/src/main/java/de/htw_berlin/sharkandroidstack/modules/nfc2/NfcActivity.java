@@ -3,15 +3,11 @@ package de.htw_berlin.sharkandroidstack.modules.nfc2;
 import android.annotation.TargetApi;
 import android.graphics.Color;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.nfc.tech.IsoDep;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
@@ -19,8 +15,6 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.MyReaderCallback;
 import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter;
 import de.htw_berlin.sharkandroidstack.modules.nfc.OnMessageReceivedImpl;
 import de.htw_berlin.sharkandroidstack.modules.nfc.OnMessageSendImpl;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 
 public class NfcActivity extends ParentActivity {
@@ -29,26 +23,20 @@ public class NfcActivity extends ParentActivity {
         @Override
         public void onClick(View view) {
             NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(NfcActivity.this);
-            if (nfcAdapter == null) {
-                Toast.makeText(NfcActivity.this, "Send preparation failed", Toast.LENGTH_LONG).show();
-            } else {
-                view.setEnabled(false);
-                Button button = (Button) view;
-                button.setTextColor(Color.DKGRAY);
-                button.setText(button.getText() + "...");
-                prepareSending(nfcAdapter);
-            }
+            view.setEnabled(false);
+            Button button = (Button) view;
+            button.setTextColor(Color.DKGRAY);
+            button.setText(button.getText() + "...");
+            prepareSending(nfcAdapter);
         }
     };
 
-    private TextView output;
     private Button sendButton;
     private ListView resultList;
     private MyResultAdapter resultAdapter;
     private OnMessageReceivedImpl onMessageReceivedCallback;
     private OnMessageSendImpl onMessageSendCallback;
     private MyReaderCallback readerCallback;
-    StringBuilder outputStringBuilder = new StringBuilder();
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +64,6 @@ public class NfcActivity extends ParentActivity {
     public void onResume() {
         super.onResume();
 
-        if (output == null) {
-            output = (TextView) findViewById(R.id.outputTextView);
-        }
-
         if (sendButton == null) {
             sendButton = (Button) findViewById(R.id.activity_nfc_benchmark_button_start);
             sendButton.setOnClickListener(sendOnClickListener);
@@ -90,7 +74,7 @@ public class NfcActivity extends ParentActivity {
         }
 
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        prepareReceiving(output, nfcAdapter, readerCallback);
+        prepareReceiving(nfcAdapter, readerCallback);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
@@ -109,57 +93,7 @@ public class NfcActivity extends ParentActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareReceiving(final TextView output, NfcAdapter nfcAdapter, MyReaderCallback readerCallback) {
-        final OnMessageReceived onMessageReceived = new OnMessageReceived() {
-            @Override
-            public void onMessage(final byte[] message) {
-                System.out.println("mario: in " + new String(message));
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        outputStringBuilder.append(new String(message));
-                        output.setText(outputStringBuilder.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                exception.printStackTrace();
-                onMessage(("Finished with error: " + exception.getMessage()).getBytes());
-            }
-
-            @Override
-            public void tagLost(Tag tag) {
-                System.out.println("mario: tag lost");
-            }
-
-            @Override
-            public void newTag(Tag tag) {
-                System.out.println("mario: new tag");
-            }
-        };
-
-        final NfcAdapter.ReaderCallback readerCallback2 = new NfcAdapter.ReaderCallback() {
-            @Override
-            public void onTagDiscovered(Tag tag) {
-                System.out.println("mario new tag");
-                IsoDep isoDep = IsoDep.get(tag);
-                if (isoDep == null) {
-                    return;
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        outputStringBuilder = new StringBuilder();
-                        output.setText(outputStringBuilder.toString());
-                    }
-                });
-
-                new IsoDepTransceiver(tag, isoDep, onMessageReceived);
-            }
-        };
+    void prepareReceiving(NfcAdapter nfcAdapter, MyReaderCallback readerCallback) {
 
         final int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK;
         nfcAdapter.enableReaderMode(this, readerCallback, flags, null);
