@@ -10,7 +10,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/sendButton"
+            android:id="@+id/activity_nfc_benchmark_button_start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

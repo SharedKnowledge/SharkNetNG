@@ -21,13 +21,6 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationS
 
 public class NfcActivity extends ParentActivity {
 
-    private final View.OnClickListener exitOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            finish();
-        }
-    };
-
     private final View.OnClickListener sendOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -45,7 +38,6 @@ public class NfcActivity extends ParentActivity {
     };
 
     private TextView output;
-
     private Button sendButton;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +54,7 @@ public class NfcActivity extends ParentActivity {
         }
 
         if (sendButton == null) {
-            sendButton = (Button) findViewById(R.id.sendButton);
+            sendButton = (Button) findViewById(R.id.activity_nfc_benchmark_button_start);
             sendButton.setOnClickListener(sendOnClickListener);
         }
 
@@ -140,9 +132,7 @@ public class NfcActivity extends ParentActivity {
                     }
                 });
 
-                IsoDepTransceiver transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
-                Thread thread = new Thread(transceiver);
-                thread.start();
+                new IsoDepTransceiver(tag, isoDep, onMessageReceived);
             }
         };
 
