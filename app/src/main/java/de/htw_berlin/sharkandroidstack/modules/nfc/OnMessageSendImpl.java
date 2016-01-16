@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.nfc.cardemulation.HostApduService;
 
 import de.htw_berlin.sharkandroidstack.Utils;
+import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
-public class OnMessageSendImpl implements OnMessageSend {
-    //    private MyResultAdapter adapter;
-//    private Runnable updater;
-//    private WeakReference<Activity> activity;
+public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {
+
     private int msgLength;
 
     public OnMessageSendImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
-//        this.adapter = adapter;
-//        this.updater = updater;
-//        this.activity = new WeakReference<>(activity);
+        super(adapter, activity, updater);
     }
 
     public void setMsgLength(int msgLength) {
@@ -24,11 +21,10 @@ public class OnMessageSendImpl implements OnMessageSend {
 
     @Override
     public byte[] getNextMessage() {
-        msgLength = 512;
         byte[] message = Utils.generateRandomString(msgLength).getBytes();
-        System.out.println("mario send:" + new String(message));
-//        adapter.add(new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message));
-//        update();
+
+        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message);
+        update(dataHolder);
         return message;
     }
 
@@ -43,15 +39,9 @@ public class OnMessageSendImpl implements OnMessageSend {
                 r = "link loss";
                 break;
         }
-        System.out.println("mario done:" + r);
 
-//        adapter.add(new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_LOST_TAG, r));
-//        update();
-
+        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_LOST_TAG, r);
+        update(dataHolder);
     }
-
-//    private void update() {
-//        activity.get().runOnUiThread(updater);
-//    }
 }
 

@@ -45,6 +45,7 @@ class NfcBenchmarkState {
         }
         currentState = STATE_RESET;
 
+        fragment.startSendingButton.setVisibility(VISIBLE);
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_start);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_play, 0);
 
