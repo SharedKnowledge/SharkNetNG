@@ -31,7 +31,7 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
 //        }
 //        transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
         IsoDepTransceiver transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
-        Thread thread = new Thread(transceiver);
-        thread.start();
+//        Thread thread = new Thread(transceiver);
+//        thread.start();
     }
 };

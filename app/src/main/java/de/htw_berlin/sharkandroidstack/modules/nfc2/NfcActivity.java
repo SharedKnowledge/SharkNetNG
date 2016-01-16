@@ -9,11 +9,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.MyReaderCallback;
+import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter;
+import de.htw_berlin.sharkandroidstack.modules.nfc.OnMessageReceivedImpl;
 import de.htw_berlin.sharkandroidstack.modules.nfc.OnMessageSendImpl;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
@@ -39,11 +43,34 @@ public class NfcActivity extends ParentActivity {
 
     private TextView output;
     private Button sendButton;
+    private ListView resultList;
+    private MyResultAdapter resultAdapter;
+    private OnMessageReceivedImpl onMessageReceivedCallback;
+    private OnMessageSendImpl onMessageSendCallback;
+    private MyReaderCallback readerCallback;
+    StringBuilder outputStringBuilder = new StringBuilder();
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.nfc2_main);
+
+        resultList = (ListView) findViewById(R.id.activity_nfc_benchmark_results);
+
+        resultAdapter = new MyResultAdapter(this);
+        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateList, this);
+        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateList, this);
+        resultList.setAdapter(resultAdapter);
     }
+
+    final Runnable updateList = new Runnable() {
+        @Override
+        public void run() {
+//            buttonClickListener.forceStart(startButton);
+            resultAdapter.notifyDataSetChanged();
+            resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
+        }
+    };
 
     @Override
     public void onResume() {
@@ -58,15 +85,13 @@ public class NfcActivity extends ParentActivity {
             sendButton.setOnClickListener(sendOnClickListener);
         }
 
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        if (nfcAdapter == null) {
-            Toast.makeText(NfcActivity.this, "Receive preparation failed", Toast.LENGTH_LONG).show();
-        } else {
-            prepareReceiving(output, nfcAdapter);
+        if (readerCallback == null) {
+            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
         }
-    }
 
-    StringBuilder outputStringBuilder = new StringBuilder();
+        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        prepareReceiving(output, nfcAdapter, readerCallback);
+    }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareSending(NfcAdapter nfcAdapter) {
@@ -84,7 +109,7 @@ public class NfcActivity extends ParentActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareReceiving(final TextView output, NfcAdapter nfcAdapter) {
+    void prepareReceiving(final TextView output, NfcAdapter nfcAdapter, MyReaderCallback readerCallback) {
         final OnMessageReceived onMessageReceived = new OnMessageReceived() {
             @Override
             public void onMessage(final byte[] message) {
@@ -115,7 +140,7 @@ public class NfcActivity extends ParentActivity {
             }
         };
 
-        final NfcAdapter.ReaderCallback readerCallback = new NfcAdapter.ReaderCallback() {
+        final NfcAdapter.ReaderCallback readerCallback2 = new NfcAdapter.ReaderCallback() {
             @Override
             public void onTagDiscovered(Tag tag) {
                 System.out.println("mario new tag");
