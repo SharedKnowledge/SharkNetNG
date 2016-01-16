@@ -79,7 +79,7 @@ public class NfcActivity extends ParentActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareSending(NfcAdapter nfcAdapter) {
-        SmartCardEmulationService.setSource(new OnMessageSendImpl(null, null, null));
+        SmartCardEmulationService.setSource(onMessageSendCallback);
         nfcAdapter.disableReaderMode(this);
     }
 
