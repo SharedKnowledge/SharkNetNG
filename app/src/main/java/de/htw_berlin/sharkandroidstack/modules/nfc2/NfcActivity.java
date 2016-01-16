@@ -16,7 +16,7 @@ import android.widget.Toast;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.Utils;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.modules.nfc2.hce.IsoDepTransceiver;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
@@ -163,7 +163,7 @@ public class NfcActivity extends ParentActivity {
                     }
                 });
 
-                IsoDepTransceiver transceiver = new IsoDepTransceiver(isoDep, onMessageReceived);
+                IsoDepTransceiver transceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
                 Thread thread = new Thread(transceiver);
                 thread.start();
             }
