@@ -73,6 +73,7 @@ public class NfcBenchmarkFragment extends Fragment {
     final Runnable updateListSending = new Runnable() {
         @Override
         public void run() {
+            benchmarkState.sendState();
             resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
         }
     };

@@ -10,8 +10,9 @@ import static android.view.View.VISIBLE;
 
 class NfcBenchmarkState {
     final int STATE_RESET = 1;
-    final int STATE_RUNNING = 2;
-    final int STATE_STOPPED = 3;
+    final int STATE_PREPARED = 2;
+    final int STATE_RUNNING = 3;
+    final int STATE_STOPPED = 4;
 
     final int STATE_RECEIVING = 4;
 
@@ -28,10 +29,13 @@ class NfcBenchmarkState {
     public void nextStateForSending() {
         switch (currentState) {
             case STATE_RESET:
-                sendState();
+                preparedState();
                 return;
             case STATE_RUNNING:
                 stoppedState();
+                return;
+            case STATE_PREPARED:
+                resetState();
                 return;
             case STATE_STOPPED:
                 resetState();
@@ -63,7 +67,19 @@ class NfcBenchmarkState {
         activity.prepareReceiving(fragment.readerCallback);
     }
 
-    private void sendState() {
+    void preparedState() {
+        if (STATE_PREPARED == currentState) {
+            return;
+        }
+        currentState = STATE_PREPARED;
+
+
+        fragment.startSendingButton.setText("ready");
+
+        activity.prepareSending(fragment.onMessageSendCallback);
+    }
+
+    void sendState() {
         if (STATE_RUNNING == currentState) {
             return;
         }
@@ -82,8 +98,6 @@ class NfcBenchmarkState {
         fragment.resultList.setVisibility(VISIBLE);
 
         fragment.timer.start();
-
-        activity.prepareSending(fragment.onMessageSendCallback);
     }
 
     void stoppedState() {
