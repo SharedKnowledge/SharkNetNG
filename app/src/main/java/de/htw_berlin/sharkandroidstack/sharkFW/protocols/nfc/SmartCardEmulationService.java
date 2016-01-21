@@ -24,7 +24,7 @@ public class SmartCardEmulationService extends HostApduService {
     @Override
     public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
         if (src == null) {
-            throw new IllegalStateException("Source of input is not set");
+            return null;
         }
 
         if (selectAidApdu(apdu)) {
