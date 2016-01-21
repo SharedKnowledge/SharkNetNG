@@ -7,6 +7,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 
 public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageReceived {
+
     public OnMessageReceivedImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
         super(adapter, activity, updater);
     }
@@ -14,7 +15,9 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     @Override
     public void onMessage(byte[] message) {
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message);
-        countData(message);
+        if (message != null) {
+            count += message.length;
+        }
         update(dataHolder);
     }
 
@@ -34,6 +37,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
 
     @Override
     public void newTag(Tag tag) {
+        tagCount++;
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_NEW_TAG, tag.toString());
         update(dataHolder);
     }

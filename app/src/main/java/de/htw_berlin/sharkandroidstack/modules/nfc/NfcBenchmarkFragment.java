@@ -233,6 +233,13 @@ public class NfcBenchmarkFragment extends Fragment {
         String msg = "Payload received: " + onMessageReceivedCallback.readAndResetCount() + " Bytes\n";
         msg += "Payload sent: " + onMessageSendCallback.readAndResetCount() + " Bytes\n";
 
+        int max = Math.max(onMessageReceivedCallback.resetTagCount(), onMessageSendCallback.resetTagCount());
+        msg += "Tags detected: " + max + "\n";
+
+        if (View.VISIBLE == progressBar.getVisibility()) {
+            msg += "Time elapsed: " + progressBar.getProgress() + " seconds\n";
+        }
+
         final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_RESULT, msg);
         resultAdapter.add(dataHolder);
         resultAdapter.notifyDataSetChanged();

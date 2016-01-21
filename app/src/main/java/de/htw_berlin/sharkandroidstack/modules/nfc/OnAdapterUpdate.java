@@ -8,7 +8,8 @@ public class OnAdapterUpdate {
     private final Runnable updater;
     private final WeakReference<Activity> activity;
     private final MyResultAdapter adapter;
-    private long count;
+    protected long count;
+    protected int tagCount;
 
     public OnAdapterUpdate(MyResultAdapter adapter, Activity activity, Runnable updater) {
         this.adapter = adapter;
@@ -30,16 +31,15 @@ public class OnAdapterUpdate {
         });
     }
 
-    protected void countData(final byte[] rawData) {
-        if (rawData != null) {
-            count += rawData.length;
-            System.out.println(count + " incremented by " + rawData.length);
-        }
-    }
-
     public long readAndResetCount() {
         long countTmp = count;
         count = 0;
         return countTmp;
+    }
+
+    public int resetTagCount() {
+        int tmp = tagCount;
+        tagCount = 0;
+        return tmp;
     }
 }
