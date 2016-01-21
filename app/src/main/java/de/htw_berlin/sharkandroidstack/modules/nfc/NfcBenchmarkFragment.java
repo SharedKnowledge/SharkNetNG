@@ -27,9 +27,11 @@ import static de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyData
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
     public static final int TICK_INTERVAL = 1000;
-    public static final int DEFAULT_MESSAGE_LENGTH = 512;
     public static final int DEFAULT_DURATION_IN_SEC = 30;
     public static final int TIMEOUT_RECEIVING_ADD_RESULT = 2000;
+    public static final int MSG_LENGTH_SCALE_FACTOR = 8;
+    public static final int DEFAULT_MESSAGE_LENGTH = 1024 / MSG_LENGTH_SCALE_FACTOR;
+
 
     // TODO: on received: show progress with stats afterwards + reset on new receiving data
 
@@ -103,6 +105,7 @@ public class NfcBenchmarkFragment extends Fragment {
     final SeekBar.OnSeekBarChangeListener msgLengthChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            progress *= MSG_LENGTH_SCALE_FACTOR;
             msgLengthOutput.setText(progress + "");
             onMessageSendCallback.setMsgLength(progress);
         }
