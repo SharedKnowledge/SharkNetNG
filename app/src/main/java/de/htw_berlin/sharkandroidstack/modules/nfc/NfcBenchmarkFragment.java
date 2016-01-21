@@ -16,7 +16,11 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 import static de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
 
@@ -221,28 +225,45 @@ public class NfcBenchmarkFragment extends Fragment {
             }
 
             public void onFinish() {
+                addResult();
                 progressBar.setProgress(durationInSec);
                 progressDescription.setText(0 + "");
                 benchmarkState.stoppedState();
-                addResult();
             }
         };
     }
 
     public void addResult() {
-        String msg = "Payload received: " + onMessageReceivedCallback.readAndResetCount() + " Bytes\n";
-        msg += "Payload sent: " + onMessageSendCallback.readAndResetCount() + " Bytes\n";
+        final long fixedTimeoutTimer = onMessageReceivedCallback.readAndResetTimer() - TIMEOUT_RECEIVING_ADD_RESULT;
+        long measuredTime = Math.min(onMessageSendCallback.readAndResetTimer(), fixedTimeoutTimer);
 
-        int max = Math.max(onMessageReceivedCallback.resetTagCount(), onMessageSendCallback.resetTagCount());
-        msg += "Tags detected: " + max + "\n";
+        final long byteCount1 = onMessageReceivedCallback.readAndResetCount();
+        long byteCount2 = onMessageSendCallback.readAndResetCount();
+        long byteCount = Math.max(byteCount1, byteCount2);
 
+        final BigDecimal asSeconds = BigDecimal.valueOf(measuredTime).setScale(4).divide(BigDecimal.valueOf(1000), RoundingMode.HALF_DOWN);
+        final BigDecimal bytePerSecond = BigDecimal.valueOf(byteCount).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
+        final BigDecimal bitsPerSecond = BigDecimal.valueOf(byteCount * 8).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
+
+        final int tagCount2 = onMessageSendCallback.readAndResetTagCount();
+        final int tagCount = Math.max(onMessageReceivedCallback.readAndResetTagCount(), tagCount2);
+
+        String msg = "Payload received: " + byteCount1 + " Bytes\n";
+        msg += "Payload sent: " + byteCount2 + " Bytes\n";
+        msg += "Tags detected: " + tagCount + "\n";
         if (View.VISIBLE == progressBar.getVisibility()) {
             msg += "Time elapsed: " + progressBar.getProgress() + " seconds\n";
         }
+        msg += "Time measured*: " + asSeconds + " seconds\n";
+        msg += "Throughput: " + bytePerSecond + " byte/s, " + bitsPerSecond + " bit/s, \n";
 
-        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_RESULT, msg);
+        msg += "\n* Time is started on first message sent/tag discovered, stopped with system overhead on result collecting.";
+
+        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg);
         resultAdapter.add(dataHolder);
         resultAdapter.notifyDataSetChanged();
         resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
+
+        LogManager.addEntry(NfcMainActivity.LOG_ID, msg, 2);
     }
 }

@@ -22,7 +22,10 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
     @Override
     public byte[] getNextMessage() {
         byte[] message = Utils.generateRandomString(msgLength).getBytes();
+
+        startTimer();
         count += message.length;
+
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message);
         update(dataHolder);
         return message;

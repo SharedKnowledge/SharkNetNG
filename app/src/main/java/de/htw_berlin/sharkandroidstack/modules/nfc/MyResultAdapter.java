@@ -91,7 +91,16 @@ public class MyResultAdapter extends BaseAdapter {
         }
 
         public void update(MyDataHolder data) {
-            String direction = data.getDirection() > 0 ? "incoming" : "outgoing";
+            String direction = "log";
+            switch (data.getDirection()) {
+                case MyDataHolder.DIRECTION_IN:
+                    direction = "incoming";
+                    break;
+                case MyDataHolder.DIRECTION_OUT:
+                    direction = "outgoing";
+                    break;
+            }
+
             String type = "Error";
             switch (data.getType()) {
                 case MyDataHolder.TYPE_DATA:
@@ -131,6 +140,7 @@ public class MyResultAdapter extends BaseAdapter {
         public static final int TYPE_DATA = 4;
 
         public static final int DIRECTION_IN = 1;
+        public static final int DIRECTION_NONE = 0;
         public static final int DIRECTION_OUT = -1;
 
         private int count;
@@ -164,7 +174,7 @@ public class MyResultAdapter extends BaseAdapter {
         }
 
         private void setDirection(int direction) {
-            if (direction != DIRECTION_IN && direction != DIRECTION_OUT) {
+            if (direction != DIRECTION_IN && direction != DIRECTION_OUT && direction != DIRECTION_NONE) {
                 throw new IllegalArgumentException("Invalid direction value: " + direction);
             }
             this.direction = direction;

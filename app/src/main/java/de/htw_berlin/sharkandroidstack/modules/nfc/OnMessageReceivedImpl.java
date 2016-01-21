@@ -37,6 +37,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
 
     @Override
     public void newTag(Tag tag) {
+        startTimer();
         tagCount++;
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_NEW_TAG, tag.toString());
         update(dataHolder);
