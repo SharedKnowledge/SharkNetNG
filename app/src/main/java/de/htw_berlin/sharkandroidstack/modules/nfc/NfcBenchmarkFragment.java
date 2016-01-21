@@ -32,6 +32,22 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final int MSG_LENGTH_SCALE_FACTOR = 8;
     public static final int DEFAULT_MESSAGE_LENGTH = 1024 / MSG_LENGTH_SCALE_FACTOR;
 
+    public static final String MSG_PAYLOAD_RECEIVED = "Payload received: ";
+    public static final String MSG_PAYLOAD_SENT = "Payload sent: ";
+    public static final String MSG_TIME_ELAPSED = "Time elapsed: ";
+    public static final String MSG_TIME_MEASURED = "Time measured*: ";
+    public static final String MSG_THROUGHPUT = "Throughput: ";
+    public static final String MSG_TAGS_DETECTED = "\nTags detected: ";
+    public static final String MSG_TAGS_PER_SECOND = "Tags per second: ";
+    public static final String MSG_BYTES_PER_TAG = "Bytes per tag: ";
+    public static final String MSG_TIME_HINT = "\n* Time is started on first message sent/tag discovered, stopped with system overhead on result collecting.";
+
+    public static final String MSG_BYTES = " Bytes\n";
+    public static final String MSG_SECONDS = " seconds\n";
+    public static final String MSG_BYTE_S = " byte/s, ";
+    public static final String MSG_BIT_S = " bit/s \n";
+    public static final String MSG_NEW_LINE = "\n";
+
 
     // TODO: on received: show progress with stats afterwards + reset on new receiving data
 
@@ -138,10 +154,6 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
-    int getDurationInSec() {
-        return new Integer(durationOutput.getText().toString());
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -236,33 +248,42 @@ public class NfcBenchmarkFragment extends Fragment {
         };
     }
 
-    public void addResult() {
+    int getDurationInSec() {
+        return new Integer(durationOutput.getText().toString());
+    }
+
+    void addResult() {
         final long fixedTimeoutTimer = onMessageReceivedCallback.readAndResetTimer() - TIMEOUT_RECEIVING_ADD_RESULT;
-        long measuredTime = Math.min(onMessageSendCallback.readAndResetTimer(), fixedTimeoutTimer);
+        final long measuredTime = Math.min(onMessageSendCallback.readAndResetTimer(), fixedTimeoutTimer);
 
         final long byteCount1 = onMessageReceivedCallback.readAndResetCount();
-        long byteCount2 = onMessageSendCallback.readAndResetCount();
-        long byteCount = Math.max(byteCount1, byteCount2);
+        final long byteCount2 = onMessageSendCallback.readAndResetCount();
+        final long byteCount = Math.max(byteCount1, byteCount2);
 
         final BigDecimal asSeconds = BigDecimal.valueOf(measuredTime).setScale(4).divide(BigDecimal.valueOf(1000), RoundingMode.HALF_DOWN);
-        final BigDecimal bytePerSecond = BigDecimal.valueOf(byteCount).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
-        final BigDecimal bitsPerSecond = BigDecimal.valueOf(byteCount * 8).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
+        final BigDecimal bytePerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
+        final BigDecimal bitsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount * 8).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
 
         final int tagCount2 = onMessageSendCallback.readAndResetTagCount();
         final int tagCount = Math.max(onMessageReceivedCallback.readAndResetTagCount(), tagCount2);
+        final BigDecimal tagsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(tagCount).setScale(2).divide(asSeconds, RoundingMode.HALF_DOWN);
+        final BigDecimal bytesPerTag = tagCount == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount).setScale(2).divide(BigDecimal.valueOf(tagCount), RoundingMode.HALF_DOWN);
 
-        String msg = "Payload received: " + byteCount1 + " Bytes\n";
-        msg += "Payload sent: " + byteCount2 + " Bytes\n";
-        msg += "Tags detected: " + tagCount + "\n";
+        final StringBuilder msg = new StringBuilder();
+        msg.append(MSG_PAYLOAD_RECEIVED + byteCount1 + MSG_BYTES);
+        msg.append(MSG_PAYLOAD_SENT + byteCount2 + MSG_BYTES);
         if (View.VISIBLE == progressBar.getVisibility()) {
-            msg += "Time elapsed: " + progressBar.getProgress() + " seconds\n";
+            msg.append(MSG_TIME_ELAPSED + progressBar.getProgress() + MSG_SECONDS);
         }
-        msg += "Time measured*: " + asSeconds + " seconds\n";
-        msg += "Throughput: " + bytePerSecond + " byte/s, " + bitsPerSecond + " bit/s, \n";
+        msg.append(MSG_TIME_MEASURED + asSeconds + MSG_SECONDS);
+        msg.append(MSG_THROUGHPUT + bytePerSecond + MSG_BYTE_S + bitsPerSecond + MSG_BIT_S);
 
-        msg += "\n* Time is started on first message sent/tag discovered, stopped with system overhead on result collecting.";
+        msg.append(MSG_TAGS_DETECTED + tagCount + MSG_NEW_LINE);
+        msg.append(MSG_TAGS_PER_SECOND + tagsPerSecond + MSG_NEW_LINE);
+        msg.append(MSG_BYTES_PER_TAG + bytesPerTag + MSG_NEW_LINE);
+        msg.append(MSG_TIME_HINT);
 
-        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg);
+        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg.toString());
         resultAdapter.add(dataHolder);
         resultAdapter.notifyDataSetChanged();
         resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);

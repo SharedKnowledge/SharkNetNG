@@ -113,7 +113,7 @@ public class MyResultAdapter extends BaseAdapter {
                     type = "lost tag";
                     break;
                 case MyDataHolder.TYPE_RESULT:
-                    type = "Benchmark results";
+                    type = "benchmark results";
                     break;
             }
 
