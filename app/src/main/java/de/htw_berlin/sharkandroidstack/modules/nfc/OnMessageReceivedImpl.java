@@ -14,6 +14,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     @Override
     public void onMessage(byte[] message) {
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message);
+        countData(message);
         update(dataHolder);
     }
 
@@ -36,5 +37,4 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_NEW_TAG, tag.toString());
         update(dataHolder);
     }
-
 }

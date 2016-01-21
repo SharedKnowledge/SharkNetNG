@@ -102,6 +102,7 @@ class NfcBenchmarkState {
             timer.cancel();
             timer = null;
         }
+
         activity.prepareReceiving(fragment.readerCallback);
     }
 
@@ -126,5 +127,9 @@ class NfcBenchmarkState {
         }
         currentState = state;
         return true;
+    }
+
+    public boolean isStopped() {
+        return currentState == STATE_STOPPED;
     }
 }

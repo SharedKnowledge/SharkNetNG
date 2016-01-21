@@ -153,5 +153,4 @@ public class NfcMainActivity extends ParentActivity {
         SmartCardEmulationService.setSource(src);
         nfcAdapter.disableReaderMode(this);
     }
-
 }

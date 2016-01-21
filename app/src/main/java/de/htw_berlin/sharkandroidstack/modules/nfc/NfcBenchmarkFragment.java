@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,11 +18,14 @@ import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
 
+import static de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
+
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
     public static final int TICK_INTERVAL = 1000;
     public static final int DEFAULT_MESSAGE_LENGTH = 512;
     public static final int DEFAULT_DURATION_IN_SEC = 30;
+    public static final int TIMEOUT_RECEIVING_ADD_RESULT = 2000;
 
     // TODO: on received: show progress with stats afterwards + reset on new receiving data
 
@@ -48,10 +52,20 @@ public class NfcBenchmarkFragment extends Fragment {
     OnMessageReceivedImpl onMessageReceivedCallback;
     OnMessageSendImpl onMessageSendCallback;
 
+    final Runnable addResultsAsync = new Runnable() {
+        @Override
+        public void run() {
+            addResult();
+        }
+    };
+
     final OnClickListener startButtonClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             benchmarkState.nextStateForSending();
+            if (benchmarkState.isStopped()) {
+                addResult();
+            }
         }
     };
 
@@ -67,6 +81,10 @@ public class NfcBenchmarkFragment extends Fragment {
         public void run() {
             benchmarkState.receivingState();
             resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
+
+            final Handler handler = resultList.getHandler();
+            handler.removeCallbacks(addResultsAsync);
+            handler.postDelayed(addResultsAsync, TIMEOUT_RECEIVING_ADD_RESULT);
         }
     };
 
@@ -206,7 +224,18 @@ public class NfcBenchmarkFragment extends Fragment {
                 progressBar.setProgress(durationInSec);
                 progressDescription.setText(0 + "");
                 benchmarkState.stoppedState();
+                addResult();
             }
         };
+    }
+
+    public void addResult() {
+        String msg = "Payload received: " + onMessageReceivedCallback.readAndResetCount() + " Bytes\n";
+        msg += "Payload sent: " + onMessageSendCallback.readAndResetCount() + " Bytes\n";
+
+        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_RESULT, msg);
+        resultAdapter.add(dataHolder);
+        resultAdapter.notifyDataSetChanged();
+        resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
     }
 }

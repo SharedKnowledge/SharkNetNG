@@ -103,6 +103,9 @@ public class MyResultAdapter extends BaseAdapter {
                 case MyDataHolder.TYPE_LOST_TAG:
                     type = "lost tag";
                     break;
+                case MyDataHolder.TYPE_RESULT:
+                    type = "Benchmark results";
+                    break;
             }
 
             stats.setText(data.getCount() + " / " + direction + " / " + type);
@@ -121,6 +124,7 @@ public class MyResultAdapter extends BaseAdapter {
     }
 
     public static class MyDataHolder {
+        public static final int TYPE_RESULT = 0;
         public static final int TYPE_ERROR = 1;
         public static final int TYPE_NEW_TAG = 2;
         public static final int TYPE_LOST_TAG = 3;
@@ -147,12 +151,6 @@ public class MyResultAdapter extends BaseAdapter {
             this.data = data;
         }
 
-        public MyDataHolder(int count, int direction, int type) {
-            this.count = count;
-            this.setDirection(direction);
-            this.setType(type);
-        }
-
         public void setCount(int count) {
             this.count = count;
         }
@@ -177,7 +175,7 @@ public class MyResultAdapter extends BaseAdapter {
         }
 
         private void setType(int type) {
-            if (type != TYPE_ERROR && type != TYPE_NEW_TAG && type != TYPE_LOST_TAG && type != TYPE_DATA) {
+            if (type != TYPE_ERROR && type != TYPE_NEW_TAG && type != TYPE_LOST_TAG && type != TYPE_DATA && type != TYPE_RESULT) {
                 throw new IllegalArgumentException("Invalid type value: " + type);
             }
             this.type = type;
