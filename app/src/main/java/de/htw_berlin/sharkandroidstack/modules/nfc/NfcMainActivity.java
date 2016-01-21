@@ -26,8 +26,10 @@ import static android.view.View.VISIBLE;
 
 public class NfcMainActivity extends ParentActivity {
 
-    public static String LOG_ID = "nfc";
-    public static NfcAdapter nfcAdapter;
+    public final static String LOG_ID = "nfc";
+    public final int NFC_FLAGS = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
+
+    static NfcAdapter nfcAdapter;
 
     final static OnClickListener enableNfcClickListener = new OnClickListener() {
         @Override
@@ -140,8 +142,10 @@ public class NfcMainActivity extends ParentActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
-        final int flags = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
-        nfcAdapter.enableReaderMode(this, readerCallback, flags, null);
+        if (isDestroyed()) {
+            return;
+        }
+        nfcAdapter.enableReaderMode(this, readerCallback, NFC_FLAGS, null);
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
