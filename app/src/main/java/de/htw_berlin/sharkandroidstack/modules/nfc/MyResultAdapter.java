@@ -29,6 +29,9 @@ public class MyResultAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
+        if (position > data.size() || position < 0) {
+            return null;
+        }
         return data.get(position);
     }
 
@@ -53,7 +56,12 @@ public class MyResultAdapter extends BaseAdapter {
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
-        MyDataHolder current = (MyDataHolder) getItem(position);
+        final Object item = getItem(position);
+        if (item == null) {
+            return convertView;
+        }
+
+        MyDataHolder current = (MyDataHolder) item;
         mViewHolder.update(current);
 
         return convertView;

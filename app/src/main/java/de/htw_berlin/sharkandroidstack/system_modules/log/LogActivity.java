@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.system_modules.log;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,12 +89,12 @@ public class LogActivity extends ParentActivity {
     }
 
     private void initLogViewAndAdapter() {
-        logAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1) {
+        logAdapter = new ArrayAdapter(this, R.layout.system_modules_log_list_entry, android.R.id.text1) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                final TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                final TextView text2 = (TextView) view.findViewById(android.R.id.text2);
+                final TextView text1 = (TextView) view.findViewById(R.id.log_entry_header);
+                final TextView text2 = (TextView) view.findViewById(android.R.id.text1);
 
                 LogManager.LogEntry item = (LogManager.LogEntry) this.getItem(position);
                 text1.setText("Priority: " + item.prio);
@@ -110,11 +111,13 @@ public class LogActivity extends ParentActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String initialLog = getIntent().getStringExtra(OPEN_LOG_ID_ON_START);
+        final Intent intent = getIntent();
+        String initialLog = intent.getStringExtra(OPEN_LOG_ID_ON_START);
         if(initialLog != null) {
             int index = LogManager.getAllLogIds().indexOf(initialLog);
             if(index != -1) {
                 spinner.setSelection(index);
+                intent.removeExtra(OPEN_LOG_ID_ON_START);
             }
         }
     }
