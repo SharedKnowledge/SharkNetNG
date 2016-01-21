@@ -48,13 +48,6 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final String MSG_BIT_S = " bit/s \n";
     public static final String MSG_NEW_LINE = "\n";
 
-
-    // TODO: on received: show progress with stats afterwards + reset on new receiving data
-
-    //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
-    //TODO: change MyStartButtonClickListener state on other device + clarify description/button
-    //TODO: stats more expressive + final stats
-
     Button startSendingButton;
     Button backFromReceivingButton;
     ProgressBar progressBar;
@@ -207,6 +200,11 @@ public class NfcBenchmarkFragment extends Fragment {
         }
 
         benchmarkState.resetState();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     protected void setResultVisibility(final int visibility, final int progressVisibility) {

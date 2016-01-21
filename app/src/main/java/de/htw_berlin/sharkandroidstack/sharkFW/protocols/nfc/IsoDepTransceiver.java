@@ -26,9 +26,7 @@ public class IsoDepTransceiver implements Runnable {
 
         onMessageReceived.newTag(tag);
 
-        //TODO: stop thread before new one? investigate death
         thread = new Thread(this);
-        thread.setName(IsoDepTransceiver.class.getSimpleName() + "-Thread");
         thread.start();
     }
 
@@ -66,9 +64,9 @@ public class IsoDepTransceiver implements Runnable {
         return result;
     }
 
-    public void stop() {
-//        if (!thread.isInterrupted()) {
-//            thread.interrupt();
-//        }
+    public void interruptThread() {
+        if (!thread.isInterrupted()) {
+            thread.interrupt();
+        }
     }
 }

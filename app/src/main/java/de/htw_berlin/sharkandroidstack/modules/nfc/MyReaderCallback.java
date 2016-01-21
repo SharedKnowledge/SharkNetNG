@@ -12,6 +12,7 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class MyReaderCallback implements NfcAdapter.ReaderCallback {
     private OnMessageReceived onMessageReceived;
+    private IsoDepTransceiver isoDepTransceiver;
 
     public MyReaderCallback(OnMessageReceived onMessageReceived) {
         this.onMessageReceived = onMessageReceived;
@@ -24,6 +25,10 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
             return;
         }
 
-        new IsoDepTransceiver(tag, isoDep, onMessageReceived);
+        if (isoDepTransceiver != null) {
+            isoDepTransceiver.interruptThread();
+        }
+
+        isoDepTransceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
     }
 };
