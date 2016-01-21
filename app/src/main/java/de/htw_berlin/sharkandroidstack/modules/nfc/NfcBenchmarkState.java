@@ -14,12 +14,14 @@ class NfcBenchmarkState {
     final int STATE_RUNNING = 3;
     final int STATE_STOPPED = 4;
 
+
     final int STATE_RECEIVING = 4;
 
     private final NfcBenchmarkFragment fragment;
     private NfcMainActivity activity;
 
     private int currentState = 0;
+    private boolean needReset = false;
 
     public NfcBenchmarkState(NfcBenchmarkFragment fragment, NfcMainActivity activity) {
         this.fragment = fragment;
@@ -44,10 +46,10 @@ class NfcBenchmarkState {
     }
 
     void resetState() {
-        if (STATE_RESET == currentState) {
+        if (!updateStateIfPossible(STATE_RESET)) {
             return;
         }
-        currentState = STATE_RESET;
+        needReset = false;
 
         fragment.startSendingButton.setVisibility(VISIBLE);
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_start);
@@ -67,12 +69,18 @@ class NfcBenchmarkState {
         activity.prepareReceiving(fragment.readerCallback);
     }
 
+    private boolean updateStateIfPossible(final int state) {
+        if (state == currentState) {
+            return false;
+        }
+        currentState = state;
+        return true;
+    }
+
     void preparedState() {
-        if (STATE_PREPARED == currentState) {
+        if (!updateStateIfPossible(STATE_PREPARED)) {
             return;
         }
-        currentState = STATE_PREPARED;
-
 
         fragment.startSendingButton.setText("ready");
 
@@ -80,10 +88,10 @@ class NfcBenchmarkState {
     }
 
     void sendState() {
-        if (STATE_RUNNING == currentState) {
+        if (!updateStateIfPossible(STATE_RUNNING) || needReset) {
             return;
         }
-        currentState = STATE_RUNNING;
+        needReset = true;
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_stop);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
@@ -101,23 +109,21 @@ class NfcBenchmarkState {
     }
 
     void stoppedState() {
-        if (STATE_STOPPED == currentState) {
+        if (!updateStateIfPossible(STATE_STOPPED)) {
             return;
         }
-        currentState = STATE_STOPPED;
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_abort);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_previous, 0);
 
         fragment.timer.cancel();
+        activity.prepareReceiving(fragment.readerCallback);
     }
 
     void receivingState() {
-        if (STATE_RECEIVING == currentState) {
+        if (!updateStateIfPossible(STATE_RECEIVING)) {
             return;
         }
-
-        currentState = STATE_RECEIVING;
 
         fragment.startSendingButton.setVisibility(GONE);
         fragment.timer.cancel();
