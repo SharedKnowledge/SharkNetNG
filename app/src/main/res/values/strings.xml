@@ -33,16 +33,22 @@
     <string name="mariodemo_menu_item_show_log">Show Log</string>
 
     <!--   nfc -->
-    <string name="nfc_log">Log</string>
-    <string name="nfc_welcome">back to start</string>
-    <string name="nfc_benchmark">Benchmark</string>
-    <string name="nfc_click_to_start">click here to start</string>
+    <string name="menu_nfc_log">Log</string>
+    <string name="menu_nfc_welcome">back to start</string>
+    <string name="menu_nfc_benchmark">Benchmark</string>
+
+    <string name="activity_nfc_click_to_start">click here to start</string>
+    <string name="activity_nfc_enable">Enable NFC first</string>
+
     <string name="activity_nfc_benchmark_start">start benchmark</string>
+    <string name="activity_nfc_benchmark_ready">benchmark prepared</string>
     <string name="activity_nfc_benchmark_stop">abort benchmark</string>
     <string name="activity_nfc_benchmark_abort">reset benchmark</string>
+    <string name="activity_nfc_benchmark_back">go back</string>
+
+    <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically. Benchmark will start immediately after connection is setup.\nBenchmark results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 512 bytes</string>
+    <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
+
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
-    <string name="activity_nfc_enable">Enable NFC first</string>
-    <string name="activity_nfc_benchmark_description">Start Benchmark by pressing <i>\"start\"</i> on ONE device before connecting phones. Test will run for 30 seconds if not aborted by pressing <i>\"abort\"</i> or phones are disconnected.</string>
-    <string name="activity_nfc_benchmark_button_back">go back</string>
 </resources>

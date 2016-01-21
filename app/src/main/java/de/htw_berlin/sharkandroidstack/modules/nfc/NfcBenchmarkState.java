@@ -18,7 +18,6 @@ class NfcBenchmarkState {
     static final int STATE_STOPPED = 4;
     static final int STATE_RECEIVING = 4;
 
-    static final int TICK_INTERVAL = 1000;
 
     private final NfcBenchmarkFragment fragment;
     private final NfcMainActivity activity;
@@ -72,8 +71,7 @@ class NfcBenchmarkState {
             return;
         }
 
-        fragment.startSendingButton.setText("ready");
-
+        fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
         activity.prepareSending(fragment.onMessageSendCallback);
     }
 
@@ -86,28 +84,9 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_stop);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
 
-        int durationInSec = fragment.getDurationInSec();
-        final int durationInMS = durationInSec * TICK_INTERVAL;
-        fragment.progressBar.setMax(durationInSec);
-        fragment.progressBar.setProgress(0);
-
         fragment.setResultVisibility(VISIBLE, VISIBLE);
 
-        timer = new CountDownTimer(durationInMS, TICK_INTERVAL) {
-
-            public void onTick(long millisUntilFinished) {
-                final long soFar = (durationInMS - millisUntilFinished) / TICK_INTERVAL;
-                final long timeLeft = (millisUntilFinished / TICK_INTERVAL) + 1;
-                fragment.progressDescription.setText(timeLeft + "");
-                fragment.progressBar.setProgress((int) soFar);
-            }
-
-            public void onFinish() {
-                fragment.progressBar.setProgress(fragment.progressBar.getMax());
-                fragment.progressDescription.setText(0 + "");
-                stoppedState();
-            }
-        };
+        timer = fragment.prepareTimer();
         timer.start();
     }
 

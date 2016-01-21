@@ -4,7 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,7 +19,7 @@ import de.htw_berlin.sharkandroidstack.R;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
-
+    public static final int TICK_INTERVAL = 1000;
     public static final int DEFAULT_MESSAGE_LENGTH = 512;
     public static final int DEFAULT_DURATION_IN_SEC = 30;
 
@@ -29,13 +29,17 @@ public class NfcBenchmarkFragment extends Fragment {
     //TODO: change MyStartButtonClickListener state on other device + clarify description/button
     //TODO: stats more expressive + final stats
 
-    TextView msgLengthOutput;
     Button startSendingButton;
     Button backFromReceivingButton;
     ProgressBar progressBar;
-    TextView description;
-    ListView resultList;
-    SeekBar msgLengthInput;
+    TextView progressDescription;
+    private TextView description;
+    private TextView description2;
+    private ListView resultList;
+    private SeekBar msgLengthInput;
+    private TextView msgLengthOutput;
+    private SeekBar durationInput;
+    private TextView durationOutput;
 
     MyReaderCallback readerCallback;
     MyResultAdapter resultAdapter;
@@ -108,9 +112,6 @@ public class NfcBenchmarkFragment extends Fragment {
 
         }
     };
-    TextView durationOutput;
-    SeekBar durationInput;
-    TextView progressDescription;
 
     int getDurationInSec() {
         return new Integer(durationOutput.getText().toString());
@@ -129,7 +130,7 @@ public class NfcBenchmarkFragment extends Fragment {
         progressDescription = (TextView) root.findViewById(R.id.activity_nfc_benchmark_progress_description);
 
         description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
-        description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));
+        description2 = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description2);
 
         resultAdapter = new MyResultAdapter(getActivity());
         onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateListReceiving, getActivity());
@@ -174,6 +175,7 @@ public class NfcBenchmarkFragment extends Fragment {
     protected void setResultVisibility(final int visibility, final int progressVisibility) {
         int invertedVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
         description.setVisibility(invertedVisibility);
+        description2.setVisibility(invertedVisibility);
         msgLengthInput.setVisibility(invertedVisibility);
         msgLengthOutput.setVisibility(invertedVisibility);
         durationInput.setVisibility(invertedVisibility);
@@ -182,5 +184,29 @@ public class NfcBenchmarkFragment extends Fragment {
         resultList.setVisibility(visibility);
 
         progressBar.setVisibility(progressVisibility);
+        progressDescription.setVisibility(progressVisibility);
+    }
+
+    public CountDownTimer prepareTimer() {
+        final int durationInSec = getDurationInSec();
+        final int durationInMS = durationInSec * TICK_INTERVAL;
+        progressBar.setMax(durationInSec);
+        progressBar.setProgress(0);
+
+        return new CountDownTimer(durationInMS, TICK_INTERVAL) {
+
+            public void onTick(long millisUntilFinished) {
+                final long soFar = (durationInMS - millisUntilFinished) / TICK_INTERVAL;
+                final long timeLeft = (millisUntilFinished / TICK_INTERVAL) + 1;
+                progressDescription.setText(timeLeft + "");
+                progressBar.setProgress((int) soFar);
+            }
+
+            public void onFinish() {
+                progressBar.setProgress(durationInSec);
+                progressDescription.setText(0 + "");
+                benchmarkState.stoppedState();
+            }
+        };
     }
 }

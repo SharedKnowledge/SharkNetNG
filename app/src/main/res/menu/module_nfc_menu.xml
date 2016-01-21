@@ -3,16 +3,16 @@
 
     <item
         android:id="@+id/nfc_menu_item_log"
-        android:title="@string/nfc_log"
+        android:title="@string/menu_nfc_log"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/nfc_menu_item_welcome"
-        android:title="@string/nfc_welcome"
+        android:title="@string/menu_nfc_welcome"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/nfc_menu_item_benchmark"
-        android:title="@string/nfc_benchmark"
+        android:title="@string/menu_nfc_benchmark"
         app:showAsAction="never" />
 </menu>

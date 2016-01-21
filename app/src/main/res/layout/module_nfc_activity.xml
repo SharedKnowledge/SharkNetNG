@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/activity_nfc_arrow"
-        android:text="@string/nfc_click_to_start" />
+        android:text="@string/activity_nfc_click_to_start" />
 
     <TextView
         android:id="@+id/activity_nfc_support"
