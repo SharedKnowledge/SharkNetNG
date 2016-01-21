@@ -64,6 +64,8 @@ class NfcBenchmarkState {
         fragment.description.setVisibility(VISIBLE);
         fragment.msgLengthInput.setVisibility(VISIBLE);
         fragment.msgLengthOutput.setVisibility(VISIBLE);
+        fragment.durationInput.setVisibility(VISIBLE);
+        fragment.durationOutput.setVisibility(VISIBLE);
 
         fragment.backFromReceivingButton.setVisibility(GONE);
         fragment.progressBar.setVisibility(GONE);
@@ -94,7 +96,7 @@ class NfcBenchmarkState {
     }
 
     void sendState() {
-        if (!updateStateIfPossible(STATE_RUNNING) || needReset) {
+        if (needReset || !updateStateIfPossible(STATE_RUNNING)) {
             return;
         }
         needReset = true;
@@ -107,21 +109,27 @@ class NfcBenchmarkState {
         fragment.description.setVisibility(GONE);
         fragment.msgLengthInput.setVisibility(GONE);
         fragment.msgLengthOutput.setVisibility(GONE);
+        fragment.durationInput.setVisibility(GONE);
+        fragment.durationOutput.setVisibility(GONE);
 
         fragment.progressBar.setVisibility(VISIBLE);
         fragment.resultList.setVisibility(VISIBLE);
 
-        final int durationInMS = fragment.getDurationInSec() * TICK_INTERVAL;
-        fragment.progressBar.setMax(fragment.getDurationInSec());
+        int durationInSec = fragment.getDurationInSec();
+        final int durationInMS = durationInSec * TICK_INTERVAL;
+        fragment.progressBar.setMax(durationInSec);
         timer = new CountDownTimer(durationInMS, TICK_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
-                long soFar = (durationInMS - millisUntilFinished) / TICK_INTERVAL;
+                final long soFar = (durationInMS - millisUntilFinished) / TICK_INTERVAL;
+                final long timeLeft = (millisUntilFinished / TICK_INTERVAL) + 1;
+                fragment.progressDescription.setText(timeLeft + "");
                 fragment.progressBar.setProgress((int) soFar);
             }
 
             public void onFinish() {
                 fragment.progressBar.setProgress(fragment.progressBar.getMax());
+                fragment.progressDescription.setText(0 + "");
                 stoppedState();
             }
         };
@@ -158,6 +166,8 @@ class NfcBenchmarkState {
         fragment.msgLengthInput.setVisibility(GONE);
         fragment.msgLengthOutput.setVisibility(GONE);
         fragment.progressBar.setVisibility(GONE);
+        fragment.durationInput.setVisibility(GONE);
+        fragment.durationOutput.setVisibility(GONE);
 
         fragment.backFromReceivingButton.setVisibility(VISIBLE);
         fragment.resultList.setVisibility(VISIBLE);

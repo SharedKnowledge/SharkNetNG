@@ -110,6 +110,7 @@ public class NfcBenchmarkFragment extends Fragment {
     };
     TextView durationOutput;
     SeekBar durationInput;
+    TextView progressDescription;
 
     int getDurationInSec() {
         return new Integer(durationOutput.getText().toString());
@@ -125,6 +126,7 @@ public class NfcBenchmarkFragment extends Fragment {
         msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
         durationOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_duration_output);
         progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
+        progressDescription = (TextView) root.findViewById(R.id.activity_nfc_benchmark_progress_description);
 
         description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
         description.setText(Html.fromHtml(getString(R.string.activity_nfc_benchmark_description)));

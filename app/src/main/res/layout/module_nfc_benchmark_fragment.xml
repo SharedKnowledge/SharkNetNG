@@ -37,18 +37,32 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_nfc_benchmark_header" />
 
-    <ProgressBar
-        android:id="@+id/activity_nfc_benchmark_progress"
-        style="?android:attr/progressBarStyleHorizontal"
+    <LinearLayout
+        android:id="@+id/activity_nfc_benchmark_progress_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_header" />
+        android:layout_below="@id/activity_nfc_benchmark_header"
+        android:orientation="horizontal">
+
+        <ProgressBar
+            android:id="@+id/activity_nfc_benchmark_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/activity_nfc_benchmark_progress_description"
+            android:layout_width="40sp"
+            android:layout_height="wrap_content"
+            android:gravity="right" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/activity_nfc_benchmark_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_progress" />
+        android:layout_below="@id/activity_nfc_benchmark_progress_container" />
 
     <LinearLayout
         android:id="@+id/activity_nfc_benchmark_msg_length"
