@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.os.CountDownTimer;
+import android.view.View;
 
 import de.htw_berlin.sharkandroidstack.R;
 
@@ -11,19 +12,16 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 class NfcBenchmarkState {
-    final int STATE_RESET = 1;
-    final int STATE_PREPARED = 2;
-    final int STATE_RUNNING = 3;
-    final int STATE_STOPPED = 4;
+    static final int STATE_RESET = 1;
+    static final int STATE_PREPARED = 2;
+    static final int STATE_RUNNING = 3;
+    static final int STATE_STOPPED = 4;
+    static final int STATE_RECEIVING = 4;
 
-
-    final int STATE_RECEIVING = 4;
-
-    public static final int TICK_INTERVAL = 1000;
-
+    static final int TICK_INTERVAL = 1000;
 
     private final NfcBenchmarkFragment fragment;
-    private NfcMainActivity activity;
+    private final NfcMainActivity activity;
 
     private int currentState = 0;
     private boolean needReset = false;
@@ -60,29 +58,13 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setVisibility(VISIBLE);
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_start);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_play, 0);
-
-        fragment.description.setVisibility(VISIBLE);
-        fragment.msgLengthInput.setVisibility(VISIBLE);
-        fragment.msgLengthOutput.setVisibility(VISIBLE);
-        fragment.durationInput.setVisibility(VISIBLE);
-        fragment.durationOutput.setVisibility(VISIBLE);
-
         fragment.backFromReceivingButton.setVisibility(GONE);
-        fragment.progressBar.setVisibility(GONE);
-        fragment.resultList.setVisibility(GONE);
+
+        fragment.setResultVisibility(View.GONE, GONE);
 
         fragment.resultAdapter.clear();
-        fragment.progressBar.setProgress(0);
 
         activity.prepareReceiving(fragment.readerCallback);
-    }
-
-    private boolean updateStateIfPossible(final int state) {
-        if (state == currentState) {
-            return false;
-        }
-        currentState = state;
-        return true;
     }
 
     void preparedState() {
@@ -104,20 +86,13 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_stop);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
 
-        fragment.progressBar.setProgress(0);
-
-        fragment.description.setVisibility(GONE);
-        fragment.msgLengthInput.setVisibility(GONE);
-        fragment.msgLengthOutput.setVisibility(GONE);
-        fragment.durationInput.setVisibility(GONE);
-        fragment.durationOutput.setVisibility(GONE);
-
-        fragment.progressBar.setVisibility(VISIBLE);
-        fragment.resultList.setVisibility(VISIBLE);
-
         int durationInSec = fragment.getDurationInSec();
         final int durationInMS = durationInSec * TICK_INTERVAL;
         fragment.progressBar.setMax(durationInSec);
+        fragment.progressBar.setProgress(0);
+
+        fragment.setResultVisibility(VISIBLE, VISIBLE);
+
         timer = new CountDownTimer(durationInMS, TICK_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
@@ -156,20 +131,21 @@ class NfcBenchmarkState {
             return;
         }
 
-        fragment.startSendingButton.setVisibility(GONE);
         if (timer != null) {
             timer.cancel();
             timer = null;
         }
 
-        fragment.description.setVisibility(GONE);
-        fragment.msgLengthInput.setVisibility(GONE);
-        fragment.msgLengthOutput.setVisibility(GONE);
-        fragment.progressBar.setVisibility(GONE);
-        fragment.durationInput.setVisibility(GONE);
-        fragment.durationOutput.setVisibility(GONE);
-
+        fragment.startSendingButton.setVisibility(GONE);
+        fragment.setResultVisibility(View.VISIBLE, GONE);
         fragment.backFromReceivingButton.setVisibility(VISIBLE);
-        fragment.resultList.setVisibility(VISIBLE);
+    }
+
+    private boolean updateStateIfPossible(final int state) {
+        if (state == currentState) {
+            return false;
+        }
+        currentState = state;
+        return true;
     }
 }

@@ -170,4 +170,17 @@ public class NfcBenchmarkFragment extends Fragment {
 
         benchmarkState.resetState();
     }
+
+    protected void setResultVisibility(final int visibility, final int progressVisibility) {
+        int invertedVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
+        description.setVisibility(invertedVisibility);
+        msgLengthInput.setVisibility(invertedVisibility);
+        msgLengthOutput.setVisibility(invertedVisibility);
+        durationInput.setVisibility(invertedVisibility);
+        durationOutput.setVisibility(invertedVisibility);
+
+        resultList.setVisibility(visibility);
+
+        progressBar.setVisibility(progressVisibility);
+    }
 }
