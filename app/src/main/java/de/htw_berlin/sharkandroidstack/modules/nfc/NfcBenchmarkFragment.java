@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,9 @@ import de.htw_berlin.sharkandroidstack.R;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
 
-    public static final int TIMER_END = 30000;
-    public static final int TICK_INTERVAL = 1000;
-
     public static final int DEFAULT_MESSAGE_LENGTH = 512;
+    public static final int DEFAULT_DURATION_IN_SEC = 30;
 
-    // TODO: progress only after first sent, run until timelimit after first connection made
     // TODO: on received: show progress with stats afterwards + reset on new receiving data
 
     //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
@@ -78,20 +74,7 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
-    final CountDownTimer timer = new CountDownTimer(TIMER_END, TICK_INTERVAL) {
-
-        public void onTick(long millisUntilFinished) {
-            long soFar = (TIMER_END - millisUntilFinished) / TICK_INTERVAL;
-            progressBar.setProgress((int) soFar);
-        }
-
-        public void onFinish() {
-            progressBar.setProgress(progressBar.getMax());
-            benchmarkState.stoppedState();
-        }
-    };
-
-    final SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    final SeekBar.OnSeekBarChangeListener msgLengthChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             msgLengthOutput.setText(progress + "");
@@ -109,6 +92,29 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
+    final SeekBar.OnSeekBarChangeListener durationChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+            durationOutput.setText(progress + "");
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
+    TextView durationOutput;
+    SeekBar durationInput;
+
+    int getDurationInSec() {
+        return new Integer(durationOutput.getText().toString());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -117,6 +123,7 @@ public class NfcBenchmarkFragment extends Fragment {
         final View root = inflater.inflate(R.layout.module_nfc_benchmark_fragment, container, false);
 
         msgLengthOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_msg_length_output);
+        durationOutput = (TextView) root.findViewById(R.id.activity_nfc_benchmark_duration_output);
         progressBar = (ProgressBar) root.findViewById(R.id.activity_nfc_benchmark_progress);
 
         description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
@@ -136,8 +143,12 @@ public class NfcBenchmarkFragment extends Fragment {
         backFromReceivingButton.setOnClickListener(backButtonClickListener);
 
         msgLengthInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_msg_length_input);
-        msgLengthInput.setOnSeekBarChangeListener(seekBarChangeListener);
+        msgLengthInput.setOnSeekBarChangeListener(msgLengthChangeListener);
         msgLengthInput.setProgress(DEFAULT_MESSAGE_LENGTH);
+
+        durationInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_duration_input);
+        durationInput.setOnSeekBarChangeListener(durationChangeListener);
+        durationInput.setProgress(DEFAULT_DURATION_IN_SEC);
 
         return root;
     }

@@ -1,5 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
+import android.os.CountDownTimer;
+
 import de.htw_berlin.sharkandroidstack.R;
 
 import static android.R.drawable.ic_media_pause;
@@ -17,11 +19,15 @@ class NfcBenchmarkState {
 
     final int STATE_RECEIVING = 4;
 
+    public static final int TICK_INTERVAL = 1000;
+
+
     private final NfcBenchmarkFragment fragment;
     private NfcMainActivity activity;
 
     private int currentState = 0;
     private boolean needReset = false;
+    private CountDownTimer timer;
 
     public NfcBenchmarkState(NfcBenchmarkFragment fragment, NfcMainActivity activity) {
         this.fragment = fragment;
@@ -105,7 +111,21 @@ class NfcBenchmarkState {
         fragment.progressBar.setVisibility(VISIBLE);
         fragment.resultList.setVisibility(VISIBLE);
 
-        fragment.timer.start();
+        final int durationInMS = fragment.getDurationInSec() * TICK_INTERVAL;
+        fragment.progressBar.setMax(fragment.getDurationInSec());
+        timer = new CountDownTimer(durationInMS, TICK_INTERVAL) {
+
+            public void onTick(long millisUntilFinished) {
+                long soFar = (durationInMS - millisUntilFinished) / TICK_INTERVAL;
+                fragment.progressBar.setProgress((int) soFar);
+            }
+
+            public void onFinish() {
+                fragment.progressBar.setProgress(fragment.progressBar.getMax());
+                stoppedState();
+            }
+        };
+        timer.start();
     }
 
     void stoppedState() {
@@ -116,7 +136,10 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_abort);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_previous, 0);
 
-        fragment.timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
         activity.prepareReceiving(fragment.readerCallback);
     }
 
@@ -126,7 +149,10 @@ class NfcBenchmarkState {
         }
 
         fragment.startSendingButton.setVisibility(GONE);
-        fragment.timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
 
         fragment.description.setVisibility(GONE);
         fragment.msgLengthInput.setVisibility(GONE);

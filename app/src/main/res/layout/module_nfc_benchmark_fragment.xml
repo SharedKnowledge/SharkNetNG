@@ -25,12 +25,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
-            android:text="@string/activity_nfc_benchmark_button_back"
             android:drawableLeft="@android:drawable/ic_media_previous"
             android:paddingBottom="@dimen/padding_horizontal"
-            android:paddingTop="@dimen/padding_horizontal" />
+            android:paddingTop="@dimen/padding_horizontal"
+            android:text="@string/activity_nfc_benchmark_button_back" />
     </RelativeLayout>
-
 
     <TextView
         android:id="@+id/activity_nfc_benchmark_description"
@@ -43,9 +42,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_header"
-        android:max="30"
-        android:progress="1" />
+        android:layout_below="@id/activity_nfc_benchmark_header" />
 
     <ListView
         android:id="@+id/activity_nfc_benchmark_results"
@@ -54,6 +51,7 @@
         android:layout_below="@id/activity_nfc_benchmark_progress" />
 
     <LinearLayout
+        android:id="@+id/activity_nfc_benchmark_msg_length"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/activity_nfc_benchmark_description"
@@ -68,6 +66,25 @@
 
         <TextView
             android:id="@+id/activity_nfc_benchmark_msg_length_output"
+            android:layout_width="40sp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_nfc_benchmark_msg_length"
+        android:orientation="horizontal">
+
+        <SeekBar
+            android:id="@+id/activity_nfc_benchmark_duration_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="60" />
+
+        <TextView
+            android:id="@+id/activity_nfc_benchmark_duration_output"
             android:layout_width="40sp"
             android:layout_height="wrap_content" />
     </LinearLayout>
