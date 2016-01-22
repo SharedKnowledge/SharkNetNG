@@ -23,16 +23,54 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_nfc_sharkdemo_start" />
 
-    <EditText
-        android:id="@+id/activity_nfc_sharkdemo_input"
+    <LinearLayout
+        android:id="@+id/activity_nfc_sharkdemo_input_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_sharkdemo_owner_id" />
+        android:layout_below="@id/activity_nfc_sharkdemo_owner_id"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/activity_nfc_sharkdemo_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/activity_nfc_sharkdemo_input_hint"
+            android:inputType="textMultiLine" />
+
+        <ImageButton
+            android:id="@+id/activity_nfc_sharkdemo_input_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@android:drawable/ic_menu_add" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/activity_nfc_sharkdemo_kb_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_sharkdemo_input" />
+        android:layout_below="@id/activity_nfc_sharkdemo_input_container"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
+
+    <ImageButton
+        android:id="@+id/activity_nfc_sharkdemo_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        android:src="@android:drawable/ic_menu_revert" />
+
+    <ImageButton
+        android:id="@+id/activity_nfc_sharkdemo_print_kb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toLeftOf="@id/activity_nfc_sharkdemo_clear"
+        android:background="@null"
+        android:src="@android:drawable/ic_menu_info_details" />
 
 </RelativeLayout>

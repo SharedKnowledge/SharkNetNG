@@ -51,6 +51,10 @@
     <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
 
     <string name="activity_nfc_sharkdemo_start">prepare sending</string>
+    <string name="activity_nfc_sharkdemo_input_hint">Add information to KB.</string>
+    <string name="activity_nfc_sharkdemo_info">Your device id, used as KB owner: %s</string>
+    <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current KnowledgeBase</string>
+    <string name="activity_nfc_sharkdemo_hint_clear">Clears list</string>
 
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>

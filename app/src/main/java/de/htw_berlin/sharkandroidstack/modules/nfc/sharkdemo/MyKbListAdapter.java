@@ -68,6 +68,7 @@ public class MyKbListAdapter extends BaseAdapter {
 
     public void add(MyDataHolder dataHolder) {
         data.add(dataHolder);
+        notifyDataSetChanged();
     }
 
     private class MyViewHolder {
