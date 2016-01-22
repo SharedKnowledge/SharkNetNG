@@ -8,6 +8,7 @@ import com.crashlytics.android.Crashlytics;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseFactory;
 import io.fabric.sdk.android.Fabric;
 
 public class Application extends android.app.Application {
@@ -22,7 +23,7 @@ public class Application extends android.app.Application {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        setDefaultValue(prefs, "pref_key_kb", "aliceBob");
+        setDefaultValue(prefs, "pref_key_kb", KnowledgeBaseFactory.implementationTypeDummy);
     }
 
     private void setDefaultValue(SharedPreferences prefs, String prefKey, String defaultValue) {

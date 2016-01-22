@@ -4,8 +4,6 @@
         android:title="@string/system_modules_settings_title_cat_kb">
         <ListPreference
             android:key="pref_key_kb"
-            android:entries="@array/system_modules_settings_kb_options"
-            android:entryValues="@array/system_modules_settings_kb_options_values"
             android:title="@string/system_modules_settings_title_kb" />
     </PreferenceCategory>
 

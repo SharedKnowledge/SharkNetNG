@@ -19,8 +19,9 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
  */
 public class KnowledgeBaseFactory {
 
-    public final static String implementationTypeDummy = "dummy";
-    public final static String[] implementationTypes = new String[]{implementationTypeDummy};
+    public final static String implementationTypeDummy = "simple with 2 Cp";
+    public final static String implementationTypeDummy2 = "simple with 20 Cp";
+    public final static String[] implementationTypes = new String[]{implementationTypeDummy, implementationTypeDummy2};
 
     private final static HashMap<String, SharkKB> kbs = new HashMap<>();
 
@@ -38,6 +39,9 @@ public class KnowledgeBaseFactory {
         switch (type) {
             case implementationTypeDummy:
                 cachedKB = prepareKb(ownerSemanticTag);
+                break;
+            default:
+                throw new IllegalArgumentException("Type " + type + " not found within implemented types.");
         }
 
         kbs.put(type, cachedKB);
