@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
 
@@ -72,48 +71,27 @@ public class MyKbListAdapter extends BaseAdapter {
     }
 
     private class MyViewHolder {
-//        final TextView stats;
-//        final TextView asString;
-//        final TextView raw;
-
-        final View.OnClickListener toggleRawView = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                final int invertedVisibility = raw.getVisibility() == View.GONE ? View.VISIBLE : View.GONE;
-//                if (raw.length() == 0 && invertedVisibility == View.VISIBLE) {
-//                    return;
-//                }
-//
-//                raw.setVisibility(invertedVisibility);
-            }
-        };
+        final TextView headerField;
+        final TextView dataField;
 
         public MyViewHolder(View item) {
-//            stats = (TextView) item.findViewById(R.id.stats);
-//            asString = (TextView) item.findViewById(R.id.asString);
-//            raw = (TextView) item.findViewById(R.id.raw);
-//
-//            raw.setVisibility(View.GONE);
-//            asString.setOnClickListener(toggleRawView);
+            headerField = (TextView) item.findViewById(R.id.header);
+            dataField = (TextView) item.findViewById(R.id.data);
         }
 
         public void update(MyDataHolder data) {
-//            asString.setText("");
-//            raw.setText("");
-//            raw.setVisibility(View.GONE);
-//
-//            if (data.getRawData() != null) {
-//                asString.setText(new String(data.getRawData()));
-//                raw.setText(Arrays.toString(data.getRawData()));
-//            } else if (data.getData() != null) {
-//                asString.setText(data.getData());
-//            }
+            headerField.setText(data.type);
+            dataField.setText(data.data);
         }
     }
 
     public static class MyDataHolder {
-        public MyDataHolder(String type, String data) {
+        final String type;
+        final String data;
 
+        public MyDataHolder(String type, String data) {
+            this.type = type;
+            this.data = data;
         }
     }
 }
