@@ -46,7 +46,7 @@
     <string name="activity_nfc_benchmark_abort">reset benchmark</string>
     <string name="activity_nfc_benchmark_back">go back</string>
 
-    <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically. Benchmark will start immediately after connection is setup.\nBenchmark results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 512 bytes</string>
+    <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically. Benchmark will start immediately after connection is setup.\nBenchmark results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 1024 bytes</string>
     <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
 
     <string name="service_description">APDU service</string>
