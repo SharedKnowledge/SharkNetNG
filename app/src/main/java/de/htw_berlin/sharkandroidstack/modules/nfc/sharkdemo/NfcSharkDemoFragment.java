@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.sharkfw.knowledgeBase.ContextCoordinates;
+import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKB;
@@ -27,12 +28,16 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
 public class NfcSharkDemoFragment extends Fragment {
+    public static final String SEMANTIC_TAG_NAME = "nfcDemo";
+    public static final String SEMANTIC_TAG_SI = "nfcDemoSI";
+    public static final String INFORMATION_NAME = "User Input";
 
     //TODO: shark log > android LogManager...
 
-    private SharkKB kb;
-    private KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
-    private MyKbListAdapter kbListAdapter;
+    SharkKB kb;
+    KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
+    MyKbListAdapter kbListAdapter;
+    SemanticTag tag;
 
     EditText userInput;
     ListView kbList;
@@ -41,14 +46,18 @@ public class NfcSharkDemoFragment extends Fragment {
         @Override
         public void onClick(View v) {
             final String inputText = userInput.getText().toString().trim();
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(userInput.getWindowToken(), 0);
-            userInput.setText("");
+            if (inputText.length() == 0) {
+                return;
+            }
+            clearUserInput();
 
             try {
-                final SemanticTag tag1 = kb.createSemanticTag("test", "testSi");
-                final ContextCoordinates contextCoordinates1 = kb.createContextCoordinates(tag1, kb.getOwner(), null, null, null, null, SharkCS.DIRECTION_INOUT);
-                kb.createContextPoint(contextCoordinates1).addInformation(inputText);
+                final ContextCoordinates contextCoordinates = kb.createContextCoordinates(tag, kb.getOwner(), null, null, null, null, SharkCS.DIRECTION_INOUT);
+                final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
+                contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
+                //TODO: Bug?! - cpChanged not called?!
+                //TODO: would like to print information...
+
                 Toast.makeText(v.getContext(), "Added: " + inputText, Toast.LENGTH_LONG).show();
             } catch (SharkKBException e) {
                 LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
@@ -77,10 +86,7 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnClickListener clearClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(userInput.getWindowToken(), 0);
-            userInput.setText("");
-
+            clearUserInput();
             kbListAdapter.clear();
             kbListAdapter.notifyDataSetChanged();
         }
@@ -114,17 +120,17 @@ public class NfcSharkDemoFragment extends Fragment {
         clearList.setOnClickListener(clearClickListener);
         clearList.setOnLongClickListener(clearLongClickListener);
 
-        kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
 
         kbListAdapter = new MyKbListAdapter(this.getActivity());
         knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
+        kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
+        kbList.setAdapter(kbListAdapter);
 
         try {
-            kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeDummy, false, AndroidUtils.deviceId);
+            kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeEmpty, false, AndroidUtils.deviceId);
             kb.addListener(knowledgeBaseListener);
-            kbList.setAdapter(kbListAdapter);
-
             kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
+            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
             kbListAdapter.notifyDataSetChanged();
         } catch (SharkKBException e) {
             LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
@@ -147,5 +153,11 @@ public class NfcSharkDemoFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    private void clearUserInput() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(userInput.getWindowToken(), 0);
+        userInput.setText("");
     }
 }
