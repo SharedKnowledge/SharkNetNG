@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import net.sharkfw.system.Util;
 
 import de.htw_berlin.sharkandroidstack.Utils;
@@ -13,6 +15,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         Utils.deviceId =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
