@@ -34,7 +34,7 @@ public class NfcSharkDemoFragment extends Fragment {
 
 
         kbListAdapter = new MyKbListAdapter(this.getActivity());
-        knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter);
+        knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
 
         try {
             kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeDummy, false, AndroidUtils.deviceId);
