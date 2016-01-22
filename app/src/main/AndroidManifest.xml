@@ -30,6 +30,11 @@
             android:label="@string/side_nav_item_settings"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".system_modules.log.LogActivity"
+            android:label="@string/side_nav_item_log"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <!-- needed for NFC -->
         <activity
             android:name=".modules.nfc.NfcMainActivity"
