@@ -1,9 +1,10 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc;
+package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.os.CountDownTimer;
 import android.view.View;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 
 import static android.R.drawable.ic_media_pause;
 import static android.R.drawable.ic_media_play;

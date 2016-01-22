@@ -1,10 +1,10 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc;
+package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.app.Activity;
 import android.nfc.cardemulation.HostApduService;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
-import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
+import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {

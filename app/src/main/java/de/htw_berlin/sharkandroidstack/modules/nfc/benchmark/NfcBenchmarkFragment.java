@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc;
+package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
@@ -20,9 +20,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
-import static de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
+import static de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {

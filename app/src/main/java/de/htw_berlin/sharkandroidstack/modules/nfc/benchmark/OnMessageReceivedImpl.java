@@ -1,9 +1,9 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc;
+package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.app.Activity;
 import android.nfc.Tag;
 
-import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
+import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 
 public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageReceived {

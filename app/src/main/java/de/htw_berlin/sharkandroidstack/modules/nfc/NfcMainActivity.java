@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.NfcBenchmarkFragment;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
@@ -141,7 +142,7 @@ public class NfcMainActivity extends ParentActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
+    public void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
         if (isDestroyed()) {
             return;
         }
@@ -149,7 +150,7 @@ public class NfcMainActivity extends ParentActivity {
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    void prepareSending(OnMessageSend src) {
+    public void prepareSending(OnMessageSend src) {
         SmartCardEmulationService.setSource(src);
         nfcAdapter.disableReaderMode(this);
     }

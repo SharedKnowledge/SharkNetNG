@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc;
+package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.content.Context;
 import android.view.LayoutInflater;
