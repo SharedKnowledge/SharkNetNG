@@ -9,7 +9,7 @@ import net.sharkfw.knowledgeBase.sync.SyncKP;
 
 import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseFactory;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
 public class SharkStack {
 
@@ -24,7 +24,7 @@ public class SharkStack {
         _engine.setConnectionTimeOut(20000); //TODO: needed?
 
         try {
-            final SharkKB kb = KnowledgeBaseFactory.createInMemoKB(KnowledgeBaseFactory.implementationTypeDummy);
+            final SharkKB kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeDummy);
             _kb = new SyncKB(kb);
             _kp = new SyncKP(_engine, _kb, 1000);
         } catch (net.sharkfw.system.SharkException e) {

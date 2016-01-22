@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager;
+package de.htw_berlin.sharkandroidstack.system_modules.settings;
 
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
@@ -17,7 +17,7 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
  * Created by simon on 18.03.15.
  * Re-used and extended to be a Factory by mn-io on 22.01.16.
  */
-public class KnowledgeBaseFactory {
+public class KnowledgeBaseManager {
 
     public final static String implementationTypeDummy = "simple with 2 Cp";
     public final static String implementationTypeDummy2 = "simple with 20 Cp";
@@ -25,7 +25,7 @@ public class KnowledgeBaseFactory {
 
     private final static HashMap<String, SharkKB> kbs = new HashMap<>();
 
-    public static SharkKB createInMemoKB(String type, boolean reUse, String owner) throws SharkKBException {
+    public static SharkKB getInMemoKb(String type, boolean reUse, String owner) throws SharkKBException {
         if (!reUse) {
             kbs.remove(type);
         }
@@ -48,12 +48,17 @@ public class KnowledgeBaseFactory {
         return cachedKB;
     }
 
-    public static SharkKB createInMemoKB(String type, boolean reUse) throws SharkKBException {
-        return createInMemoKB(type, reUse, AndroidUtils.deviceId);
+    public static SharkKB getInMemoKb(String type, boolean reUse) throws SharkKBException {
+        return getInMemoKb(type, reUse, AndroidUtils.deviceId);
     }
 
-    public static SharkKB createInMemoKB(String type) throws SharkKBException {
-        return createInMemoKB(type, true, AndroidUtils.deviceId);
+    public static SharkKB getInMemoKb(String type) throws SharkKBException {
+        return getInMemoKb(type, true, AndroidUtils.deviceId);
+    }
+
+    public static SharkKB getInMemoKbBySettings() throws SharkKBException {
+        final String typeFromSettings = SettingsManager.getValue(SettingsManager.KEY_KB_PREFERENCES);
+        return getInMemoKb(typeFromSettings, true);
     }
 
     private static SharkKB prepareKb(PeerSemanticTag owner) throws SharkKBException {

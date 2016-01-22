@@ -8,18 +8,18 @@ import android.preference.PreferenceFragment;
 import java.util.Map;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseFactory;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.system_module_settings);
 
-        final ListPreference kbPreferences = (ListPreference) findPreference("pref_key_kb");
-        kbPreferences.setEntries(KnowledgeBaseFactory.implementationTypes);
-        kbPreferences.setEntryValues(KnowledgeBaseFactory.implementationTypes);
+        final ListPreference kbPreferences = (ListPreference) findPreference(SettingsManager.KEY_KB_PREFERENCES);
+        kbPreferences.setEntries(KnowledgeBaseManager.implementationTypes);
+        kbPreferences.setEntryValues(KnowledgeBaseManager.implementationTypes);
     }
 
     @Override
