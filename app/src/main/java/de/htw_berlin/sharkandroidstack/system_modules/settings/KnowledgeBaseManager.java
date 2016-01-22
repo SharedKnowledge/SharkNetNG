@@ -19,8 +19,9 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
  */
 public class KnowledgeBaseManager {
 
+    public final static String implementationTypeEmpty = "empty KB";
     public final static String implementationTypeDummy = "simple with 2 Cp";
-    public final static String[] implementationTypes = new String[]{implementationTypeDummy};
+    public final static String[] implementationTypes = new String[]{implementationTypeEmpty, implementationTypeDummy};
 
     private final static HashMap<String, SharkKB> kbs = new HashMap<>();
 
@@ -36,9 +37,12 @@ public class KnowledgeBaseManager {
 
         final PeerSemanticTag ownerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag(owner, owner + "Id", "tcp://localhost:5555");
         switch (type) {
+            case implementationTypeEmpty:
+                cachedKB = new InMemoSharkKB();
+                break;
             case implementationTypeDummy:
                 cachedKB = prepareKb(ownerSemanticTag);
-                break;
+                cachedKB.setOwner(ownerSemanticTag);
             default:
                 throw new IllegalArgumentException("Type " + type + " not found within implemented types.");
         }
