@@ -19,12 +19,12 @@ public class SharkStack {
     private MySimpleKp _myKP;
     private KbTextViewWriter _kbTextViewWriter;
 
-    public SharkStack(Context context, String name) {
+    public SharkStack(Context context) {
         _engine = new AndroidSharkEngine(context);
         _engine.setConnectionTimeOut(20000); //TODO: needed?
 
         try {
-            final SharkKB kb = new KnowledgeBaseFactory().getKb(name);
+            final SharkKB kb = KnowledgeBaseFactory.createInMemoKB(KnowledgeBaseFactory.implementationTypeDummy);
             _kb = new SyncKB(kb);
             _kp = new SyncKP(_engine, _kb, 1000);
         } catch (net.sharkfw.system.SharkException e) {

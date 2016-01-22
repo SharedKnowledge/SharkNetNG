@@ -5,11 +5,10 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
-import net.sharkfw.system.Util;
 
-import de.htw_berlin.sharkandroidstack.Utils;
+import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
+import io.fabric.sdk.android.Fabric;
 
 public class Application extends android.app.Application {
     @Override
@@ -17,7 +16,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
 
-        Utils.deviceId =  Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        AndroidUtils.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         LogManager.init();
 

@@ -3,7 +3,7 @@ package de.htw_berlin.sharkandroidstack.modules.nfc;
 import android.app.Activity;
 import android.nfc.cardemulation.HostApduService;
 
-import de.htw_berlin.sharkandroidstack.Utils;
+import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.modules.nfc.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
@@ -21,7 +21,7 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
     @Override
     public byte[] getNextMessage() {
-        byte[] message = Utils.generateRandomString(msgLength).getBytes();
+        byte[] message = AndroidUtils.generateRandomString(msgLength).getBytes();
 
         startTimer();
         count += message.length;
