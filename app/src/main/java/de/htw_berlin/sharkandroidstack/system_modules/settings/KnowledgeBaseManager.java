@@ -61,6 +61,14 @@ public class KnowledgeBaseManager {
         return getInMemoKb(typeFromSettings, true);
     }
 
+    public static void saveToCache() {
+        //TODO: how can a Kb be serialized?
+    }
+
+    public static void restoreFromCache() {
+        //TODO: how can a Kb be serialized?
+    }
+
     private static SharkKB prepareKb(PeerSemanticTag owner) throws SharkKBException {
         SharkKB kb = new InMemoSharkKB();
         final SemanticTag tag1 = kb.createSemanticTag(owner.getName() + " Semantic Tag 1", owner.getName() + " Subject Identifier 1");
