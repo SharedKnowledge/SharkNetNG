@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.setup;
+package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,7 +7,6 @@ import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.sync.SyncKB;
 import net.sharkfw.knowledgeBase.sync.SyncKP;
 
-import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 

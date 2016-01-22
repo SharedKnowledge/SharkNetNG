@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.android;
+package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
 import android.widget.TextView;
 

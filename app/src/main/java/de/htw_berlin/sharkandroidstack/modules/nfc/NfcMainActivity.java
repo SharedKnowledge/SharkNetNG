@@ -13,7 +13,7 @@ import android.widget.TextView;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.NfcBenchmarkFragment;
-import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.SharkDemoFragment;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
@@ -137,7 +137,7 @@ public class NfcMainActivity extends ParentActivity {
                 break;
             case R.id.nfc_menu_item_sharkdemo:
                 clearView();
-                setFragment(new SharkDemoFragment());
+                setFragment(new NfcSharkDemoFragment());
                 break;
         }
 

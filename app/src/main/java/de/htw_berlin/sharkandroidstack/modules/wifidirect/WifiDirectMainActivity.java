@@ -10,9 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.setup.SharkStack;
 
 public class WifiDirectMainActivity extends ParentActivity {
 

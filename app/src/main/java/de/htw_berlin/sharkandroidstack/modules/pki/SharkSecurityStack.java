@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.setup;
+package de.htw_berlin.sharkandroidstack.modules.pki;
 
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.Interest;

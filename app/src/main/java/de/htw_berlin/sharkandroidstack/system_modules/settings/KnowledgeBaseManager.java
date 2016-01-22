@@ -20,8 +20,7 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
 public class KnowledgeBaseManager {
 
     public final static String implementationTypeDummy = "simple with 2 Cp";
-    public final static String implementationTypeDummy2 = "simple with 20 Cp";
-    public final static String[] implementationTypes = new String[]{implementationTypeDummy, implementationTypeDummy2};
+    public final static String[] implementationTypes = new String[]{implementationTypeDummy};
 
     private final static HashMap<String, SharkKB> kbs = new HashMap<>();
 

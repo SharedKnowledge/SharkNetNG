@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.setup;
+package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
@@ -12,7 +12,7 @@ import net.sharkfw.peer.SharkEngine;
 import net.sharkfw.system.L;
 import net.sharkfw.system.SharkException;
 
-import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
+import de.htw_berlin.sharkandroidstack.modules.wifidirect.KbTextViewWriter;
 
 /**
  * An example KP which will send an interest to the connecting device
