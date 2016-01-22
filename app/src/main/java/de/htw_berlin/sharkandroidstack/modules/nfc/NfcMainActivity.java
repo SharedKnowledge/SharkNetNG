@@ -47,18 +47,18 @@ public class NfcMainActivity extends ParentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setLayoutResource(R.layout.module_nfc_activity);
         setOptionsMenu(R.menu.module_nfc_menu);
 
         LogManager.registerLog(LOG_ID, "nfc module");
+        setWelcomeScreen();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-        checkNfcSupport();
+        if (R.id.nfc_menu_item_welcome == lastOptionsItemId) {
+            checkNfcSupport();
+        }
     }
 
     @Override
@@ -71,13 +71,12 @@ public class NfcMainActivity extends ParentActivity {
     }
 
     private void checkNfcSupport() {
+        if (nfcAdapter == null) {
+            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        }
+
         TextView supportMessage = (TextView) findViewById(R.id.activity_nfc_support);
         Button enableButton = (Button) findViewById(R.id.activity_nfc_enable);
-
-        if (supportMessage == null) {
-            // activity has different fragment or layout resource set, which does not have this elements; skip
-            return;
-        }
 
         String reason = null;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
@@ -130,8 +129,7 @@ public class NfcMainActivity extends ParentActivity {
                 startActivity(intent);
                 return true;
             case R.id.nfc_menu_item_welcome:
-                clearView();
-                setLayoutResource(R.layout.module_nfc_activity);
+                setWelcomeScreen();
                 break;
             case R.id.nfc_menu_item_benchmark:
                 clearView();
@@ -146,6 +144,12 @@ public class NfcMainActivity extends ParentActivity {
         lastOptionsItemId = id;
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setWelcomeScreen() {
+        clearView();
+        setLayoutResource(R.layout.module_nfc_activity);
+        checkNfcSupport();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
