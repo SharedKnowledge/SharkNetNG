@@ -10,11 +10,16 @@ import java.util.Map;
 import de.htw_berlin.sharkandroidstack.R;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.system_module_settings);
+
+        final ListPreference kbPreferences = (ListPreference) findPreference(SettingsManager.KEY_KB_PREFERENCES);
+        kbPreferences.setEntries(KnowledgeBaseManager.implementationTypes);
+        kbPreferences.setEntryValues(KnowledgeBaseManager.implementationTypes);
     }
 
     @Override
@@ -41,7 +46,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         //String prefValue = sharedPreferences.getString(key, "");
         setSummaryOfListPreference(key);
         //TODO: act on settings change
-
     }
 
     private void setSummaryOfListPreference(String key) {
