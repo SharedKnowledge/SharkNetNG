@@ -3,12 +3,13 @@ package de.htw_berlin.sharkandroidstack.setup;
 import android.content.Context;
 import android.util.Log;
 
+import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.sync.SyncKB;
 import net.sharkfw.knowledgeBase.sync.SyncKP;
 
 import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseCreator;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseFactory;
 
 public class SharkStack {
 
@@ -23,7 +24,8 @@ public class SharkStack {
         _engine.setConnectionTimeOut(20000); //TODO: needed?
 
         try {
-            _kb = new KnowledgeBaseCreator().getKb(name);
+            final SharkKB kb = new KnowledgeBaseFactory().getKb(name);
+            _kb = new SyncKB(kb);
             _kp = new SyncKP(_engine, _kb, 1000);
         } catch (net.sharkfw.system.SharkException e) {
             Log.d("Internal", "Setting up the SyncKB failed.");

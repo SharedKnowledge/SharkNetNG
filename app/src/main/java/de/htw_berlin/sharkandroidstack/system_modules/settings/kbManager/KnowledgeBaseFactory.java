@@ -7,22 +7,21 @@ import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.knowledgeBase.sync.SyncKB;
 import net.sharkfw.system.L;
 
 import java.util.UUID;
 
 /**
  * Created by simon on 18.03.15.
- * This is a helper class that creates KnowledgeBases with random data.
+ * Re-used and extended to be a Factory by mn-io on 22.01.16.
  */
-public class KnowledgeBaseCreator {
+public class KnowledgeBaseFactory {
 
-    public SyncKB getKb(String owner) throws SharkKBException {
+    public SharkKB getKb(String owner) throws SharkKBException {
         return prepareKb(InMemoSharkKB.createInMemoPeerSemanticTag(owner, owner + "Id", "tcp://localhost:5555"));
     }
 
-    private SyncKB prepareKb(PeerSemanticTag owner) throws SharkKBException {
+    private SharkKB prepareKb(PeerSemanticTag owner) throws SharkKBException {
         SharkKB kb = new InMemoSharkKB();
         try {
             final SemanticTag tag1 = kb.createSemanticTag(owner.getName() + " Semantic Tag 1", owner.getName() + " Subject Identifier 1");
@@ -39,11 +38,6 @@ public class KnowledgeBaseCreator {
 
         kb.setOwner(owner);
 
-        try {
-            return new SyncKB(kb);
-        } catch (SharkKBException e) {
-            L.e("Knowledge Base Factory", "Could not create a sync KB from " + owner.getName() + "s InMemoKb.");
-            throw e;
-        }
+        return kb;
     }
 }
