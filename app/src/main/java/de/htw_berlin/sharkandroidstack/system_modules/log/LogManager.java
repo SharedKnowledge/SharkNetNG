@@ -78,6 +78,18 @@ public class LogManager {
         notify(logId, entry);
     }
 
+    public static void addThrowable(String logId, Throwable throwable) {
+        int index = findIndexByLogId(logId);
+
+        final String message = throwable.getMessage();
+        final StackTraceElement element = throwable.getStackTrace()[0];
+
+        String text = message + "\n\n" + element.toString();
+        LogEntry entry = new LogEntry(text, 5);
+        logEntries.get(index).add(entry);
+        notify(logId, entry);
+    }
+
     public static void addListener(LogChangeListener listener, String logId) {
         int index = findIndexByLogId(logId);
         ArrayList<LogChangeListener> list = listeners.get(index);

@@ -15,7 +15,7 @@
         android:drawableRight="@android:drawable/ic_media_play"
         android:paddingBottom="@dimen/padding_horizontal"
         android:paddingTop="@dimen/padding_horizontal"
-        android:text="@string/activity_nfc_benchmark_start" />
+        android:text="@string/activity_nfc_sharkdemo_start" />
 
     <TextView
         android:id="@+id/activity_nfc_sharkdemo_owner_id"
@@ -30,6 +30,7 @@
         android:layout_below="@id/activity_nfc_sharkdemo_owner_id" />
 
     <ListView
+        android:id="@+id/activity_nfc_sharkdemo_kb_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_nfc_sharkdemo_input" />
