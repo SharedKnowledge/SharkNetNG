@@ -15,4 +15,9 @@
         android:id="@+id/nfc_menu_item_benchmark"
         android:title="@string/menu_nfc_benchmark"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nfc_menu_item_sharkdemo"
+        android:title="@string/menu_nfc_sharkdemo"
+        app:showAsAction="never" />
 </menu>

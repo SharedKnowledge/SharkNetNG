@@ -13,6 +13,7 @@ import android.widget.TextView;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.NfcBenchmarkFragment;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.SharkDemoFragment;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
@@ -31,6 +32,7 @@ public class NfcMainActivity extends ParentActivity {
     public final int NFC_FLAGS = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
 
     static NfcAdapter nfcAdapter;
+    private int lastOptionsItemId = R.id.nfc_menu_item_welcome;
 
     final static OnClickListener enableNfcClickListener = new OnClickListener() {
         @Override
@@ -57,10 +59,6 @@ public class NfcMainActivity extends ParentActivity {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         checkNfcSupport();
-
-        //TODO: for testing
-        clearView();
-        setFragment(new NfcBenchmarkFragment());
     }
 
     @Override
@@ -119,6 +117,9 @@ public class NfcMainActivity extends ParentActivity {
         if ((nfcAdapter == null || !nfcAdapter.isEnabled()) && R.id.nfc_menu_item_log != id) {
             return false;
         }
+        if (lastOptionsItemId == id) {
+            return false;
+        }
 
         Intent intent;
         switch (id) {
@@ -136,7 +137,13 @@ public class NfcMainActivity extends ParentActivity {
                 clearView();
                 setFragment(new NfcBenchmarkFragment());
                 break;
+            case R.id.nfc_menu_item_sharkdemo:
+                clearView();
+                setFragment(new SharkDemoFragment());
+                break;
         }
+
+        lastOptionsItemId = id;
 
         return super.onOptionsItemSelected(item);
     }
