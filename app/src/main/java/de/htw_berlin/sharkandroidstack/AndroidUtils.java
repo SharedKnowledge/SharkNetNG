@@ -5,7 +5,7 @@ import android.content.Intent;
 
 import java.util.Random;
 
-public final class Utils {
+public final class AndroidUtils {
 
     public static String deviceId;
 

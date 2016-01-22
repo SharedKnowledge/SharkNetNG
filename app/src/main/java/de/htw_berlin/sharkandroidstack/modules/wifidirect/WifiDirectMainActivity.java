@@ -5,10 +5,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -65,7 +61,7 @@ public class WifiDirectMainActivity extends ParentActivity {
         if (sharkStack == null) {
             kbTextViewWriter = KbTextViewWriter.getInstance();
 
-            sharkStack = new SharkStack(this, getDeviceId()).setTextViewWriter(kbTextViewWriter).start();
+            sharkStack = new SharkStack(this).setTextViewWriter(kbTextViewWriter).start();
 
             kbTextViewWriter.setOutputTextView((TextView) findViewById(R.id.outputTextView));
             View toggleLogView = findViewById(R.id.toogleLog);
