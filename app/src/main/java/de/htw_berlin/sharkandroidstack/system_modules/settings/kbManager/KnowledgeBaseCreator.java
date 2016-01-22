@@ -1,5 +1,6 @@
-package de.htw_berlin.sharkandroidstack.setup;
+package de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager;
 
+import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
@@ -24,19 +25,13 @@ public class KnowledgeBaseCreator {
     private SyncKB prepareKb(PeerSemanticTag owner) throws SharkKBException {
         SharkKB kb = new InMemoSharkKB();
         try {
-            SemanticTag tag1 = kb.createSemanticTag(owner.getName() + " Semantic Tag 1", owner.getName() + " Subject Identifier 1");
-            SemanticTag tag2 = kb.createSemanticTag(owner.getName() + " Semantic Tag 2", owner.getName() + " Subject Identifier 2");
-            kb.createContextPoint(
-                    kb.createContextCoordinates(tag1, owner, null, null, null, null, SharkCS.DIRECTION_INOUT)
-            ).addInformation(
-                    UUID.randomUUID().toString()
-            );
-            kb.createContextPoint(
-                    kb.createContextCoordinates(tag2, owner, null, null, null, null, SharkCS.DIRECTION_INOUT)
-            ).addInformation(
-                    UUID.randomUUID().toString()
-            );
+            final SemanticTag tag1 = kb.createSemanticTag(owner.getName() + " Semantic Tag 1", owner.getName() + " Subject Identifier 1");
+            final SemanticTag tag2 = kb.createSemanticTag(owner.getName() + " Semantic Tag 2", owner.getName() + " Subject Identifier 2");
+            final ContextCoordinates contextCoordinates1 = kb.createContextCoordinates(tag1, owner, null, null, null, null, SharkCS.DIRECTION_INOUT);
+            final ContextCoordinates contextCoordinates2 = kb.createContextCoordinates(tag2, owner, null, null, null, null, SharkCS.DIRECTION_INOUT);
 
+            kb.createContextPoint(contextCoordinates1).addInformation(UUID.randomUUID().toString());
+            kb.createContextPoint(contextCoordinates2).addInformation(UUID.randomUUID().toString());
         } catch (SharkKBException e) {
             L.e("Knowledge Base Factory", "Could not create semantic tags for " + owner.getName() + " knowledge base");
             throw e;

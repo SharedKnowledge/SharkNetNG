@@ -8,6 +8,7 @@ import net.sharkfw.knowledgeBase.sync.SyncKP;
 
 import de.htw_berlin.sharkandroidstack.android.KbTextViewWriter;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.kbManager.KnowledgeBaseCreator;
 
 public class SharkStack {
 
