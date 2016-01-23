@@ -76,14 +76,6 @@ public class NfcSharkDemoFragment extends Fragment {
         }
     };
 
-    final View.OnLongClickListener printKBLongClickListener = new View.OnLongClickListener() {
-        @Override
-        public boolean onLongClick(View v) {
-            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_print_kb, Toast.LENGTH_SHORT).show();
-            return true;
-        }
-    };
-
     final View.OnClickListener clearClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -93,10 +85,26 @@ public class NfcSharkDemoFragment extends Fragment {
         }
     };
 
-    final View.OnLongClickListener clearLongClickListener = new View.OnLongClickListener() {
+    final View.OnLongClickListener infoLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_clear, Toast.LENGTH_SHORT).show();
+            int toastMsg = 0;
+            switch (v.getId()) {
+                case R.id.activity_nfc_sharkdemo_clear:
+                    toastMsg = R.string.activity_nfc_sharkdemo_hint_clear;
+                    break;
+                case R.id.activity_nfc_sharkdemo_print_kb:
+                    toastMsg = R.string.activity_nfc_sharkdemo_hint_print_kb;
+                    break;
+                case R.id.activity_nfc_sharkdemo_input_add:
+                    toastMsg = R.string.activity_nfc_sharkdemo_hint_add;
+                    break;
+
+            }
+
+            if (toastMsg != 0) {
+                Toast.makeText(v.getContext(), toastMsg, Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
     };
@@ -110,14 +118,15 @@ public class NfcSharkDemoFragment extends Fragment {
 
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);
+        userInputAdd.setOnLongClickListener(infoLongClickListener);
 
         final ImageButton printKB = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_print_kb);
         printKB.setOnClickListener(printKBClickListener);
-        printKB.setOnLongClickListener(printKBLongClickListener);
+        printKB.setOnLongClickListener(infoLongClickListener);
 
-        final ImageButton clearList = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_clear);
-        clearList.setOnClickListener(clearClickListener);
-        clearList.setOnLongClickListener(clearLongClickListener);
+        final ImageButton clearListButton = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_clear);
+        clearListButton.setOnClickListener(clearClickListener);
+        clearListButton.setOnLongClickListener(infoLongClickListener);
 
         userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
         kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
