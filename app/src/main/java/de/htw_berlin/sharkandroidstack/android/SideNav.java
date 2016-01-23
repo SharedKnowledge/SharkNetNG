@@ -7,6 +7,9 @@ import de.htw_berlin.sharkandroidstack.modules.wifidirect.WifiDirectMainActivity
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsActivity;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class SideNav {
 
     public final static Object[][] system_modules = new Object[][]{

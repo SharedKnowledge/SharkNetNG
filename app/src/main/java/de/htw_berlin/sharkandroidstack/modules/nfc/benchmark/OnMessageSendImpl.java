@@ -7,6 +7,9 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {
 
     private int msgLength;

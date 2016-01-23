@@ -12,6 +12,9 @@ import static android.R.drawable.ic_media_previous;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 class NfcBenchmarkState {
     static final int STATE_RESET = 1;
     static final int STATE_PREPARED = 2;

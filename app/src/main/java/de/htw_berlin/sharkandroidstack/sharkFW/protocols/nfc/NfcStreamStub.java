@@ -11,6 +11,9 @@ import net.sharkfw.protocols.StreamStub;
 
 import java.io.IOException;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class NfcStreamStub implements StreamStub {
 
     RequestHandler _handler;

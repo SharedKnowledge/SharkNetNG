@@ -9,6 +9,9 @@ import java.util.Map;
 
 import de.htw_berlin.sharkandroidstack.R;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override

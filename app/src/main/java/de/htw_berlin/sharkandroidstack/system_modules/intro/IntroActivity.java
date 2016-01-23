@@ -5,7 +5,9 @@ import android.os.Bundle;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 
-
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class IntroActivity extends ParentActivity {
 
     @Override

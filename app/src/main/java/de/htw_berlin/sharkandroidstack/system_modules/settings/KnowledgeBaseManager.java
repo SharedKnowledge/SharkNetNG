@@ -14,8 +14,7 @@ import java.util.UUID;
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 
 /**
- * Created by simon on 18.03.15.
- * Re-used and extended to be a Factory by mn-io on 22.01.16.
+ * Created by mn-io on 22.01.16.
  */
 public class KnowledgeBaseManager {
 

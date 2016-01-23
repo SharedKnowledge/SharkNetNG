@@ -7,6 +7,9 @@ import android.nfc.tech.IsoDep;
 import java.io.IOException;
 import java.util.Arrays;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class IsoDepTransceiver implements Runnable {
 
     public static final String ISO_DEP_MAX_LENGTH = "Iso-Dep-Max-Length: ";

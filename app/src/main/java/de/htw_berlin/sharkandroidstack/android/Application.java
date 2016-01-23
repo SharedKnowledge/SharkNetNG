@@ -11,6 +11,9 @@ import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseMana
 import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsManager;
 import io.fabric.sdk.android.Fabric;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class Application extends android.app.Application {
     @Override
     public void onCreate() {

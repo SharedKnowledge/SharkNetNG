@@ -25,6 +25,9 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 import static de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcBenchmarkFragment extends Fragment {
     public static final int TICK_INTERVAL = 1000;

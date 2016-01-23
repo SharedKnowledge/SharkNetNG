@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class SettingsManager {
 
     public static final String KEY_KB_PREFERENCES = "pref_key_kb";

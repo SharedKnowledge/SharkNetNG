@@ -26,6 +26,9 @@ import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class NfcMainActivity extends ParentActivity {
 
     public final static String LOG_ID = "nfc";

@@ -9,6 +9,9 @@ import android.os.Build;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class MyReaderCallback implements NfcAdapter.ReaderCallback {
     private OnMessageReceived onMessageReceived;

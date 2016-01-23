@@ -6,11 +6,12 @@ import java.util.List;
 
 /**
  * @author Mario Neises
- *         <p/>
  *         This implemantation is not thread save (yet).
  *         Android is usually running single threaded.
  */
 public class LogManager {
+
+    //TODO: connect shark log with android LogManager...
 
     public final static ArrayList<ArrayList<LogEntry>> logEntries = new ArrayList<>();
 
@@ -67,7 +68,6 @@ public class LogManager {
             listeners.remove(index);
         }
     }
-
 
     public static void addEntry(String logId, Object msg, int prio) {
         int index = findIndexByLogId(logId);

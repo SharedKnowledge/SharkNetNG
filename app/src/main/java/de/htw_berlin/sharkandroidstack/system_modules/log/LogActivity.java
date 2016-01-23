@@ -16,10 +16,11 @@ import java.util.List;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 
-/*
-* open certain log on activity start by intent extra:
-* intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
-* */
+/**
+ * Created by mn-io on 22.01.16.
+ * open certain log on activity start by intent extra:
+ * intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
+ */
 public class LogActivity extends ParentActivity {
 
     public static final String OPEN_LOG_ID_ON_START = "activity_log_open_log_id_on_start";

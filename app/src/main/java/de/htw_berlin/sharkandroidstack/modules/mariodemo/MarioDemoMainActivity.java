@@ -10,6 +10,9 @@ import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class MarioDemoMainActivity extends ParentActivity {
 
     private static final String LOG_ID = "mariodemo";

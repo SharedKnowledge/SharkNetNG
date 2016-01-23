@@ -27,12 +27,13 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class NfcSharkDemoFragment extends Fragment {
     public static final String SEMANTIC_TAG_NAME = "nfcDemo";
     public static final String SEMANTIC_TAG_SI = "nfcDemoSI";
     public static final String INFORMATION_NAME = "User Input";
-
-    //TODO: shark log > android LogManager...
 
     SharkKB kb;
     KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
@@ -107,7 +108,6 @@ public class NfcSharkDemoFragment extends Fragment {
         final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
         ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
 
-        userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);
 
@@ -116,14 +116,21 @@ public class NfcSharkDemoFragment extends Fragment {
         printKB.setOnLongClickListener(printKBLongClickListener);
 
         final ImageButton clearList = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_clear);
-
         clearList.setOnClickListener(clearClickListener);
         clearList.setOnLongClickListener(clearLongClickListener);
 
+        userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
+        kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
 
+        initShark(kbList);
+
+        return root;
+    }
+
+    private void initShark(ListView kbList) {
         kbListAdapter = new MyKbListAdapter(this.getActivity());
         knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
-        kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
+
         kbList.setAdapter(kbListAdapter);
 
         try {
@@ -136,8 +143,6 @@ public class NfcSharkDemoFragment extends Fragment {
             LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
             e.printStackTrace();
         }
-
-        return root;
     }
 
     @Override

@@ -4,6 +4,9 @@ import android.app.Activity;
 
 import java.lang.ref.WeakReference;
 
+/**
+ * Created by mn-io on 22.01.16.
+ */
 public class OnAdapterUpdate {
     private final Runnable updater;
     private final WeakReference<Activity> activity;
