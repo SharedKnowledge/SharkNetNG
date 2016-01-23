@@ -18,45 +18,22 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
  */
 public class KnowledgeBaseManager {
 
-    public final static String implementationTypeEmpty = "empty KB";
-    public final static String implementationTypeDummy = "simple with 2 Cp";
-    public final static String[] implementationTypes = new String[]{implementationTypeEmpty, implementationTypeDummy};
+    public final static String implementationTypeEmpty = "empty";
+    public final static String implementationTypeSimple = "simple";
+    public final static String implementationTypeSimpleWith2Cp = "simple with 2 Cp";
+    public final static String[] implementationTypes = new String[]{implementationTypeEmpty, implementationTypeSimple, implementationTypeSimpleWith2Cp};
 
     private final static HashMap<String, SharkKB> kbs = new HashMap<>();
 
-    public static SharkKB getInMemoKb(String type, boolean reUse, String owner) throws SharkKBException {
-        if (!reUse) {
-            kbs.remove(type);
-        }
-
-        SharkKB cachedKB = kbs.get(type);
+    public static SharkKB getInMemoKb(String type, boolean reUse) throws SharkKBException {
+        SharkKB cachedKB = getSharkKbFromCache(type, reUse);
         if (cachedKB != null) {
             return cachedKB;
         }
 
-        final PeerSemanticTag ownerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag(owner, owner + "Id", "tcp://localhost:5555");
-        switch (type) {
-            case implementationTypeEmpty:
-                cachedKB = new InMemoSharkKB();
-                cachedKB.setOwner(ownerSemanticTag);
-                break;
-            case implementationTypeDummy:
-                cachedKB = prepareKb(ownerSemanticTag);
-                cachedKB.setOwner(ownerSemanticTag);
-            default:
-                throw new IllegalArgumentException("Type " + type + " not found within implemented types.");
-        }
-
+        cachedKB = createSharkKb(type);
         kbs.put(type, cachedKB);
         return cachedKB;
-    }
-
-    public static SharkKB getInMemoKb(String type, boolean reUse) throws SharkKBException {
-        return getInMemoKb(type, reUse, AndroidUtils.deviceId);
-    }
-
-    public static SharkKB getInMemoKb(String type) throws SharkKBException {
-        return getInMemoKb(type, true, AndroidUtils.deviceId);
     }
 
     public static SharkKB getInMemoKbBySettings() throws SharkKBException {
@@ -72,16 +49,47 @@ public class KnowledgeBaseManager {
         //TODO: how can a Kb be serialized?
     }
 
-    private static SharkKB prepareKb(PeerSemanticTag owner) throws SharkKBException {
-        SharkKB kb = new InMemoSharkKB();
-        final SemanticTag tag1 = kb.createSemanticTag(owner.getName() + " Semantic Tag 1", owner.getName() + " Subject Identifier 1");
-        final SemanticTag tag2 = kb.createSemanticTag(owner.getName() + " Semantic Tag 2", owner.getName() + " Subject Identifier 2");
-        final ContextCoordinates contextCoordinates1 = kb.createContextCoordinates(tag1, owner, null, null, null, null, SharkCS.DIRECTION_INOUT);
-        final ContextCoordinates contextCoordinates2 = kb.createContextCoordinates(tag2, owner, null, null, null, null, SharkCS.DIRECTION_INOUT);
+    private static SharkKB getSharkKbFromCache(String type, boolean reUse) {
+        if (!reUse) {
+            kbs.remove(type);
+        }
 
-        kb.setOwner(owner);
-        kb.createContextPoint(contextCoordinates1).addInformation(UUID.randomUUID().toString());
-        kb.createContextPoint(contextCoordinates2).addInformation(UUID.randomUUID().toString());
+        return kbs.get(type);
+    }
+
+    private static SharkKB createSharkKb(String type) throws SharkKBException {
+        SharkKB cachedKB;
+        switch (type) {
+            case implementationTypeEmpty:
+                cachedKB = new InMemoSharkKB();
+                break;
+            case implementationTypeSimple:
+                cachedKB = prepareKb(AndroidUtils.deviceId, false);
+                break;
+            case implementationTypeSimpleWith2Cp:
+                cachedKB = prepareKb(AndroidUtils.deviceId, true);
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Type %s not found within implemented types.", type));
+        }
+        return cachedKB;
+    }
+
+    private static SharkKB prepareKb(String owner, boolean withCp) throws SharkKBException {
+        final PeerSemanticTag ownerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag(owner, owner + "Id", "tcp://localhost:5555");
+
+        SharkKB kb = new InMemoSharkKB();
+        kb.setOwner(ownerSemanticTag);
+
+        if (withCp) {
+            final SemanticTag tag1 = kb.createSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 1", ownerSemanticTag.getName() + " Subject Identifier 1");
+            final SemanticTag tag2 = kb.createSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 2", ownerSemanticTag.getName() + " Subject Identifier 2");
+            final ContextCoordinates contextCoordinates1 = kb.createContextCoordinates(tag1, ownerSemanticTag, null, null, null, null, SharkCS.DIRECTION_INOUT);
+            final ContextCoordinates contextCoordinates2 = kb.createContextCoordinates(tag2, ownerSemanticTag, null, null, null, null, SharkCS.DIRECTION_INOUT);
+
+            kb.createContextPoint(contextCoordinates1).addInformation(UUID.randomUUID().toString());
+            kb.createContextPoint(contextCoordinates2).addInformation(UUID.randomUUID().toString());
+        }
 
         return kb;
     }

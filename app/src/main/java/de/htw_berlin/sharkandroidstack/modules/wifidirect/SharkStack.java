@@ -23,7 +23,7 @@ public class SharkStack {
         _engine.setConnectionTimeOut(20000); //TODO: needed?
 
         try {
-            final SharkKB kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeDummy);
+            final SharkKB kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimpleWith2Cp, true);
             _kb = new SyncKB(kb);
             _kp = new SyncKP(_engine, _kb, 1000);
         } catch (net.sharkfw.system.SharkException e) {

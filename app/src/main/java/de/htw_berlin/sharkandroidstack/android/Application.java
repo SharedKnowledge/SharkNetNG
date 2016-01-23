@@ -26,6 +26,6 @@ public class Application extends android.app.Application {
         LogManager.addEntry("sys", "Your device id is: " + AndroidUtils.deviceId, 1);
 
         SettingsManager.prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SettingsManager.setDefaultValueOrMigrateToValid(SettingsManager.KEY_KB_PREFERENCES, KnowledgeBaseManager.implementationTypeDummy, KnowledgeBaseManager.implementationTypes);
+        SettingsManager.setDefaultValueOrMigrateToValid(SettingsManager.KEY_KB_PREFERENCES, KnowledgeBaseManager.implementationTypeSimple, KnowledgeBaseManager.implementationTypes);
     }
 }
