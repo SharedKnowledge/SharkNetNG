@@ -22,6 +22,7 @@ import java.math.RoundingMode;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcReaderCallback;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 import static de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
@@ -67,7 +68,7 @@ public class NfcBenchmarkFragment extends Fragment {
     private SeekBar durationInput;
     private TextView durationOutput;
 
-    MyReaderCallback readerCallback;
+    NfcReaderCallback readerCallback;
     MyResultAdapter resultAdapter;
 
     NfcBenchmarkState benchmarkState;
@@ -207,7 +208,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new MyReaderCallback(onMessageReceivedCallback);
+            readerCallback = new NfcReaderCallback(onMessageReceivedCallback);
         }
 
         benchmarkState.resetState();

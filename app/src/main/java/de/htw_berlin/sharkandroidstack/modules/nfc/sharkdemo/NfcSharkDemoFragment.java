@@ -53,7 +53,7 @@ public class NfcSharkDemoFragment extends Fragment {
         @Override
         public void onClick(View v) {
             try {
-                AndroidSharkEngine engine = new AndroidSharkEngine(v.getContext());
+                AndroidSharkEngine engine = new AndroidSharkEngine(v.getContext(), getActivity());
                 SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
                 new MySimpleKp(engine, kb.getOwner(), kp);
                 engine.startNfc();
