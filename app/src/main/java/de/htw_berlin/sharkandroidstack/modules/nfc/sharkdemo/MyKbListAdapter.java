@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import de.htw_berlin.sharkandroidstack.R;
  * Created by mn-io on 22.01.16.
  */
 public class MyKbListAdapter extends BaseAdapter {
+
+    public static final String SRC_KB_LISTENER = "KB Listener";
+    public static final String SRC_KP = "Knowledge Port";
 
     private final ArrayList<MyDataHolder> data = new ArrayList<>();
 
@@ -75,6 +79,7 @@ public class MyKbListAdapter extends BaseAdapter {
     }
 
     private class MyViewHolder {
+
         final TextView headerField;
         final TextView dataField;
 
@@ -84,18 +89,40 @@ public class MyKbListAdapter extends BaseAdapter {
         }
 
         public void update(MyDataHolder data) {
-            headerField.setText(data.type);
+            if (data.src != null) {
+                headerField.setText(String.format("%s: %s", data.src, data.type));
+            } else {
+                headerField.setText(data.type);
+            }
+
+            if (SRC_KB_LISTENER == data.src) {
+                headerField.setGravity(Gravity.LEFT);
+                headerField.invalidate();
+            } else if (SRC_KP == data.src) {
+                headerField.setGravity(Gravity.RIGHT);
+                headerField.invalidate();
+            }
+
             dataField.setText(data.data);
+
         }
     }
 
     public static class MyDataHolder {
         final String type;
         final String data;
+        final String src;
+
+        public MyDataHolder(String type, String data, String src) {
+            this.type = type;
+            this.data = data;
+            this.src = src;
+        }
 
         public MyDataHolder(String type, String data) {
             this.type = type;
             this.data = data;
+            this.src = null;
         }
     }
 }
