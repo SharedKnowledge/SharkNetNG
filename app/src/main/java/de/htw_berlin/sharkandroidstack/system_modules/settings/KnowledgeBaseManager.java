@@ -64,10 +64,12 @@ public class KnowledgeBaseManager {
                 cachedKB = new InMemoSharkKB();
                 break;
             case implementationTypeSimple:
-                cachedKB = prepareKb(AndroidUtils.deviceId, false);
+                final String value = SettingsManager.getValue(SettingsManager.KEY_KB_OWNER_PREFERENCES, AndroidUtils.deviceId);
+                cachedKB = prepareKb(value, false);
                 break;
             case implementationTypeSimpleWith2Cp:
-                cachedKB = prepareKb(AndroidUtils.deviceId, true);
+                final String value1 = SettingsManager.getValue(SettingsManager.KEY_KB_OWNER_PREFERENCES, AndroidUtils.deviceId);
+                cachedKB = prepareKb(value1, true);
                 break;
             default:
                 throw new IllegalArgumentException(String.format("Type %s not found within implemented types.", type));

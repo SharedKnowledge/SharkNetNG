@@ -59,10 +59,10 @@ public class NfcSharkDemoFragment extends Fragment {
                 //TODO: Bug?! - cpChanged not called?!
                 //TODO: would like to print information...
 
-                Toast.makeText(v.getContext(), "Added: " + inputText, Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
             } catch (SharkKBException e) {
                 LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
-                Toast.makeText(v.getContext(), "Error occured: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), String.format("Error occurred: %s", e.getMessage()), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
@@ -79,7 +79,7 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnLongClickListener printKBLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_print_kb, Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_print_kb, Toast.LENGTH_SHORT).show();
             return true;
         }
     };
@@ -96,7 +96,7 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnLongClickListener clearLongClickListener = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_clear, Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), R.string.activity_nfc_sharkdemo_hint_clear, Toast.LENGTH_SHORT).show();
             return true;
         }
     };
@@ -133,7 +133,7 @@ public class NfcSharkDemoFragment extends Fragment {
         kbList.setAdapter(kbListAdapter);
 
         try {
-            kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeEmpty, false, AndroidUtils.deviceId);
+            kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
             kb.addListener(knowledgeBaseListener);
             kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
             tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);

@@ -2,6 +2,7 @@ package de.htw_berlin.sharkandroidstack.system_modules.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceFragment;
 
@@ -35,6 +36,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         Map<String, ?> allPreferences = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : allPreferences.entrySet()) {
             setSummaryOfListPreference(entry.getKey());
+            setSummaryOfEditTextPreferences(entry.getKey());
         }
     }
 
@@ -48,6 +50,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         //String prefValue = sharedPreferences.getString(key, "");
         setSummaryOfListPreference(key);
+        setSummaryOfEditTextPreferences(key);
+
         //TODO: act on settings change
     }
 
@@ -58,5 +62,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         ListPreference preference = (ListPreference) findPreference(key);
         preference.setSummary(preference.getEntry());
+    }
+
+    private void setSummaryOfEditTextPreferences(String key) {
+        if (!(findPreference(key) instanceof EditTextPreference)) {
+            return;
+        }
+
+        EditTextPreference preference = (EditTextPreference) findPreference(key);
+        preference.setSummary(preference.getText());
     }
 }

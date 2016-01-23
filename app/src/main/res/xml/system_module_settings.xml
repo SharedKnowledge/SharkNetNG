@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="@string/system_modules_settings_title_cat_kb">
+    <PreferenceCategory android:title="@string/system_modules_settings_title_cat_kb">
+        <EditTextPreference
+            android:key="pref_key_kb_owner"
+            android:title="@string/system_modules_settings_edit_kb_owner" />
         <ListPreference
             android:key="pref_key_kb"
             android:title="@string/system_modules_settings_title_kb" />
@@ -9,9 +11,9 @@
 
     <PreferenceCategory android:title="@string/system_modules_settings_title_cat_connection">
         <ListPreference
-            android:key="pref_key_connection"
             android:entries="@array/system_modules_settings_connection_options"
             android:entryValues="@array/system_modules_settings_connection_options_values"
+            android:key="pref_key_connection"
             android:title="@string/system_modules_settings_title_connection" />
     </PreferenceCategory>
 </PreferenceScreen>
