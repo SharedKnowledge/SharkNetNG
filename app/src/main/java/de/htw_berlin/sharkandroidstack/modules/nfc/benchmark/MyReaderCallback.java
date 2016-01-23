@@ -34,4 +34,4 @@ public class MyReaderCallback implements NfcAdapter.ReaderCallback {
 
         isoDepTransceiver = new IsoDepTransceiver(tag, isoDep, onMessageReceived);
     }
-};
+}

@@ -12,6 +12,7 @@ import java.util.List;
 public class LogManager {
 
     //TODO: connect shark log with android LogManager...
+    //TODO: implement kb log
 
     public final static ArrayList<ArrayList<LogEntry>> logEntries = new ArrayList<>();
 
@@ -35,7 +36,7 @@ public class LogManager {
     public static String findLogIdByName(String name) {
         int index = logNames.indexOf(name);
         if (index == -1) {
-            throw new IllegalStateException("Log with name '" + name + "' not registered.");
+            throw new IllegalStateException(String.format("Log with name '%s' not registered.", name));
         }
 
         return logIds.get(index);
@@ -107,7 +108,7 @@ public class LogManager {
         if (index != -1) {
             return index;
         }
-        throw new IllegalStateException("Log with ID '" + logId + "' not registered.");
+        throw new IllegalStateException(String.format("Log with ID '%s' not registered.", logId));
     }
 
     private static void notify(String logId, LogEntry entry) {

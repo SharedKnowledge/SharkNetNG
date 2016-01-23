@@ -98,7 +98,7 @@ public class LogActivity extends ParentActivity {
                 final TextView text2 = (TextView) view.findViewById(android.R.id.text1);
 
                 LogManager.LogEntry item = (LogManager.LogEntry) this.getItem(position);
-                text1.setText("Priority: " + item.prio);
+                text1.setText(String.format("Priority: %d", item.prio));
                 text2.setText(item.msg);
 
                 return view;
@@ -122,6 +122,4 @@ public class LogActivity extends ParentActivity {
             }
         }
     }
-
-    //TODO: implement kb log
 }

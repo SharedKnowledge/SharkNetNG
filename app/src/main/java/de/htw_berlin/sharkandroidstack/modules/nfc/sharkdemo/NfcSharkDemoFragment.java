@@ -121,7 +121,6 @@ public class NfcSharkDemoFragment extends Fragment {
 
         userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
         kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
-
         initShark(kbList);
 
         return root;

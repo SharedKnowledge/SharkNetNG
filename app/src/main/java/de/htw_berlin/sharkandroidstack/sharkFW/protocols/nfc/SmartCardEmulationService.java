@@ -45,7 +45,7 @@ public class SmartCardEmulationService extends HostApduService {
         final String payload = new String(apdu);
         if (payload.startsWith(IsoDepTransceiver.ISO_DEP_MAX_LENGTH)) {
             final String substring = payload.substring(IsoDepTransceiver.ISO_DEP_MAX_LENGTH.length(), payload.length());
-            return new Integer(substring);
+            return Integer.valueOf(substring);
         }
 
         return DEFAULT_MAX_LENGTH;
@@ -53,8 +53,7 @@ public class SmartCardEmulationService extends HostApduService {
 
     byte[] getNextMessage(int maxLength) {
         if (null == byteBuffer) {
-            byte[] message = src.getNextMessage();
-            byteBuffer = message;
+            byteBuffer = src.getNextMessage();
         }
 
         return getBytesFromBuffer(maxLength);

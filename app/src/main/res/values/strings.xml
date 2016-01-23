@@ -40,6 +40,9 @@
 
     <string name="activity_nfc_click_to_start">click here to start</string>
     <string name="activity_nfc_enable">Enable NFC first</string>
+    <string name="activity_nfc_no_nfc_too_old">Your Android Version is too old (Found API: %1$d). Requires at least Kitkat (API:%2$d)</string>
+    <string name="activity_nfc_no_nfc_no_adapter">NFC Adapter not found</string>
+    <string name="activity_nfc_no_nfc">NFC not support: %1$s</string>
 
     <string name="activity_nfc_benchmark_start">start benchmark</string>
     <string name="activity_nfc_benchmark_ready">benchmark prepared</string>
@@ -52,7 +55,7 @@
 
     <string name="activity_nfc_sharkdemo_start">prepare sending</string>
     <string name="activity_nfc_sharkdemo_input_hint">Add information to KB.</string>
-    <string name="activity_nfc_sharkdemo_info">Your device id, used as KB owner: %s</string>
+    <string name="activity_nfc_sharkdemo_info">Your device id, used as KB owner: %1$s</string>
     <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current KnowledgeBase</string>
     <string name="activity_nfc_sharkdemo_hint_clear">Clears list</string>
 

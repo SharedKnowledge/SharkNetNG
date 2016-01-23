@@ -38,6 +38,7 @@ public class KnowledgeBaseManager {
         switch (type) {
             case implementationTypeEmpty:
                 cachedKB = new InMemoSharkKB();
+                cachedKB.setOwner(ownerSemanticTag);
                 break;
             case implementationTypeDummy:
                 cachedKB = prepareKb(ownerSemanticTag);

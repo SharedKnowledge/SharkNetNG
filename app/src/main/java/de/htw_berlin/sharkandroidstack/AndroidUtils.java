@@ -10,6 +10,7 @@ import java.util.Random;
  */
 public final class AndroidUtils {
 
+    public static final String CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     public static String deviceId;
 
     public static void startActivity(Context context, Class className) {
@@ -19,13 +20,12 @@ public final class AndroidUtils {
     }
 
     public static String generateRandomString(int length) {
-        String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
         Random randomGenerator = new Random();
 
-        StringBuffer randStr = new StringBuffer();
+        StringBuilder randStr = new StringBuilder();
         for (int i = 0; i < length; i++) {
-            int number = randomGenerator.nextInt(chars.length());
-            char ch = chars.charAt(number);
+            int number = randomGenerator.nextInt(CHARS.length());
+            char ch = CHARS.charAt(number);
             randStr.append(ch);
         }
         return randStr.toString();

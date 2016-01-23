@@ -128,7 +128,7 @@ public class MyResultAdapter extends BaseAdapter {
                     break;
             }
 
-            stats.setText(data.getCount() + " / " + direction + " / " + type);
+            stats.setText(String.format("%d / %s / %s", data.getCount(), direction, type));
 
             asString.setText("");
             raw.setText("");

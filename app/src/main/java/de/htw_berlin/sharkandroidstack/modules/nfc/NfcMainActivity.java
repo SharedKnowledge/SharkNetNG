@@ -25,7 +25,6 @@ import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 
-
 /**
  * Created by mn-io on 22.01.16.
  */
@@ -83,10 +82,9 @@ public class NfcMainActivity extends ParentActivity {
 
         String reason = null;
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            reason = "Your Android Version is too old (Found API: " + Build.VERSION.SDK_INT + "). " +
-                    "Requires at least Kitkat (API:" + Build.VERSION_CODES.KITKAT + ")";
+            reason = String.format(getString(R.string.activity_nfc_no_nfc_too_old), Build.VERSION.SDK_INT, Build.VERSION_CODES.KITKAT);
         } else if (nfcAdapter == null) {
-            reason = "NFC Adapter not found";
+            reason = getString(R.string.activity_nfc_no_nfc_no_adapter);
         }
 
         enableButton.setVisibility(GONE);
@@ -95,7 +93,7 @@ public class NfcMainActivity extends ParentActivity {
         findViewById(R.id.activtiy_nfc_start_here).setVisibility(GONE);
 
         if (null != reason) {
-            reason = "NFC not support: " + reason;
+            reason = String.format(getString(R.string.activity_nfc_no_nfc), reason);
             LogManager.addEntry(LOG_ID, reason, 1);
             supportMessage.setText(reason);
             supportMessage.setVisibility(VISIBLE);

@@ -22,9 +22,6 @@ public class OnAdapterUpdate {
     }
 
     protected void update(final MyResultAdapter.MyDataHolder dataHolder) {
-        //ugly and expensive, but needed to avoid exception:
-        // "IllegalStateException: The content of the adapter has changed but ListView did not receive a notification."
-        // need to update adapter on UI thread with current data
         activity.get().runOnUiThread(new Runnable() {
             @Override
             public void run() {

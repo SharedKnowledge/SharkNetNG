@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,6 +52,8 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final String MSG_BYTE_S = " byte/s, ";
     public static final String MSG_BIT_S = " bit/s \n";
     public static final String MSG_NEW_LINE = "\n";
+
+    public static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_DOWN;
 
     Button startSendingButton;
     Button backFromReceivingButton;
@@ -166,12 +169,8 @@ public class NfcBenchmarkFragment extends Fragment {
         description = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description);
         description2 = (TextView) root.findViewById(R.id.activity_nfc_benchmark_description2);
 
-        resultAdapter = new MyResultAdapter(getActivity());
-        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateListReceiving, getActivity());
-        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateListSending, getActivity());
-
         resultList = (ListView) root.findViewById(R.id.activity_nfc_benchmark_results);
-        resultList.setAdapter(resultAdapter);
+        initAdapterAndCallbacks(resultList);
 
         startSendingButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
         startSendingButton.setOnClickListener(startButtonClickListener);
@@ -187,7 +186,15 @@ public class NfcBenchmarkFragment extends Fragment {
         durationInput.setOnSeekBarChangeListener(durationChangeListener);
         durationInput.setProgress(DEFAULT_DURATION_IN_SEC);
 
+
         return root;
+    }
+
+    private void initAdapterAndCallbacks(ListView resultList) {
+        resultAdapter = new MyResultAdapter(getActivity());
+        onMessageReceivedCallback = new OnMessageReceivedImpl(resultAdapter, updateListReceiving, getActivity());
+        onMessageSendCallback = new OnMessageSendImpl(resultAdapter, updateListSending, getActivity());
+        resultList.setAdapter(resultAdapter);
     }
 
     @Override
@@ -209,21 +216,6 @@ public class NfcBenchmarkFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-    }
-
-    protected void setResultVisibility(final int visibility, final int progressVisibility) {
-        int invertedVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
-        description.setVisibility(invertedVisibility);
-        description2.setVisibility(invertedVisibility);
-        msgLengthInput.setVisibility(invertedVisibility);
-        msgLengthOutput.setVisibility(invertedVisibility);
-        durationInput.setVisibility(invertedVisibility);
-        durationOutput.setVisibility(invertedVisibility);
-
-        resultList.setVisibility(visibility);
-
-        progressBar.setVisibility(progressVisibility);
-        progressDescription.setVisibility(progressVisibility);
     }
 
     public CountDownTimer prepareTimer() {
@@ -250,11 +242,37 @@ public class NfcBenchmarkFragment extends Fragment {
         };
     }
 
-    int getDurationInSec() {
-        return new Integer(durationOutput.getText().toString());
+    protected void setResultVisibility(final int visibility, final int progressVisibility) {
+        int invertedVisibility = View.VISIBLE == visibility ? View.GONE : View.VISIBLE;
+        description.setVisibility(invertedVisibility);
+        description2.setVisibility(invertedVisibility);
+        msgLengthInput.setVisibility(invertedVisibility);
+        msgLengthOutput.setVisibility(invertedVisibility);
+        durationInput.setVisibility(invertedVisibility);
+        durationOutput.setVisibility(invertedVisibility);
+
+        resultList.setVisibility(visibility);
+
+        progressBar.setVisibility(progressVisibility);
+        progressDescription.setVisibility(progressVisibility);
     }
 
-    void addResult() {
+    private int getDurationInSec() {
+        return Integer.valueOf(durationOutput.getText().toString());
+    }
+
+    private void addResult() {
+        final StringBuilder msg = calcStats();
+        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg.toString());
+        resultAdapter.add(dataHolder);
+        resultAdapter.notifyDataSetChanged();
+        resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
+
+        LogManager.addEntry(NfcMainActivity.LOG_ID, msg, 2);
+    }
+
+    @NonNull
+    private StringBuilder calcStats() {
         final long fixedTimeoutTimer = onMessageReceivedCallback.readAndResetTimer() - TIMEOUT_RECEIVING_ADD_RESULT;
         final long measuredTime = Math.min(onMessageSendCallback.readAndResetTimer(), fixedTimeoutTimer);
 
@@ -262,34 +280,39 @@ public class NfcBenchmarkFragment extends Fragment {
         final long byteCount2 = onMessageSendCallback.readAndResetCount();
         final long byteCount = Math.max(byteCount1, byteCount2);
 
-        final BigDecimal asSeconds = BigDecimal.valueOf(measuredTime).setScale(4).divide(BigDecimal.valueOf(1000), RoundingMode.HALF_DOWN);
-        final BigDecimal bytePerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
-        final BigDecimal bitsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount * 8).setScale(4).divide(asSeconds, RoundingMode.HALF_DOWN);
-
         final int tagCount2 = onMessageSendCallback.readAndResetTagCount();
         final int tagCount = Math.max(onMessageReceivedCallback.readAndResetTagCount(), tagCount2);
-        final BigDecimal tagsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO : BigDecimal.valueOf(tagCount).setScale(2).divide(asSeconds, RoundingMode.HALF_DOWN);
-        final BigDecimal bytesPerTag = tagCount == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount).setScale(2).divide(BigDecimal.valueOf(tagCount), RoundingMode.HALF_DOWN);
+
+        final BigDecimal asSeconds = BigDecimal.valueOf(measuredTime).setScale(4, ROUNDING_MODE)
+                .divide(BigDecimal.valueOf(1000), ROUNDING_MODE);
+        final BigDecimal bytePerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO :
+                BigDecimal.valueOf(byteCount).setScale(4, ROUNDING_MODE).divide(asSeconds, ROUNDING_MODE);
+        final BigDecimal bitsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO :
+                BigDecimal.valueOf(byteCount * 8).setScale(4, ROUNDING_MODE).divide(asSeconds, ROUNDING_MODE);
+
+        final BigDecimal tagsPerSecond = asSeconds.equals(BigDecimal.ZERO) ? BigDecimal.ZERO :
+                BigDecimal.valueOf(tagCount).setScale(2, ROUNDING_MODE).divide(asSeconds, ROUNDING_MODE);
+        final BigDecimal bytesPerTag = tagCount == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(byteCount)
+                .setScale(2, ROUNDING_MODE).divide(BigDecimal.valueOf(tagCount), ROUNDING_MODE);
+
 
         final StringBuilder msg = new StringBuilder();
-        msg.append(MSG_PAYLOAD_RECEIVED + byteCount1 + MSG_BYTES);
-        msg.append(MSG_PAYLOAD_SENT + byteCount2 + MSG_BYTES);
+
+        msg.append(MSG_PAYLOAD_RECEIVED).append(byteCount1).append(MSG_BYTES);
+        msg.append(MSG_PAYLOAD_SENT).append(byteCount2).append(MSG_BYTES);
+
         if (View.VISIBLE == progressBar.getVisibility()) {
-            msg.append(MSG_TIME_ELAPSED + progressBar.getProgress() + MSG_SECONDS);
+            final int p = progressBar.getProgress();
+            msg.append(MSG_TIME_ELAPSED).append(p).append(MSG_SECONDS);
         }
-        msg.append(MSG_TIME_MEASURED + asSeconds + MSG_SECONDS);
-        msg.append(MSG_THROUGHPUT + bytePerSecond + MSG_BYTE_S + bitsPerSecond + MSG_BIT_S);
 
-        msg.append(MSG_TAGS_DETECTED + tagCount + MSG_NEW_LINE);
-        msg.append(MSG_TAGS_PER_SECOND + tagsPerSecond + MSG_NEW_LINE);
-        msg.append(MSG_BYTES_PER_TAG + bytesPerTag + MSG_NEW_LINE);
+        msg.append(MSG_TIME_MEASURED).append(asSeconds).append(MSG_SECONDS);
+        msg.append(MSG_THROUGHPUT).append(bytePerSecond).append(MSG_BYTE_S).append(bitsPerSecond).append(MSG_BIT_S);
+
+        msg.append(MSG_TAGS_DETECTED).append(tagCount).append(MSG_NEW_LINE);
+        msg.append(MSG_TAGS_PER_SECOND).append(tagsPerSecond).append(MSG_NEW_LINE);
+        msg.append(MSG_BYTES_PER_TAG).append(bytesPerTag).append(MSG_NEW_LINE);
         msg.append(MSG_TIME_HINT);
-
-        final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg.toString());
-        resultAdapter.add(dataHolder);
-        resultAdapter.notifyDataSetChanged();
-        resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
-
-        LogManager.addEntry(NfcMainActivity.LOG_ID, msg, 2);
+        return msg;
     }
 }

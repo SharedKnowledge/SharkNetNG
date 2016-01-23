@@ -23,14 +23,14 @@ public class SettingsManager {
 
         String value = prefs.getString(prefKey, "");
         if (value.isEmpty() || !strings.contains(value)) {
-            prefs.edit().putString(prefKey, defaultValue).commit();
+            prefs.edit().putString(prefKey, defaultValue).apply();
         }
     }
 
     public static void setDefaultValue(String prefKey, String defaultValue) {
         String value = prefs.getString(prefKey, "");
         if (value.isEmpty()) {
-            prefs.edit().putString(prefKey, defaultValue).commit();
+            prefs.edit().putString(prefKey, defaultValue).apply();
         }
     }
 
