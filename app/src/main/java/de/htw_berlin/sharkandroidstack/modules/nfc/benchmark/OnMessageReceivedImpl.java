@@ -21,6 +21,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
         if (message != null) {
             count += message.length;
         }
+        countMsg++;
         update(dataHolder);
     }
 

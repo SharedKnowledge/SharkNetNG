@@ -12,6 +12,7 @@ public class OnAdapterUpdate {
     private final WeakReference<Activity> activity;
     private final MyResultAdapter adapter;
     protected long count = 0;
+    protected int countMsg = 0;
     protected int tagCount = 0;
     private long startTime = 0;
 
@@ -55,6 +56,12 @@ public class OnAdapterUpdate {
     public int readAndResetTagCount() {
         int tmp = tagCount;
         tagCount = 0;
+        return tmp;
+    }
+
+    public int readAndResetMsgCount() {
+        int tmp = countMsg;
+        countMsg = 0;
         return tmp;
     }
 }

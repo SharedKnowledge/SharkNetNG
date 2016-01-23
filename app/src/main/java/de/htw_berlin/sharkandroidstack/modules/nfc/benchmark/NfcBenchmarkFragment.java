@@ -43,6 +43,7 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final String MSG_TIME_ELAPSED = "Time elapsed: ";
     public static final String MSG_TIME_MEASURED = "Time measured*: ";
     public static final String MSG_THROUGHPUT = "Throughput: ";
+    public static final String MSG_MSG_DETECTED = "\nMessage packages (chunks) detected: ";
     public static final String MSG_TAGS_DETECTED = "\nTags detected: ";
     public static final String MSG_TAGS_PER_SECOND = "Tags per second: ";
     public static final String MSG_BYTES_PER_TAG = "Bytes per tag: ";
@@ -281,8 +282,8 @@ public class NfcBenchmarkFragment extends Fragment {
         final long byteCount2 = onMessageSendCallback.readAndResetCount();
         final long byteCount = Math.max(byteCount1, byteCount2);
 
-        final int tagCount2 = onMessageSendCallback.readAndResetTagCount();
-        final int tagCount = Math.max(onMessageReceivedCallback.readAndResetTagCount(), tagCount2);
+        final int tagCount = Math.max(onMessageReceivedCallback.readAndResetTagCount(), onMessageSendCallback.readAndResetTagCount());
+        final int msgCount = Math.max(onMessageReceivedCallback.readAndResetMsgCount(), onMessageSendCallback.readAndResetMsgCount());
 
         final BigDecimal asSeconds = BigDecimal.valueOf(measuredTime).setScale(4, ROUNDING_MODE)
                 .divide(BigDecimal.valueOf(1000), ROUNDING_MODE);
@@ -310,6 +311,7 @@ public class NfcBenchmarkFragment extends Fragment {
         msg.append(MSG_TIME_MEASURED).append(asSeconds).append(MSG_SECONDS);
         msg.append(MSG_THROUGHPUT).append(bytePerSecond).append(MSG_BYTE_S).append(bitsPerSecond).append(MSG_BIT_S);
 
+        msg.append(MSG_MSG_DETECTED).append(msgCount).append(MSG_NEW_LINE);
         msg.append(MSG_TAGS_DETECTED).append(tagCount).append(MSG_NEW_LINE);
         msg.append(MSG_TAGS_PER_SECOND).append(tagsPerSecond).append(MSG_NEW_LINE);
         msg.append(MSG_BYTES_PER_TAG).append(bytesPerTag).append(MSG_NEW_LINE);
