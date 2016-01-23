@@ -3,7 +3,6 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
-import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharkfw.knowledgeBase.sync.SyncKP;
 import net.sharkfw.peer.KEPConnection;
@@ -11,8 +10,6 @@ import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.peer.SharkEngine;
 import net.sharkfw.system.L;
 import net.sharkfw.system.SharkException;
-
-import de.htw_berlin.sharkandroidstack.modules.wifidirect.KbTextViewWriter;
 
 /**
  * An example KP which will send an interest to the connecting device
@@ -22,19 +19,11 @@ import de.htw_berlin.sharkandroidstack.modules.wifidirect.KbTextViewWriter;
  */
 public class MySimpleKp extends KnowledgePort {
     private SharkCS myInterest;
-    private SyncKP _kp;
-    private KbTextViewWriter kbTextViewWriter;
+    private SyncKP kp;
 
-    /**
-     * @param se  the shark engine
-     * @param _kp
-     */
-    public MySimpleKp(SharkEngine se, PeerSemanticTag myIdentity, SyncKP _kp) {
+    public MySimpleKp(SharkEngine se, PeerSemanticTag myIdentity, SyncKP kp) {
         super(se);
-        this._kp = _kp;
-
-        SharkKB kb = new InMemoSharkKB();
-        PeerSemanticTag me = myIdentity;
+        this.kp = kp;
 
         this.myInterest = new InMemoSharkKB().createInterest(null, myIdentity, null, null, null, null, SharkCS.DIRECTION_INOUT);
     }
@@ -42,6 +31,10 @@ public class MySimpleKp extends KnowledgePort {
     @Override
     protected void doInsert(Knowledge knowledge, KEPConnection kepConnection) {
         log("knowledge received: (" + L.knowledge2String(knowledge) + ")");
+    }
+
+    private void log(String msg) {
+        System.out.println("mario: " + msg);
     }
 
     @Override
@@ -60,9 +53,9 @@ public class MySimpleKp extends KnowledgePort {
         //TODO: if else?
         if (isPeerInterest(interest)) {
             log("Peer interest received " + L.contextSpace2String(interest));
-            log("Trying to send sync interest " + L.contextSpace2String(_kp.getInterest()));
+            log("Trying to send sync interest " + L.contextSpace2String(kp.getInterest()));
             try {
-                kepConnection.expose(_kp.getInterest());
+                kepConnection.expose(kp.getInterest());
             } catch (SharkException ex) {
                 log("problems:" + ex.getMessage());
             }
@@ -82,18 +75,6 @@ public class MySimpleKp extends KnowledgePort {
                 theInterest.isAny(SharkCS.DIM_LOCATION) && theInterest.isAny(SharkCS.DIM_DIRECTION) &&
                 theInterest.isAny(SharkCS.DIM_PEER) && theInterest.isAny(SharkCS.DIM_REMOTEPEER) &&
                 theInterest.isAny(SharkCS.DIM_TIME));
-    }
-
-    public void setTextViewWriter(KbTextViewWriter kbTextViewWriter) {
-        this.kbTextViewWriter = kbTextViewWriter;
-    }
-
-    public void log(String msg) {
-        if (kbTextViewWriter == null) {
-            return;
-        }
-
-        kbTextViewWriter.appendToLogText(msg);
     }
 }
 

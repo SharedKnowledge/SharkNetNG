@@ -13,17 +13,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.sync.SyncKB;
+import net.sharkfw.knowledgeBase.sync.SyncKP;
 import net.sharkfw.system.L;
+
+import java.io.IOException;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
@@ -42,6 +48,24 @@ public class NfcSharkDemoFragment extends Fragment {
 
     EditText userInput;
     ListView kbList;
+
+    final View.OnClickListener startClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                AndroidSharkEngine engine = new AndroidSharkEngine(v.getContext());
+                SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
+                new MySimpleKp(engine, kb.getOwner(), kp);
+                engine.startNfc();
+            } catch (SharkKBException e) {
+                e.printStackTrace();
+            } catch (SharkProtocolNotSupportedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     final View.OnClickListener userInputAddClickListener = new View.OnClickListener() {
         @Override
@@ -115,6 +139,8 @@ public class NfcSharkDemoFragment extends Fragment {
 
         final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
         ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
+
+        root.findViewById(R.id.activity_nfc_sharkdemo_start).setOnClickListener(startClickListener);
 
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);
