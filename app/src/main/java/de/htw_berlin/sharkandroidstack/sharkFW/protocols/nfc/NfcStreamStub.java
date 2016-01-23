@@ -22,8 +22,6 @@ import java.lang.ref.WeakReference;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcStreamStub implements StreamStub {
 
-    public final int NFC_FLAGS = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
-
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
     private final NfcReaderCallback nfcReaderCallback;
@@ -48,6 +46,18 @@ public class NfcStreamStub implements StreamStub {
         }
     };
 
+    final static OnMessageSend onMessageSend = new OnMessageSend() {
+        @Override
+        public byte[] getNextMessage() {
+            return new byte[0];
+        }
+
+        @Override
+        public void onDeactivated(int reason) {
+
+        }
+    };
+
     public NfcStreamStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
         this.activity = activity;
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(context);
@@ -58,24 +68,26 @@ public class NfcStreamStub implements StreamStub {
         nfcReaderCallback = new NfcReaderCallback(new OnMessageReceived() {
             @Override
             public void onMessage(byte[] message) {
-
+                System.out.println("mario nfc: " + new String(message));
             }
 
             @Override
             public void onError(Exception exception) {
-
+                onMessage(exception.getMessage().getBytes());
             }
 
             @Override
             public void tagLost(Tag tag) {
+                onMessage(tag.toString().getBytes());
 
             }
 
             @Override
             public void newTag(Tag tag) {
-
+                onMessage(tag.toString().getBytes());
             }
         });
+
         stop(); // stop means: reading actively and notify callback when NFC detected
     }
 
@@ -96,13 +108,13 @@ public class NfcStreamStub implements StreamStub {
 
     @Override
     public void stop() {
-        nfcAdapter.enableReaderMode(activity.get(), nfcReaderCallback, NFC_FLAGS, null);
+        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
         isStarted = false;
     }
 
     @Override
     public void start() throws IOException {
-        nfcAdapter.disableReaderMode(activity.get());
+        NfcAdapterHelper.prepareSending(activity.get(), onMessageSend);
         isStarted = true;
     }
 

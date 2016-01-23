@@ -5,6 +5,7 @@ import android.view.View;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcAdapterHelper;
 
 import static android.R.drawable.ic_media_pause;
 import static android.R.drawable.ic_media_play;
@@ -21,7 +22,6 @@ class NfcBenchmarkState {
     static final int STATE_RUNNING = 3;
     static final int STATE_STOPPED = 4;
     static final int STATE_RECEIVING = 4;
-
 
     private final NfcBenchmarkFragment fragment;
     private final NfcMainActivity activity;
@@ -67,7 +67,7 @@ class NfcBenchmarkState {
 
         fragment.resultAdapter.clear();
 
-        activity.prepareReceiving(fragment.readerCallback);
+        NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
     }
 
     void preparedState() {
@@ -76,7 +76,7 @@ class NfcBenchmarkState {
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
-        activity.prepareSending(fragment.onMessageSendCallback);
+        NfcAdapterHelper.prepareSending(activity, fragment.onMessageSendCallback);
     }
 
     void sendState() {
@@ -107,7 +107,7 @@ class NfcBenchmarkState {
             timer = null;
         }
 
-        activity.prepareReceiving(fragment.readerCallback);
+        NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
     }
 
     void receivingState() {

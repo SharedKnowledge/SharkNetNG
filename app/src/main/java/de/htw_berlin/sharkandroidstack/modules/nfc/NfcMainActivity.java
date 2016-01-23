@@ -1,6 +1,5 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -14,8 +13,6 @@ import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.NfcBenchmarkFragment;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.SmartCardEmulationService;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
@@ -31,7 +28,6 @@ import static android.view.View.VISIBLE;
 public class NfcMainActivity extends ParentActivity {
 
     public final static String LOG_ID = "nfc";
-    public final int NFC_FLAGS = NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_SKIP_NDEF_CHECK | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS;
 
     static NfcAdapter nfcAdapter;
     private int lastOptionsItemId = R.id.nfc_menu_item_welcome;
@@ -151,19 +147,5 @@ public class NfcMainActivity extends ParentActivity {
         clearView();
         setLayoutResource(R.layout.module_nfc_activity);
         checkNfcSupport();
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void prepareReceiving(NfcAdapter.ReaderCallback readerCallback) {
-        if (isDestroyed()) {
-            return;
-        }
-        nfcAdapter.enableReaderMode(this, readerCallback, NFC_FLAGS, null);
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void prepareSending(OnMessageSend src) {
-        SmartCardEmulationService.setSource(src);
-        nfcAdapter.disableReaderMode(this);
     }
 }
