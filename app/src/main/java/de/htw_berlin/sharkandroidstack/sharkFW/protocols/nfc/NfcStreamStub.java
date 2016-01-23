@@ -16,6 +16,8 @@ import net.sharkfw.protocols.StreamStub;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
+import de.htw_berlin.sharkandroidstack.AndroidUtils;
+
 /**
  * Created by mn-io on 22.01.16.
  */
@@ -31,17 +33,21 @@ public class NfcStreamStub implements StreamStub {
 
     final RequestHandler _internHandler = new RequestHandler() {
         public void handleMessage(byte[] msg, MessageStub stub) {
+            System.out.println("mario handleMessage");
             NfcStreamStub.this._handler.handleMessage(msg, stub);
         }
 
         public void handleStream(StreamConnection con) {
 //            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
+            System.out.println("mario handleStream");
             NfcStreamStub.this._handler.handleStream(con);
+
         }
 
         @Override
         public void handleNewConnectionStream(StreamConnection con) {
 //            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
+            System.out.println("mario handleNewConnectionStream");
             NfcStreamStub.this._handler.handleNewConnectionStream(con);
         }
     };
@@ -49,12 +55,36 @@ public class NfcStreamStub implements StreamStub {
     final static OnMessageSend onMessageSend = new OnMessageSend() {
         @Override
         public byte[] getNextMessage() {
-            return new byte[0];
+            final String s = AndroidUtils.generateRandomString(512);
+            System.out.println("mario: sending " + s);
+            return s.getBytes();
         }
 
         @Override
         public void onDeactivated(int reason) {
 
+        }
+    };
+
+    final static OnMessageReceived onMessageReceived = new OnMessageReceived() {
+        @Override
+        public void onMessage(byte[] message) {
+            System.out.println("mario receiving: " + new String(message));
+        }
+
+        @Override
+        public void onError(Exception exception) {
+            onMessage(exception.getMessage().getBytes());
+        }
+
+        @Override
+        public void tagLost(Tag tag) {
+            onMessage(tag.toString().getBytes());
+        }
+
+        @Override
+        public void newTag(Tag tag) {
+            onMessage(tag.toString().getBytes());
         }
     };
 
@@ -65,30 +95,7 @@ public class NfcStreamStub implements StreamStub {
             throw new SharkProtocolNotSupportedException("NFC is not supported");
         }
 
-        nfcReaderCallback = new NfcReaderCallback(new OnMessageReceived() {
-            @Override
-            public void onMessage(byte[] message) {
-                System.out.println("mario nfc: " + new String(message));
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                onMessage(exception.getMessage().getBytes());
-            }
-
-            @Override
-            public void tagLost(Tag tag) {
-                onMessage(tag.toString().getBytes());
-
-            }
-
-            @Override
-            public void newTag(Tag tag) {
-                onMessage(tag.toString().getBytes());
-            }
-        });
-
-        stop(); // stop means: reading actively and notify callback when NFC detected
+        nfcReaderCallback = new NfcReaderCallback(onMessageReceived);
     }
 
     @Override
@@ -114,6 +121,7 @@ public class NfcStreamStub implements StreamStub {
 
     @Override
     public void start() throws IOException {
+        //TODO: state for start... ?!
         NfcAdapterHelper.prepareSending(activity.get(), onMessageSend);
         isStarted = true;
     }

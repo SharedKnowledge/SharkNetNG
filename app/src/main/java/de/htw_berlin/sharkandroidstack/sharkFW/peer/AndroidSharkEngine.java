@@ -71,6 +71,10 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
 
     @Override
     public void startNfc() throws SharkProtocolNotSupportedException, IOException {
+        if (currentStub instanceof NfcStreamStub) {
+            currentStub.start();
+            return;
+        }
         this.createNfcStreamStub(this.getKepStub()).start();
     }
 

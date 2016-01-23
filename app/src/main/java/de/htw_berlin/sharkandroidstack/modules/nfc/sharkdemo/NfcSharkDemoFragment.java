@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -50,19 +51,36 @@ public class NfcSharkDemoFragment extends Fragment {
     ListView kbList;
 
     final View.OnClickListener startClickListener = new View.OnClickListener() {
+
+        public AndroidSharkEngine engine;
+
         @Override
         public void onClick(View v) {
-            try {
-                AndroidSharkEngine engine = new AndroidSharkEngine(v.getContext(), getActivity());
-                SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
-                new MySimpleKp(engine, kb.getOwner(), kp);
-                engine.startNfc();
-            } catch (SharkKBException e) {
-                e.printStackTrace();
-            } catch (SharkProtocolNotSupportedException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            Button button = (Button) v;
+            //TODO: dummy implementation - 1st click: engine is passive, 2nd click engine started reading
+            if (engine == null) {
+                try {
+                    button.setText("engine started");
+                    engine = new AndroidSharkEngine(v.getContext(), getActivity());
+                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
+                    new MySimpleKp(engine, kb.getOwner(), kp);
+                    engine.startNfc();
+                } catch (SharkKBException e) {
+                    e.printStackTrace();
+                } catch (SharkProtocolNotSupportedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    button.setText("engine stopped");
+                    engine.startNfc();
+                } catch (SharkProtocolNotSupportedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     };
