@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Created by mn-io on 25.01.2016.
  */
 public class NfcMessageSendHandler implements OnMessageSend {
-    private byte[] byteBuffer = new byte[0];
+    byte[] byteBuffer = new byte[0];
     private int size;
 
     @Override
