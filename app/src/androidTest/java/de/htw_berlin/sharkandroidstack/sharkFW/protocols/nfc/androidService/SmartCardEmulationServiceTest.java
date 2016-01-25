@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
 
 import junit.framework.TestCase;
 

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 
 /**
  * Created by mn-io on 22.01.16.

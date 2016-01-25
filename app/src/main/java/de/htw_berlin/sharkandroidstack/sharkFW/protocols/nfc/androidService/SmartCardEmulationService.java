@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
 
 import android.annotation.TargetApi;
 import android.nfc.cardemulation.HostApduService;
@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 
 import java.util.Arrays;
+
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 /**
  * Created by mn-io on 22.01.16.

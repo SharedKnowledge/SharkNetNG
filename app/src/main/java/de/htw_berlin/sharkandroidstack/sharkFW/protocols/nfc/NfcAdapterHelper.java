@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.nfc.NfcAdapter;
 import android.os.Build;
 
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.SmartCardEmulationService;
+
 /**
  * Created by mn-io on 23.01.2016.
  */

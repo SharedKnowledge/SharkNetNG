@@ -6,8 +6,8 @@ import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.os.Build;
 
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.IsoDepTransceiver;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.IsoDepTransceiver;
 
 /**
  * Created by mn-io on 22.01.16.
