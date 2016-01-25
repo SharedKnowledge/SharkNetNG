@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -106,11 +107,17 @@ public class MyResultAdapter extends BaseAdapter {
             switch (data.getDirection()) {
                 case MyDataHolder.DIRECTION_IN:
                     direction = "incoming";
+                    asString.setTextColor(0xFF550000);
                     break;
                 case MyDataHolder.DIRECTION_OUT:
                     direction = "outgoing";
+                    asString.setTextColor(0xFF005500);
                     break;
+                default:
+                    asString.setTextColor(Color.BLACK);
             }
+
+            stats.invalidate();
 
             String type = "Error";
             switch (data.getType()) {
