@@ -8,4 +8,6 @@ public interface OnMessageSend {
     byte[] getNextMessage();
 
     void onDeactivated(int reason);
+
+    void setMaxSize(int size);
 }

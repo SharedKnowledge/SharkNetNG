@@ -103,6 +103,10 @@ public class NfcBenchmarkFragment extends Fragment {
     final Runnable updateListReceiving = new Runnable() {
         @Override
         public void run() {
+            if (benchmarkState.isState(NfcBenchmarkState.STATE_RUNNING)) {
+                return;
+            }
+
             benchmarkState.receivingState();
             resultList.smoothScrollToPosition(resultAdapter.getCount() - 1);
 
@@ -125,7 +129,7 @@ public class NfcBenchmarkFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             progress *= MSG_LENGTH_SCALE_FACTOR;
             msgLengthOutput.setText(progress + "");
-            onMessageSendCallback.setMsgLength(progress);
+            onMessageSendCallback.setMaxSize(progress);
         }
 
         @Override
@@ -209,7 +213,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new NfcReaderCallback(onMessageReceivedCallback);
+            readerCallback = new NfcReaderCallback(onMessageReceivedCallback, onMessageSendCallback);
         }
 
         benchmarkState.resetState();
@@ -275,6 +279,7 @@ public class NfcBenchmarkFragment extends Fragment {
 
     @NonNull
     private StringBuilder calcStats() {
+        //TODO: fix/enhance stats
         final long fixedTimeoutTimer = onMessageReceivedCallback.readAndResetTimer() - TIMEOUT_RECEIVING_ADD_RESULT;
         final long measuredTime = Math.min(onMessageSendCallback.readAndResetTimer(), fixedTimeoutTimer);
 

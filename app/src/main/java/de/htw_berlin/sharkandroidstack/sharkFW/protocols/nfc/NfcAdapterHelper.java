@@ -31,11 +31,12 @@ public class NfcAdapterHelper {
      * NFC acts as a passive SmartCard, which contains data to send.
      * Technically this device is waiting to receive energy by electromagnetic induction.
      */
-    public static void prepareSending(Activity activity, OnMessageSend src) {
+    public static void prepareSending(Activity activity, OnMessageSend src, OnMessageReceived dst) {
         if (activity.isDestroyed()) {
             return;
         }
         SmartCardEmulationService.setSource(src);
+        SmartCardEmulationService.setSink(dst);
         getAdapter(activity).disableReaderMode(activity);
     }
 

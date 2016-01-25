@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 /**
  * Created by mn-io on 22.01.16.
  */
 public class IsoDepTransceiver implements Runnable {
 
-    public static final String ISO_DEP_MAX_LENGTH = "Iso-Dep-Max-Length: ";
     public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
     public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
 
@@ -23,11 +23,14 @@ public class IsoDepTransceiver implements Runnable {
     private Tag tag;
     private IsoDep isoDep;
     private OnMessageReceived onMessageReceived;
+    private OnMessageSend onMessageSendCallback;
 
-    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived) {
+    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCallback) {
         this.tag = tag;
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
+        this.onMessageSendCallback = onMessageSendCallback;
+        onMessageSendCallback.setMaxSize(isoDep.getMaxTransceiveLength());
 
         onMessageReceived.newTag(tag);
 
@@ -46,9 +49,8 @@ public class IsoDepTransceiver implements Runnable {
             }
 
             while (isoDep.isConnected() && !Thread.interrupted()) {
-                final int maxTransceiveLength = isoDep.getMaxTransceiveLength();
-                final byte[] bytes = (ISO_DEP_MAX_LENGTH + maxTransceiveLength).getBytes();
-                response = isoDep.transceive(bytes);
+                final byte[] nextMessage = onMessageSendCallback.getNextMessage();
+                response = isoDep.transceive(nextMessage);
                 onMessageReceived.onMessage(response);
             }
 

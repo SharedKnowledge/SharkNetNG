@@ -12,19 +12,15 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
  */
 public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {
 
-    private int msgLength;
+    private int size;
 
     public OnMessageSendImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
         super(adapter, activity, updater);
     }
 
-    public void setMsgLength(int msgLength) {
-        this.msgLength = msgLength;
-    }
-
     @Override
     public byte[] getNextMessage() {
-        byte[] message = AndroidUtils.generateRandomString(msgLength).getBytes();
+        byte[] message = AndroidUtils.generateRandomString(size).getBytes();
 
         startTimer();
         count += message.length;
@@ -50,6 +46,11 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_LOST_TAG, r);
         update(dataHolder);
+    }
+
+    @Override
+    public void setMaxSize(int size) {
+        this.size = size;
     }
 }
 

@@ -5,8 +5,7 @@ import android.nfc.cardemulation.HostApduService;
 import android.os.Build;
 import android.os.Bundle;
 
-import java.util.Arrays;
-
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 /**
@@ -19,11 +18,11 @@ public class SmartCardEmulationService extends HostApduService {
     //TODO: start/stop service on activity start
     //TODO: stream ...
 
-    public static int DEFAULT_MAX_LENGTH = 200;
     public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
 
     private static OnMessageSend src;
-    byte[] byteBuffer;
+    private static OnMessageReceived sink;
+
 
     @Override
     public void onDeactivated(int reason) {
@@ -31,52 +30,26 @@ public class SmartCardEmulationService extends HostApduService {
     }
 
     @Override
-    public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
+    public byte[] processCommandApdu(byte[] data, Bundle extras) {
         if (src == null) {
             return null;
         }
 
-        if (selectAidApdu(apdu)) {
+        if (selectAidApdu(data)) {
             return INITIAL_TYPE_OF_SERVICE;
         }
 
-        int maxLength = getMaxLength(apdu);
-        return getNextMessage(maxLength);
+        sink.onMessage(data);
+        return src.getNextMessage();
     }
 
-    private int getMaxLength(byte[] apdu) {
-        final String payload = new String(apdu);
-        if (payload.startsWith(IsoDepTransceiver.ISO_DEP_MAX_LENGTH)) {
-            final String substring = payload.substring(IsoDepTransceiver.ISO_DEP_MAX_LENGTH.length(), payload.length());
-            return Integer.valueOf(substring);
-        }
-
-        return DEFAULT_MAX_LENGTH;
-    }
-
-    byte[] getNextMessage(int maxLength) {
-        if (null == byteBuffer) {
-            byteBuffer = src.getNextMessage();
-        }
-
-        return getBytesFromBuffer(maxLength);
-    }
-
-    byte[] getBytesFromBuffer(int maxLength) {
-        if (byteBuffer == null || 0 == byteBuffer.length) {
-            byteBuffer = null;
-            return null;
-        }
-
-        int length = Math.min(byteBuffer.length, maxLength);
-        final byte[] currentBuffer = Arrays.copyOfRange(byteBuffer, 0, length);
-
-        byteBuffer = Arrays.copyOfRange(byteBuffer, length, byteBuffer.length);
-        return currentBuffer;
-    }
 
     public static void setSource(OnMessageSend src) {
         SmartCardEmulationService.src = src;
+    }
+
+    public static void setSink(OnMessageReceived sink) {
+        SmartCardEmulationService.sink = sink;
     }
 
     private boolean selectAidApdu(byte[] apdu) {

@@ -76,7 +76,7 @@ class NfcBenchmarkState {
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
-        NfcAdapterHelper.prepareSending(activity, fragment.onMessageSendCallback);
+        NfcAdapterHelper.prepareSending(activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
     }
 
     void sendState() {
@@ -111,6 +111,9 @@ class NfcBenchmarkState {
     }
 
     void receivingState() {
+        if (STATE_RUNNING == currentState) {
+            return;
+        }
         if (!updateStateIfPossible(STATE_RECEIVING)) {
             return;
         }
@@ -123,6 +126,10 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setVisibility(GONE);
         fragment.setResultVisibility(View.VISIBLE, GONE);
         fragment.backFromReceivingButton.setVisibility(VISIBLE);
+    }
+
+    boolean isState(int state) {
+        return state == currentState;
     }
 
     private boolean updateStateIfPossible(final int state) {
