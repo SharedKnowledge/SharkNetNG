@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
 
 import android.nfc.Tag;
 import android.nfc.TagLostException;
@@ -6,6 +6,8 @@ import android.nfc.tech.IsoDep;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 
 /**
  * Created by mn-io on 22.01.16.

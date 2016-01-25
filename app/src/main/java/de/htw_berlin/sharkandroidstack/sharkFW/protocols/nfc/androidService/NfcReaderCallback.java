@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
 
 import android.annotation.TargetApi;
 import android.nfc.NfcAdapter;
@@ -7,17 +7,16 @@ import android.nfc.tech.IsoDep;
 import android.os.Build;
 
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.IsoDepTransceiver;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by mn-io on 23.01.2016.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class MyReaderCallback implements NfcAdapter.ReaderCallback {
+public class NfcReaderCallback implements NfcAdapter.ReaderCallback {
     private OnMessageReceived onMessageReceived;
     private IsoDepTransceiver isoDepTransceiver;
 
-    public MyReaderCallback(OnMessageReceived onMessageReceived) {
+    public NfcReaderCallback(OnMessageReceived onMessageReceived) {
         this.onMessageReceived = onMessageReceived;
     }
 

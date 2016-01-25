@@ -7,23 +7,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.sync.SyncKB;
+import net.sharkfw.knowledgeBase.sync.SyncKP;
 import net.sharkfw.system.L;
+
+import java.io.IOException;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
@@ -43,6 +50,39 @@ public class NfcSharkDemoFragment extends Fragment {
     EditText userInput;
     ListView kbList;
 
+    final View.OnClickListener startClickListener = new View.OnClickListener() {
+
+        public AndroidSharkEngine engine;
+
+        @Override
+        public void onClick(View v) {
+            Button button = (Button) v;
+            //TODO: dummy implementation - 1st click: engine is passive, 2nd click engine started reading
+            if (engine == null) {
+                try {
+                    button.setText("NFC stopped / sending");
+                    engine = new AndroidSharkEngine(v.getContext(), getActivity());
+                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
+                    new MySimpleKp(engine, kb.getOwner(), kp);
+                    engine.stopNfc();
+                } catch (SharkKBException e) {
+                    e.printStackTrace();
+                } catch (SharkProtocolNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                try {
+                    button.setText("NFC started / listening");
+                    engine.startNfc();
+                } catch (SharkProtocolNotSupportedException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+
     final View.OnClickListener userInputAddClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -57,7 +97,7 @@ public class NfcSharkDemoFragment extends Fragment {
                 final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
                 contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
                 //TODO: Bug?! - cpChanged not called?!
-                //TODO: would like to print information...
+                //TODO: would like to print information... L.cps2String
 
                 Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
             } catch (SharkKBException e) {
@@ -115,6 +155,8 @@ public class NfcSharkDemoFragment extends Fragment {
 
         final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
         ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
+
+        root.findViewById(R.id.activity_nfc_sharkdemo_start).setOnClickListener(startClickListener);
 
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);

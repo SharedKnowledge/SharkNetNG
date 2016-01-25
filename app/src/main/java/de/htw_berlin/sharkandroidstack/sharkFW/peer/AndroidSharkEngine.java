@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.peer;
 
+import android.app.Activity;
 import android.content.Context;
 
 import net.sharkfw.kep.KEPStub;
@@ -14,21 +15,24 @@ import net.sharkfw.protocols.wifidirect.WifiDirectStreamStub;
 import net.sharkfw.system.SharkSecurityException;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcStreamStub;
 
 public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
-    Context _context;
+    Context context;
+    WeakReference<Activity> activityRef;
     Stub currentStub;
 
     public AndroidSharkEngine(Context context) {
         super();
-        _context = context;
+        this.context = context;
     }
 
-
-    public Context getContext() {
-        return _context;
+    public AndroidSharkEngine(Context context, Activity activity) {
+        super();
+        this.context = context;
+        this.activityRef = new WeakReference<>(activity);
     }
 
     /*
@@ -42,7 +46,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
             currentStub.stop();
         }
         //TODO: this (SharkEngine not used for WifiDirectStreamStub), kebStub should be set by setHandler()
-        currentStub = new WifiDirectStreamStub(getContext(), this, kepStub);
+        currentStub = new WifiDirectStreamStub(context, this, kepStub);
         return currentStub;
     }
 
@@ -57,23 +61,21 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
 
     @Override
     protected Stub createNfcStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
-        if (currentStub != null) {
-            currentStub.stop();
+        if (currentStub == null) {
+            currentStub = new NfcStreamStub(context, activityRef);
+            currentStub.setHandler(kepStub);
         }
-        currentStub = new NfcStreamStub(getContext());
-        currentStub.setHandler(kepStub);
         return currentStub;
     }
 
     @Override
     public void startNfc() throws SharkProtocolNotSupportedException, IOException {
-        //TODO: test via NFC devices
         this.createNfcStreamStub(this.getKepStub()).start();
     }
 
     @Override
     public void stopNfc() throws SharkProtocolNotSupportedException {
-        currentStub.stop();
+        this.createNfcStreamStub(this.getKepStub()).stop();
     }
 
     @Override

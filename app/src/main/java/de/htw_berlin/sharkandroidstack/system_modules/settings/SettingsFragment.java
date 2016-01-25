@@ -9,6 +9,7 @@ import android.preference.PreferenceFragment;
 import java.util.Map;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogStreamHelper;
 
 /**
  * Created by mn-io on 22.01.16.
@@ -21,9 +22,13 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
         addPreferencesFromResource(R.xml.system_module_settings);
 
-        final ListPreference kbPreferences = (ListPreference) findPreference(SettingsManager.KEY_KB_PREFERENCES);
-        kbPreferences.setEntries(KnowledgeBaseManager.implementationTypes);
-        kbPreferences.setEntryValues(KnowledgeBaseManager.implementationTypes);
+        ListPreference listPreference = (ListPreference) findPreference(SettingsManager.KEY_KB_PREFERENCES);
+        listPreference.setEntries(KnowledgeBaseManager.implementationTypes);
+        listPreference.setEntryValues(KnowledgeBaseManager.implementationTypes);
+
+        listPreference = (ListPreference) findPreference(SettingsManager.KEY_CONNECTION_LOG_LEVEL);
+        listPreference.setEntries(LogStreamHelper.logLevelNames);
+        listPreference.setEntryValues(LogStreamHelper.logLevelNames);
     }
 
     @Override
@@ -53,6 +58,9 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         setSummaryOfEditTextPreferences(key);
 
         //TODO: act on settings change
+        if (SettingsManager.KEY_CONNECTION_LOG_LEVEL.equals(key)) {
+            LogStreamHelper.setLogLevelFromPreferences();
+        }
     }
 
     private void setSummaryOfListPreference(String key) {

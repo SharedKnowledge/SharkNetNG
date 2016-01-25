@@ -1,48 +1,45 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.nfc.NfcAdapter;
+import android.os.Build;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.protocols.MessageStub;
 import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;
 import net.sharkfw.protocols.StreamStub;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
+
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 
 /**
  * Created by mn-io on 22.01.16.
  */
+@TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcStreamStub implements StreamStub {
 
-    RequestHandler _handler;
+    private final NfcAdapter nfcAdapter;
+    private final WeakReference<Activity> activity;
+    private final NfcReaderCallback nfcReaderCallback;
+    private final NfcMessageReceivedHandler receivedRequestHandler;
+    private final NfcMessageSendHandler sendRequestHandler;
+    private boolean isStarted = false;
 
-    //TODO: implement receiver here
-
-    public NfcStreamStub(Context context) throws SharkProtocolNotSupportedException {
-        NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(context);
-        if (nfcAdapter == null) {
+    public NfcStreamStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
+        this.activity = activity;
+        this.nfcAdapter = NfcAdapter.getDefaultAdapter(context);
+        if (this.nfcAdapter == null) {
             throw new SharkProtocolNotSupportedException("NFC is not supported");
         }
+
+        receivedRequestHandler = new NfcMessageReceivedHandler();
+        sendRequestHandler = new NfcMessageSendHandler();
+        nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler);
     }
-
-    private RequestHandler _internHandler = new RequestHandler() {
-        public void handleMessage(byte[] msg, MessageStub stub) {
-            NfcStreamStub.this._handler.handleMessage(msg, stub);
-        }
-
-        public void handleStream(StreamConnection con) {
-//            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
-            NfcStreamStub.this._handler.handleStream(con);
-        }
-
-        @Override
-        public void handleNewConnectionStream(StreamConnection con) {
-//            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
-            NfcStreamStub.this._handler.handleNewConnectionStream(con);
-        }
-    };
 
     @Override
     public StreamConnection createStreamConnection(String addressString) throws IOException {
@@ -56,20 +53,25 @@ public class NfcStreamStub implements StreamStub {
 
     @Override
     public void setHandler(RequestHandler handler) {
-        this._handler = handler;
+        sendRequestHandler.setHandler(handler);
+        receivedRequestHandler.setHandler(handler);
     }
 
     @Override
     public void stop() {
-
+        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler);
+        isStarted = false;
     }
 
     @Override
-    public void start() throws IOException {
+    public void start() {
+        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
+        isStarted = true;
     }
 
     @Override
     public boolean started() {
-        return false;
+        return isStarted;
     }
+
 }

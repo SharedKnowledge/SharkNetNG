@@ -28,6 +28,7 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
         startTimer();
         count += message.length;
+        countMsg++;
 
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message);
         update(dataHolder);

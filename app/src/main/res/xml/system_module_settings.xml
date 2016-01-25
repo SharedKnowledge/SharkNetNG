@@ -16,4 +16,10 @@
             android:key="pref_key_connection"
             android:title="@string/system_modules_settings_title_connection" />
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/system_modules_settings_title_cat_connection">
+        <ListPreference
+            android:key="pref_key_log_level"
+            android:title="@string/system_modules_settings_log_level" />
+    </PreferenceCategory>
 </PreferenceScreen>

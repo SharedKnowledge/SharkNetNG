@@ -68,13 +68,13 @@ public class KnowledgeBaseListenerAdapterImpl implements KnowledgeBaseListener {
     @Override
     public void predicateCreated(SNSemanticTag subject, String type, SNSemanticTag object) {
         String data = subject.toString() + " / " + type + " / " + object.toString();
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Predicate created", data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Predicate created", data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 
     @Override
     public void predicateRemoved(SNSemanticTag subject, String type, SNSemanticTag object) {
         String data = subject.toString() + " / " + type + " / " + object.toString();
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Predicate removed", data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Predicate removed", data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 
     @Override
@@ -85,19 +85,19 @@ public class KnowledgeBaseListenerAdapterImpl implements KnowledgeBaseListener {
     @Override
     public void contextPointAdded(ContextPoint cp) {
         final String data = L.cp2String(cp);
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point added", data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point added", data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 
     @Override
     public void cpChanged(ContextPoint cp) {
         final String data = L.cp2String(cp);
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point changed", data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point changed", data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 
     @Override
     public void contextPointRemoved(ContextPoint cp) {
         final String data = L.cp2String(cp);
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point removed", data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("Context point removed", data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 
     private void addTagToAdapter(String type, SemanticTag tag) {
@@ -108,6 +108,6 @@ public class KnowledgeBaseListenerAdapterImpl implements KnowledgeBaseListener {
             LogManager.addThrowable(logId, e);
             data = "An error occurred, see log for details.";
         }
-        kbListAdapter.add(new MyKbListAdapter.MyDataHolder(type, data));
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder(type, data, MyKbListAdapter.SRC_KB_LISTENER));
     }
 }
