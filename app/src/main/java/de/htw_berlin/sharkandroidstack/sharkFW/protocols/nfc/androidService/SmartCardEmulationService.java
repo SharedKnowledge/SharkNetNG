@@ -17,6 +17,7 @@ public class SmartCardEmulationService extends HostApduService {
 
     //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
     //TODO: start/stop service on activity start
+    //TODO: stream ...
 
     public static int DEFAULT_MAX_LENGTH = 200;
     public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();

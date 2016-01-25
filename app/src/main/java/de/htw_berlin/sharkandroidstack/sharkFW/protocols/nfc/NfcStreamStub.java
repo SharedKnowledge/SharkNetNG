@@ -4,11 +4,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
 import android.os.Build;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.protocols.MessageStub;
 import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;
 import net.sharkfw.protocols.StreamStub;
@@ -16,7 +14,6 @@ import net.sharkfw.protocols.StreamStub;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 
 /**
@@ -28,66 +25,9 @@ public class NfcStreamStub implements StreamStub {
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
     private final NfcReaderCallback nfcReaderCallback;
+    private final NfcMessageReceivedHandler receivedRequestHandler;
+    private final NfcMessageSendHandler sendRequestHandler;
     private boolean isStarted = false;
-
-    RequestHandler _handler;
-
-    final RequestHandler _internHandler = new RequestHandler() {
-        public void handleMessage(byte[] msg, MessageStub stub) {
-            System.out.println("mario handleMessage");
-            NfcStreamStub.this._handler.handleMessage(msg, stub);
-        }
-
-        public void handleStream(StreamConnection con) {
-//            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
-            System.out.println("mario handleStream");
-            NfcStreamStub.this._handler.handleStream(con);
-
-        }
-
-        @Override
-        public void handleNewConnectionStream(StreamConnection con) {
-//            NfcStreamStub.this._connectionStr = "tcp://" + con.getReceiverAddressString() + ":"+PORT;
-            System.out.println("mario handleNewConnectionStream");
-            NfcStreamStub.this._handler.handleNewConnectionStream(con);
-        }
-    };
-
-    final static OnMessageSend onMessageSend = new OnMessageSend() {
-        @Override
-        public byte[] getNextMessage() {
-            final String s = AndroidUtils.generateRandomString(512);
-            System.out.println("mario: sending " + s);
-            return s.getBytes();
-        }
-
-        @Override
-        public void onDeactivated(int reason) {
-
-        }
-    };
-
-    final static OnMessageReceived onMessageReceived = new OnMessageReceived() {
-        @Override
-        public void onMessage(byte[] message) {
-            System.out.println("mario receiving: " + new String(message));
-        }
-
-        @Override
-        public void onError(Exception exception) {
-            onMessage(exception.getMessage().getBytes());
-        }
-
-        @Override
-        public void tagLost(Tag tag) {
-            onMessage(tag.toString().getBytes());
-        }
-
-        @Override
-        public void newTag(Tag tag) {
-            onMessage(tag.toString().getBytes());
-        }
-    };
 
     public NfcStreamStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
         this.activity = activity;
@@ -96,7 +36,9 @@ public class NfcStreamStub implements StreamStub {
             throw new SharkProtocolNotSupportedException("NFC is not supported");
         }
 
-        nfcReaderCallback = new NfcReaderCallback(onMessageReceived);
+        receivedRequestHandler = new NfcMessageReceivedHandler();
+        sendRequestHandler = new NfcMessageSendHandler();
+        nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler);
     }
 
     @Override
@@ -111,19 +53,19 @@ public class NfcStreamStub implements StreamStub {
 
     @Override
     public void setHandler(RequestHandler handler) {
-        this._handler = handler;
+        sendRequestHandler.setHandler(handler);
+        receivedRequestHandler.setHandler(handler);
     }
 
     @Override
     public void stop() {
-        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
+        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler);
         isStarted = false;
     }
 
     @Override
-    public void start() throws IOException {
-        //TODO: state for start... ?!
-        NfcAdapterHelper.prepareSending(activity.get(), onMessageSend);
+    public void start() {
+        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
         isStarted = true;
     }
 

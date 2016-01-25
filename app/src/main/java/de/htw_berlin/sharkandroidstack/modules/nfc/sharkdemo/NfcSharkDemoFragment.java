@@ -60,21 +60,19 @@ public class NfcSharkDemoFragment extends Fragment {
             //TODO: dummy implementation - 1st click: engine is passive, 2nd click engine started reading
             if (engine == null) {
                 try {
-                    button.setText("engine started");
+                    button.setText("NFC stopped / sending");
                     engine = new AndroidSharkEngine(v.getContext(), getActivity());
                     SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
                     new MySimpleKp(engine, kb.getOwner(), kp);
-                    engine.startNfc();
+                    engine.stopNfc();
                 } catch (SharkKBException e) {
                     e.printStackTrace();
                 } catch (SharkProtocolNotSupportedException e) {
                     e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             } else {
                 try {
-                    button.setText("engine stopped");
+                    button.setText("NFC started / listening");
                     engine.startNfc();
                 } catch (SharkProtocolNotSupportedException e) {
                     e.printStackTrace();
@@ -99,7 +97,7 @@ public class NfcSharkDemoFragment extends Fragment {
                 final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
                 contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
                 //TODO: Bug?! - cpChanged not called?!
-                //TODO: would like to print information...
+                //TODO: would like to print information... L.cps2String
 
                 Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
             } catch (SharkKBException e) {
