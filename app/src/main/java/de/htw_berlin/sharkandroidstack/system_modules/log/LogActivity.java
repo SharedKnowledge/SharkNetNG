@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,10 +31,9 @@ public class LogActivity extends ParentActivity {
     public final AdapterView.OnItemSelectedListener itemClickListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String readableName = ((TextView) view).getText().toString();
-            String name = LogManager.findLogIdByName(readableName);
+            String logId = getCurrentSelectedLogId((TextView) view);
 
-            final List<LogManager.LogEntry> allEntries = LogManager.getAllEntries(name);
+            final List<LogManager.LogEntry> allEntries = LogManager.getAllEntries(logId);
             logAdapter.clear();
             logAdapter.addAll(allEntries);
             logAdapter.notifyDataSetChanged();
@@ -52,11 +52,21 @@ public class LogActivity extends ParentActivity {
         }
     };
 
-    View.OnClickListener nextButtonClickListener = new View.OnClickListener() {
+    final View.OnClickListener nextButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             int nextItem = (spinner.getSelectedItemPosition() + 1) % spinner.getCount();
             spinner.setSelection(nextItem);
+        }
+    };
+
+    final View.OnClickListener clearLogClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String id = getCurrentSelectedLogId((TextView) spinner.getSelectedView());
+            LogManager.clearAllEntries(id);
+            logAdapter.clear();
+            logAdapter.notifyDataSetChanged();
         }
     };
 
@@ -72,6 +82,23 @@ public class LogActivity extends ParentActivity {
 
         final Button nextButton = (Button) findViewById(R.id.activity_log_next_button);
         nextButton.setOnClickListener(nextButtonClickListener);
+
+        final ImageButton clearButton = (ImageButton) findViewById(R.id.activity_log_clear);
+        clearButton.setOnClickListener(clearLogClickListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final Intent intent = getIntent();
+        String initialLog = intent.getStringExtra(OPEN_LOG_ID_ON_START);
+        if (initialLog != null) {
+            int index = LogManager.getAllLogIds().indexOf(initialLog);
+            if (index != -1) {
+                spinner.setSelection(index);
+                intent.removeExtra(OPEN_LOG_ID_ON_START);
+            }
+        }
     }
 
     private void initSpinner() {
@@ -109,17 +136,8 @@ public class LogActivity extends ParentActivity {
         log.setAdapter(logAdapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        final Intent intent = getIntent();
-        String initialLog = intent.getStringExtra(OPEN_LOG_ID_ON_START);
-        if(initialLog != null) {
-            int index = LogManager.getAllLogIds().indexOf(initialLog);
-            if(index != -1) {
-                spinner.setSelection(index);
-                intent.removeExtra(OPEN_LOG_ID_ON_START);
-            }
-        }
+    private String getCurrentSelectedLogId(TextView view) {
+        String readableName = view.getText().toString();
+        return LogManager.findLogIdByName(readableName);
     }
 }

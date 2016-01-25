@@ -23,6 +23,10 @@ public class LogManager {
 
     public static void init() {
         registerLog("sys", "System");
+
+        final String logId = "L";
+        registerLog(logId, "L output");
+        LogStreamHelper.init(logId);
     }
 
     public static List<String> getAllLogIds() {
@@ -71,24 +75,25 @@ public class LogManager {
     }
 
     public static void addEntry(String logId, Object msg, int prio) {
-        int index = findIndexByLogId(logId);
-
         String text = msg != null ? msg.toString() : "";
         LogEntry entry = new LogEntry(text, prio);
+
+        addEntry(logId, entry);
+    }
+
+    public static void addEntry(String logId, LogEntry entry) {
+        int index = findIndexByLogId(logId);
         logEntries.get(index).add(entry);
         notify(logId, entry);
     }
 
     public static void addThrowable(String logId, Throwable throwable) {
-        int index = findIndexByLogId(logId);
-
         final String message = throwable.getMessage();
         final StackTraceElement element = throwable.getStackTrace()[0];
 
         String text = message + "\n\n" + element.toString();
         LogEntry entry = new LogEntry(text, 5);
-        logEntries.get(index).add(entry);
-        notify(logId, entry);
+        addEntry(logId, entry);
     }
 
     public static void addListener(LogChangeListener listener, String logId) {
@@ -125,6 +130,11 @@ public class LogManager {
         return logEntries.get(index);
     }
 
+    public static void clearAllEntries(String logId) {
+        int index = findIndexByLogId(logId);
+        logEntries.get(index).clear();
+    }
+
     public interface LogChangeListener {
         void update(String name, LogEntry msgAndPrio);
     }
@@ -136,7 +146,11 @@ public class LogManager {
             this.msg = msg;
         }
 
+        public LogEntry() {
+        }
+
         public int prio = 0;
         public String msg = "";
     }
+
 }
