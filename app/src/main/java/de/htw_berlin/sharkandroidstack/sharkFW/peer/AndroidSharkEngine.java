@@ -29,6 +29,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
         this.context = context;
     }
 
+    //TODO: activity is enough
     public AndroidSharkEngine(Context context, Activity activity) {
         super();
         this.context = context;
@@ -91,6 +92,13 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     @Override
     public void stopBluetooth() throws SharkProtocolNotSupportedException {
         throw new SharkProtocolNotSupportedException("TODO: Timm");
+    }
+
+    @Override
+    public Stub getProtocolStub(int type) throws SharkProtocolNotSupportedException {
+        //TODO this is called but the parent function look likes a big mess
+        // and it does not look like it is designed to work with start/stop methods.
+        return currentStub;
     }
 
     @Override
