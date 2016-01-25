@@ -12,8 +12,11 @@ public class NfcMessageSendHandler implements OnMessageSend {
     @Override
     public byte[] getNextMessage() {
         final byte[] data = getBytesFromBuffer(size);
-        System.out.println("mario: sending " + Arrays.toString(data));
-        System.out.println("mario: sending " + new String(data));
+        if (data != null) {
+            System.out.println("mario: sending " + Arrays.toString(data));
+            System.out.println("mario: sending " + new String(data));
+        }
+
         //TODO: clear after sending
         return data;
     }

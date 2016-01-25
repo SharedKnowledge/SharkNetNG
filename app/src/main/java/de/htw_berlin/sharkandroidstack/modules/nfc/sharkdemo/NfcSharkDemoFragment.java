@@ -64,9 +64,6 @@ public class NfcSharkDemoFragment extends Fragment {
             if (engine == null) {
                 try {
                     button.setText("NFC stopped / sending");
-
-//                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
-//                    new MySimpleKp(engine, kb.getOwner(), kp);
                     engine.stopNfc();
 
 

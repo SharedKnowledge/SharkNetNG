@@ -37,7 +37,7 @@ public class NfcMessageStub implements MessageStub {
 
         receivedRequestHandler = new NfcMessageReceivedHandler(this);
         sendRequestHandler = new NfcMessageSendHandler();
-        nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler, null);
+        nfcReaderCallback = new NfcReaderCallback(sendRequestHandler, receivedRequestHandler);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class NfcMessageStub implements MessageStub {
 
     @Override
     public void stop() {
-        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler, null);
+        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = false;
     }
 

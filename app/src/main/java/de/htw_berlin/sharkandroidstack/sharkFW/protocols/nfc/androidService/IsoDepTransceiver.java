@@ -49,7 +49,10 @@ public class IsoDepTransceiver implements Runnable {
             }
 
             while (isoDep.isConnected() && !Thread.interrupted()) {
-                final byte[] nextMessage = onMessageSendCallback.getNextMessage();
+                byte[] nextMessage = onMessageSendCallback.getNextMessage();
+                if (nextMessage == null) {
+                    nextMessage = new byte[0];
+                }
                 response = isoDep.transceive(nextMessage);
                 onMessageReceived.onMessage(response);
             }

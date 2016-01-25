@@ -18,7 +18,7 @@ public class NfcReaderCallback implements NfcAdapter.ReaderCallback {
     private OnMessageSend onMessageSendCallback;
     private IsoDepTransceiver isoDepTransceiver;
 
-    public NfcReaderCallback(OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCallback) {
+    public NfcReaderCallback(OnMessageSend onMessageSendCallback, OnMessageReceived onMessageReceived) {
         this.onMessageReceived = onMessageReceived;
         this.onMessageSendCallback = onMessageSendCallback;
     }

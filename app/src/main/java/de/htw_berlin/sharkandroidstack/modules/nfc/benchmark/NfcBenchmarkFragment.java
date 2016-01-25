@@ -213,7 +213,7 @@ public class NfcBenchmarkFragment extends Fragment {
         super.onResume();
 
         if (readerCallback == null) {
-            readerCallback = new NfcReaderCallback(onMessageReceivedCallback, onMessageSendCallback);
+            readerCallback = new NfcReaderCallback(onMessageSendCallback, onMessageReceivedCallback);
         }
 
         benchmarkState.resetState();
