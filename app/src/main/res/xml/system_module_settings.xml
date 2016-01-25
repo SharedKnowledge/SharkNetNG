@@ -9,6 +9,14 @@
             android:title="@string/system_modules_settings_title_kb" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/system_modules_settings_title_cat_kp">
+        <ListPreference
+            android:entries="@array/system_modules_settings_kp_options"
+            android:entryValues="@array/system_modules_settings_kp_options_values"
+            android:key="pref_key_kp"
+            android:title="@string/system_modules_settings_title_kp" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="@string/system_modules_settings_title_cat_connection">
         <ListPreference
             android:entries="@array/system_modules_settings_connection_options"
@@ -17,7 +25,7 @@
             android:title="@string/system_modules_settings_title_connection" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/system_modules_settings_title_cat_connection">
+    <PreferenceCategory android:title="@string/system_modules_settings_title_cat_log">
         <ListPreference
             android:key="pref_key_log_level"
             android:title="@string/system_modules_settings_log_level" />

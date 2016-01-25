@@ -10,4 +10,6 @@
         <item>bt</item>
         <item>wifiDirect</item>
     </string-array>
+    <string-array name="system_modules_settings_kp_options" />
+    <string-array name="system_modules_settings_kp_options_values" />
 </resources>

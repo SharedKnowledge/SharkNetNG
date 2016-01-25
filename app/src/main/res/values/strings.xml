@@ -22,9 +22,11 @@
     <string name="system_modules_settings_title_cat_kb">KnowledgeBase</string>
     <string name="system_modules_settings_edit_kb_owner">Owner for your new KnowlegdeBases</string>
     <string name="system_modules_settings_title_kb">Choose your KnowlegdeBase</string>
+    <string name="system_modules_settings_title_cat_kp">KnowledgePort</string>
+    <string name="system_modules_settings_title_kp">NOT IMPLEMENTED, Choose your KnowledgePort</string>
     <string name="system_modules_settings_title_cat_connection">Connection</string>
-    <string name="system_modules_settings_title_cat_Log">Log</string>
-    <string name="system_modules_settings_title_connection">Choose your connection type</string>
+    <string name="system_modules_settings_title_connection">NOT IMPLEMENTED, Choose your connection type</string>
+    <string name="system_modules_settings_title_cat_log">Shark L</string>
     <string name="system_modules_settings_log_level">Set shark log level</string>
 
     <!--   log -->
@@ -65,4 +67,5 @@
 
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
+
 </resources>
