@@ -1,20 +1,19 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
 
-import net.sharkfw.protocols.RequestHandler;
-
-import de.htw_berlin.sharkandroidstack.AndroidUtils;
+import java.util.Arrays;
 
 /**
  * Created by mn-io on 25.01.2016.
  */
 public class NfcMessageSendHandler implements OnMessageSend {
-    private RequestHandler handler;
+    private byte[] data = new byte[0];
 
     @Override
     public byte[] getNextMessage() {
-        final String s = AndroidUtils.generateRandomString(512);
-        System.out.println("mario: sending " + s);
-        return s.getBytes();
+        System.out.println("mario: sending " + Arrays.toString(data));
+        System.out.println("mario: sending " + new String(data));
+        //TODO: clear after sending
+        return data;
     }
 
     @Override
@@ -22,7 +21,7 @@ public class NfcMessageSendHandler implements OnMessageSend {
 
     }
 
-    public void setHandler(RequestHandler handler) {
-        this.handler = handler;
+    public void setData(byte[] data) {
+        this.data = data;
     }
 }

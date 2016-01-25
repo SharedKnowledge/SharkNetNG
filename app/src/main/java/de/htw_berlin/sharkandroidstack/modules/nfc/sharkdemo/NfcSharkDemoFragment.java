@@ -17,13 +17,15 @@ import android.widget.Toast;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
-import net.sharkfw.knowledgeBase.sync.SyncKB;
-import net.sharkfw.knowledgeBase.sync.SyncKP;
+import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
+import net.sharkfw.peer.StandardKP;
 import net.sharkfw.system.L;
+import net.sharkfw.system.SharkSecurityException;
 
 import java.io.IOException;
 
@@ -33,6 +35,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
+import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsManager;
 
 /**
  * Created by mn-io on 22.01.16.
@@ -46,15 +49,14 @@ public class NfcSharkDemoFragment extends Fragment {
     KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
     KnowledgePortAdapterListenerImpl knowledgePortListener;
     MyKbListAdapter kbListAdapter;
-    SemanticTag tag;
+//    SemanticTag tag;
+
+    AndroidSharkEngine engine;
 
     EditText userInput;
     ListView kbList;
 
     final View.OnClickListener startClickListener = new View.OnClickListener() {
-
-        public AndroidSharkEngine engine;
-
         @Override
         public void onClick(View v) {
             Button button = (Button) v;
@@ -62,19 +64,22 @@ public class NfcSharkDemoFragment extends Fragment {
             if (engine == null) {
                 try {
                     button.setText("NFC stopped / sending");
-                    engine = new AndroidSharkEngine(v.getContext(), getActivity());
-                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
-                    new MySimpleKp(engine, kb.getOwner(), kp);
+
+//                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
+//                    new MySimpleKp(engine, kb.getOwner(), kp);
                     engine.stopNfc();
-                } catch (SharkKBException e) {
-                    e.printStackTrace();
+
+
                 } catch (SharkProtocolNotSupportedException e) {
                     e.printStackTrace();
                 }
             } else {
                 try {
                     button.setText("NFC started / listening");
+
                     engine.startNfc();
+
+
                 } catch (SharkProtocolNotSupportedException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -87,25 +92,25 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnClickListener userInputAddClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            final String inputText = userInput.getText().toString().trim();
-            if (inputText.length() == 0) {
-                return;
-            }
-            clearUserInput();
-
-            try {
-                final ContextCoordinates contextCoordinates = kb.createContextCoordinates(tag, kb.getOwner(), null, null, null, null, SharkCS.DIRECTION_INOUT);
-                final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
-                contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
-                //TODO: Bug?! - cpChanged not called?!
-                //TODO: would like to print information... L.cps2String
-
-                Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
-            } catch (SharkKBException e) {
-                LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
-                Toast.makeText(v.getContext(), String.format("Error occurred: %s", e.getMessage()), Toast.LENGTH_SHORT).show();
-                e.printStackTrace();
-            }
+//            final String inputText = userInput.getText().toString().trim();
+//            if (inputText.length() == 0) {
+//                return;
+//            }
+//            clearUserInput();
+//
+//            try {
+//                final ContextCoordinates contextCoordinates = kb.createContextCoordinates(tag, kb.getOwner(), null, null, null, null, SharkCS.DIRECTION_INOUT);
+//                final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
+//                contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
+//                //TODO: Bug?! - cpChanged not called?!
+//                //TODO: would like to print information... L.cps2String
+//
+//                Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
+//            } catch (SharkKBException e) {
+//                LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
+//                Toast.makeText(v.getContext(), String.format("Error occurred: %s", e.getMessage()), Toast.LENGTH_SHORT).show();
+//                e.printStackTrace();
+//            }
         }
     };
 
@@ -188,13 +193,59 @@ public class NfcSharkDemoFragment extends Fragment {
         kbList.setAdapter(kbListAdapter);
 
         try {
+            // uses default owner from settings!
             kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
+
             kb.addListener(knowledgeBaseListener);
             kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
-            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
+//            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
             kbListAdapter.notifyDataSetChanged();
+
+            engine = new AndroidSharkEngine(getActivity().getApplicationContext(), getActivity());
+
+            String aliceOrBob = SettingsManager.getValue(SettingsManager.KEY_KB_OWNER_PREFERENCES);
+            String other = "alice".equals(aliceOrBob) ? "bob" : "alice";
+            Toast.makeText(NfcSharkDemoFragment.this.getActivity(), "This is: " + aliceOrBob + ", the other is " + other, Toast.LENGTH_SHORT).show();
+
+            SemanticTag shark = kb.createSemanticTag("Shark", "http://www.sharksystem.net/");
+
+            StandardKP kp;
+            engine.stopNfc();
+            if (aliceOrBob.equals("alice")) {
+                //Alice
+                String aliceName = aliceOrBob;
+                System.out.println("mario1: I am alice " + aliceName);
+
+                final PeerSemanticTag alice = kb.getOwner();
+                ContextCoordinates cc = kb.createContextCoordinates(shark, alice, alice, null, null, null, SharkCS.DIRECTION_OUT);
+                ContextPoint cp = kb.createContextPoint(cc);
+                cp.addInformation("I like Shark");
+                kb.addInterest(cc);
+                kp = new StandardKP(engine, cc, kb);
+                kp.addListener(knowledgePortListener);
+                PeerSemanticTag bob = kb.createPeerSemanticTag(other, other + "Id", "tcp://localhost:1000");
+                final InMemoKnowledge k = new InMemoKnowledge();
+                k.addContextPoint(cp);
+                engine.sendKnowledge(k, bob, kp);
+            } else {
+                //Bob
+                String bobName = aliceOrBob;
+                System.out.println("mario2: I am bob " + bobName);
+
+                PeerSemanticTag bob = kb.createPeerSemanticTag(bobName, bobName + "Id", "tcp://localhost:1001");
+                ContextCoordinates interest = kb.createContextCoordinates(shark, null, bob, null, null, null, SharkCS.DIRECTION_IN);
+                kp = new StandardKP(engine, interest, kb);
+                kp.addListener(knowledgePortListener);
+                engine.startNfc();
+            }
         } catch (SharkKBException e) {
             LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
+            e.printStackTrace();
+        } catch (SharkSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SharkProtocolNotSupportedException e) {
             e.printStackTrace();
         }
     }

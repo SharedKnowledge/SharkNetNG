@@ -3,8 +3,6 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
-import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.knowledgeBase.sync.SyncKP;
 import net.sharkfw.peer.KEPConnection;
 import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.peer.SharkEngine;
@@ -19,13 +17,10 @@ import net.sharkfw.system.SharkException;
  */
 public class MySimpleKp extends KnowledgePort {
     private SharkCS myInterest;
-    private SyncKP kp;
+    private KnowledgePort kp;
 
-    public MySimpleKp(SharkEngine se, PeerSemanticTag myIdentity, SyncKP kp) {
+    public MySimpleKp(SharkEngine se, PeerSemanticTag myIdentity) {
         super(se);
-        this.kp = kp;
-
-        this.myInterest = new InMemoSharkKB().createInterest(null, myIdentity, null, null, null, null, SharkCS.DIRECTION_INOUT);
     }
 
     @Override

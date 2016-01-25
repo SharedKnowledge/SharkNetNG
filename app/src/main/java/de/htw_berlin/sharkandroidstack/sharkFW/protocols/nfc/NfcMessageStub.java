@@ -35,14 +35,13 @@ public class NfcMessageStub implements MessageStub {
             throw new SharkProtocolNotSupportedException("NFC is not supported");
         }
 
-        receivedRequestHandler = new NfcMessageReceivedHandler();
+        receivedRequestHandler = new NfcMessageReceivedHandler(this);
         sendRequestHandler = new NfcMessageSendHandler();
         nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler);
     }
 
     @Override
     public void setHandler(RequestHandler handler) {
-        sendRequestHandler.setHandler(handler);
         receivedRequestHandler.setHandler(handler);
     }
 
@@ -68,9 +67,11 @@ public class NfcMessageStub implements MessageStub {
 
     }
 
+    //TODO: ignore address..
     @Override
     public void sendMessage(byte[] msg, String recAddress) throws IOException {
-
+        //System.out.println("mario: trying to send " + new String(msg) + " to " + recAddress);
+        sendRequestHandler.setData(msg);
     }
 
     @Override
