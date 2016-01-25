@@ -7,9 +7,8 @@ import android.nfc.NfcAdapter;
 import android.os.Build;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
+import net.sharkfw.protocols.MessageStub;
 import net.sharkfw.protocols.RequestHandler;
-import net.sharkfw.protocols.StreamConnection;
-import net.sharkfw.protocols.StreamStub;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -20,7 +19,7 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcR
  * Created by mn-io on 22.01.16.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NfcStreamStub implements StreamStub {
+public class NfcMessageStub implements MessageStub {
 
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
@@ -29,7 +28,7 @@ public class NfcStreamStub implements StreamStub {
     private final NfcMessageSendHandler sendRequestHandler;
     private boolean isStarted = false;
 
-    public NfcStreamStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
+    public NfcMessageStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
         this.activity = activity;
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(context);
         if (this.nfcAdapter == null) {
@@ -39,16 +38,6 @@ public class NfcStreamStub implements StreamStub {
         receivedRequestHandler = new NfcMessageReceivedHandler();
         sendRequestHandler = new NfcMessageSendHandler();
         nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler);
-    }
-
-    @Override
-    public StreamConnection createStreamConnection(String addressString) throws IOException {
-        return null;
-    }
-
-    @Override
-    public String getLocalAddress() {
-        return null;
     }
 
     @Override
@@ -74,4 +63,18 @@ public class NfcStreamStub implements StreamStub {
         return isStarted;
     }
 
+    @Override
+    public void setReplyAddressString(String addr) {
+
+    }
+
+    @Override
+    public void sendMessage(byte[] msg, String recAddress) throws IOException {
+
+    }
+
+    @Override
+    public String getReplyAddressString() {
+        return null;
+    }
 }

@@ -44,6 +44,7 @@ public class NfcSharkDemoFragment extends Fragment {
 
     SharkKB kb;
     KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
+    KnowledgePortAdapterListenerImpl knowledgePortListener;
     MyKbListAdapter kbListAdapter;
     SemanticTag tag;
 
@@ -57,7 +58,7 @@ public class NfcSharkDemoFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Button button = (Button) v;
-            //TODO: dummy implementation - 1st click: engine is passive, 2nd click engine started reading
+            //TODO: dummy implementation - 1st click: engine is stopped and sending, 2nd click engine started listening
             if (engine == null) {
                 try {
                     button.setText("NFC stopped / sending");
@@ -111,7 +112,9 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnClickListener printKBClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
+            final String data = L.kb2String(kb);
+            L.l(data);
+            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", data));
             kbListAdapter.notifyDataSetChanged();
         }
     };
@@ -180,6 +183,7 @@ public class NfcSharkDemoFragment extends Fragment {
     private void initShark(ListView kbList) {
         kbListAdapter = new MyKbListAdapter(this.getActivity());
         knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
+        knowledgePortListener = new KnowledgePortAdapterListenerImpl(kbListAdapter);
 
         kbList.setAdapter(kbListAdapter);
 

@@ -17,7 +17,7 @@ import net.sharkfw.system.SharkSecurityException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcStreamStub;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcMessageStub;
 
 public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     Context context;
@@ -62,7 +62,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     @Override
     protected Stub createNfcStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
         if (currentStub == null) {
-            currentStub = new NfcStreamStub(context, activityRef);
+            currentStub = new NfcMessageStub(context, activityRef);
             currentStub.setHandler(kepStub);
         }
         return currentStub;
