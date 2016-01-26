@@ -40,11 +40,8 @@ public class NfcMessageReceivedHandler implements OnMessageReceived {
     @Override
     public void tagLost() {
         if (byteBuffer != null) {
-            System.out.println("mario receiving: " + new String(byteBuffer));
             handler.handleMessage(byteBuffer, nfcMessageStub);
             byteBuffer = null;
-        } else {
-            System.out.println("mario receiving: nothing..");
         }
     }
 

@@ -21,7 +21,7 @@ public class SmartCardEmulationService extends HostApduService {
     //TODO: stream ...
 
     public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
-    public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL = {(byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFD,};
+    public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE = {(byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFC,};
 
     private static OnMessageSend src;
     private static OnMessageReceived sink;
@@ -45,13 +45,13 @@ public class SmartCardEmulationService extends HostApduService {
             return INITIAL_TYPE_OF_SERVICE;
         }
 
-        if (sink != null && !Arrays.equals(KEEP_CHANNEL_OPEN_SIGNAL, data)) {
+        if (sink != null && !Arrays.equals(IsoDepTransceiver.KEEP_CHANNEL_OPEN_SIGNAL_ACTIVE, data)) {
             sink.onMessage(data);
         }
 
         byte[] nextMessage = src.getNextMessage();
         if (nextMessage == null) {
-            nextMessage = KEEP_CHANNEL_OPEN_SIGNAL;
+            nextMessage = KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE;
         }
 
         return nextMessage;
