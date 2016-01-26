@@ -42,8 +42,9 @@ public class SmartCardEmulationService extends HostApduService {
             return null;
         }
 
-        if (selectAidApdu(data)) {
+        if (Arrays.equals(IsoDepTransceiver.AID_APDU, data)) {
             isValidReader = true;
+            System.out.println("mario: selectAidApdu   " + new String(data) + " / " + Arrays.toString(data));
             return handshakeIdentifier;
         }
 
@@ -74,10 +75,5 @@ public class SmartCardEmulationService extends HostApduService {
 
     public static void setSink(OnMessageReceived sink) {
         SmartCardEmulationService.sink = sink;
-    }
-
-    private boolean selectAidApdu(byte[] apdu) {
-        //TODO: how does this work?
-        return apdu.length >= 2 && apdu[0] == (byte) 0 && apdu[1] == (byte) 0xa4;
     }
 }

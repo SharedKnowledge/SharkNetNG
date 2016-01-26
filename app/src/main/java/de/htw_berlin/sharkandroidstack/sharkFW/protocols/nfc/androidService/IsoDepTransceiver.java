@@ -15,9 +15,11 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
  */
 public class IsoDepTransceiver implements Runnable {
 
-    public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
-    public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
     public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL_ACTIVE = {(byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFD,};
+
+    public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
+    public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x06, 0x06, 0x06}; // needs to be equal host-apdu-service > aid-filter
+    public static final byte[] AID_APDU = createSelectAidApdu(CLA_INS_P1_P2, AID_ANDROID);
 
     private final Thread thread;
 
@@ -49,8 +51,7 @@ public class IsoDepTransceiver implements Runnable {
     public void run() {
         try {
             isoDep.connect();
-            final byte[] selectAidApdu = createSelectAidApdu(AID_ANDROID);
-            byte[] response = isoDep.transceive(selectAidApdu);
+            byte[] response = isoDep.transceive(AID_APDU);
             if (!Arrays.equals(response, initialHandshakeIdentifier)) {
                 return;
             }
@@ -74,9 +75,9 @@ public class IsoDepTransceiver implements Runnable {
         }
     }
 
-    private byte[] createSelectAidApdu(byte[] aid) {
+    private static byte[] createSelectAidApdu(byte[] header, byte[] aid) {
         byte[] result = new byte[6 + aid.length];
-        System.arraycopy(CLA_INS_P1_P2, 0, result, 0, CLA_INS_P1_P2.length);
+        System.arraycopy(header, 0, result, 0, header.length);
         result[4] = (byte) aid.length;
         System.arraycopy(aid, 0, result, 5, aid.length);
         result[result.length - 1] = 0;
