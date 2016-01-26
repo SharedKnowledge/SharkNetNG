@@ -16,9 +16,6 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SmartCardEmulationService extends HostApduService {
 
-    //TODO: start/stop service on activity start
-
-    //public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
     public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE = {(byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFC,};
 
     private static OnMessageSend src;
