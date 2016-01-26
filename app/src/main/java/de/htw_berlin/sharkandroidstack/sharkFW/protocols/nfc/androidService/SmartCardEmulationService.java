@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import java.util.Arrays;
 
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
 /**
@@ -15,72 +16,64 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SmartCardEmulationService extends HostApduService {
 
-    //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
-    //TODO: start/stop service on activity start
-    //TODO: stream ...
-
-    public static int DEFAULT_MAX_LENGTH = 200;
-    public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
+    public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE = {(byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFC,};
 
     private static OnMessageSend src;
-    byte[] byteBuffer;
+    private static OnMessageReceived sink;
+    private static byte[] handshakeIdentifier;
+    private static boolean isValidReader;
 
     @Override
     public void onDeactivated(int reason) {
-        src.onDeactivated(reason);
+        if (src != null) {
+            src.onDeactivated(reason);
+        }
+
+        if (sink != null) {
+            sink.tagLost();
+        }
+
+        isValidReader = false;
     }
 
     @Override
-    public byte[] processCommandApdu(byte[] apdu, Bundle extras) {
+    public byte[] processCommandApdu(byte[] data, Bundle extras) {
         if (src == null) {
             return null;
         }
 
-        if (selectAidApdu(apdu)) {
-            return INITIAL_TYPE_OF_SERVICE;
+        if (Arrays.equals(IsoDepTransceiver.AID_APDU, data)) {
+            isValidReader = true;
+            System.out.println("mario: selectAidApdu   " + new String(data) + " / " + Arrays.toString(data));
+            return handshakeIdentifier;
         }
 
-        int maxLength = getMaxLength(apdu);
-        return getNextMessage(maxLength);
-    }
-
-    private int getMaxLength(byte[] apdu) {
-        final String payload = new String(apdu);
-        if (payload.startsWith(IsoDepTransceiver.ISO_DEP_MAX_LENGTH)) {
-            final String substring = payload.substring(IsoDepTransceiver.ISO_DEP_MAX_LENGTH.length(), payload.length());
-            return Integer.valueOf(substring);
-        }
-
-        return DEFAULT_MAX_LENGTH;
-    }
-
-    byte[] getNextMessage(int maxLength) {
-        if (null == byteBuffer) {
-            byteBuffer = src.getNextMessage();
-        }
-
-        return getBytesFromBuffer(maxLength);
-    }
-
-    byte[] getBytesFromBuffer(int maxLength) {
-        if (byteBuffer == null || 0 == byteBuffer.length) {
-            byteBuffer = null;
+        if (!isValidReader) {
             return null;
         }
 
-        int length = Math.min(byteBuffer.length, maxLength);
-        final byte[] currentBuffer = Arrays.copyOfRange(byteBuffer, 0, length);
+        if (sink != null && !Arrays.equals(IsoDepTransceiver.KEEP_CHANNEL_OPEN_SIGNAL_ACTIVE, data)) {
+            sink.onMessage(data);
+        }
 
-        byteBuffer = Arrays.copyOfRange(byteBuffer, length, byteBuffer.length);
-        return currentBuffer;
+        byte[] nextMessage = src.getNextMessage();
+        if (nextMessage == null) {
+            nextMessage = KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE;
+        }
+
+        return nextMessage;
+    }
+
+    public static void setInitialHandshakeResponse(String identifier) {
+        handshakeIdentifier = identifier.getBytes();
+        isValidReader = false;
     }
 
     public static void setSource(OnMessageSend src) {
         SmartCardEmulationService.src = src;
     }
 
-    private boolean selectAidApdu(byte[] apdu) {
-        //TODO: how does this work?
-        return apdu.length >= 2 && apdu[0] == (byte) 0 && apdu[1] == (byte) 0xa4;
+    public static void setSink(OnMessageReceived sink) {
+        SmartCardEmulationService.sink = sink;
     }
 }

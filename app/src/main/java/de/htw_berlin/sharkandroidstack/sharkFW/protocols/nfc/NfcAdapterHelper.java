@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.nfc.NfcAdapter;
 import android.os.Build;
 
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.SmartCardEmulationService;
 
 /**
@@ -20,22 +21,26 @@ public class NfcAdapterHelper {
      * Technically this device is actively trying to detect devices by electromagnetic induction,
      * which means it is "sending" energy in order to activate passive devices.
      */
-    public static void prepareReceiving(Activity activity, NfcAdapter.ReaderCallback readerCallback) {
+    public static void prepareReceiving(String smartCardIdentifier, Activity activity, OnMessageSend src, OnMessageReceived dst) {
         if (activity.isDestroyed()) {
             return;
         }
-        getAdapter(activity).enableReaderMode(activity, readerCallback, NFC_FLAGS, null);
+
+        final NfcReaderCallback nfcReaderCallback = new NfcReaderCallback(smartCardIdentifier, src, dst);
+        getAdapter(activity).enableReaderMode(activity, nfcReaderCallback, NFC_FLAGS, null);
     }
 
     /*
      * NFC acts as a passive SmartCard, which contains data to send.
      * Technically this device is waiting to receive energy by electromagnetic induction.
      */
-    public static void prepareSending(Activity activity, OnMessageSend src) {
+    public static void prepareSending(String smartCardIdentifier, Activity activity, OnMessageSend src, OnMessageReceived dst) {
         if (activity.isDestroyed()) {
             return;
         }
+        SmartCardEmulationService.setInitialHandshakeResponse(smartCardIdentifier);
         SmartCardEmulationService.setSource(src);
+        SmartCardEmulationService.setSink(dst);
         getAdapter(activity).disableReaderMode(activity);
     }
 

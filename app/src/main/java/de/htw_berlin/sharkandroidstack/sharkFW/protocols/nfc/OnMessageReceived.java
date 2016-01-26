@@ -11,7 +11,7 @@ public interface OnMessageReceived {
 
     void onError(Exception exception);
 
-    void tagLost(Tag tag);
+    void tagLost();
 
     void newTag(Tag tag);
 }

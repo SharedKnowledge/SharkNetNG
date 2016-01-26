@@ -14,74 +14,35 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.knowledgeBase.ContextCoordinates;
-import net.sharkfw.knowledgeBase.ContextPoint;
-import net.sharkfw.knowledgeBase.SemanticTag;
-import net.sharkfw.knowledgeBase.SharkCS;
-import net.sharkfw.knowledgeBase.SharkKB;
-import net.sharkfw.knowledgeBase.SharkKBException;
-import net.sharkfw.knowledgeBase.sync.SyncKB;
-import net.sharkfw.knowledgeBase.sync.SyncKP;
 import net.sharkfw.system.L;
 
-import java.io.IOException;
-
-import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys.Alice;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys.Bob;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys.SharkDemoIdentity;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
 /**
  * Created by mn-io on 22.01.16.
  */
 public class NfcSharkDemoFragment extends Fragment {
-    public static final String SEMANTIC_TAG_NAME = "nfcDemo";
-    public static final String SEMANTIC_TAG_SI = "nfcDemoSI";
-    public static final String INFORMATION_NAME = "User Input";
 
-    SharkKB kb;
+    SharkDemoIdentity currentID;
+    Alice alice;
+    Bob bob;
+
     KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
+    KnowledgePortAdapterListenerImpl knowledgePortListener;
     MyKbListAdapter kbListAdapter;
-    SemanticTag tag;
+
+    TextView ownerInformation;
+
+    AndroidSharkEngine engine;
 
     EditText userInput;
     ListView kbList;
-
-    final View.OnClickListener startClickListener = new View.OnClickListener() {
-
-        public AndroidSharkEngine engine;
-
-        @Override
-        public void onClick(View v) {
-            Button button = (Button) v;
-            //TODO: dummy implementation - 1st click: engine is passive, 2nd click engine started reading
-            if (engine == null) {
-                try {
-                    button.setText("NFC stopped / sending");
-                    engine = new AndroidSharkEngine(v.getContext(), getActivity());
-                    SyncKP kp = new SyncKP(engine, new SyncKB(kb), 1000);
-                    new MySimpleKp(engine, kb.getOwner(), kp);
-                    engine.stopNfc();
-                } catch (SharkKBException e) {
-                    e.printStackTrace();
-                } catch (SharkProtocolNotSupportedException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    button.setText("NFC started / listening");
-                    engine.startNfc();
-                } catch (SharkProtocolNotSupportedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    };
 
     final View.OnClickListener userInputAddClickListener = new View.OnClickListener() {
         @Override
@@ -93,14 +54,9 @@ public class NfcSharkDemoFragment extends Fragment {
             clearUserInput();
 
             try {
-                final ContextCoordinates contextCoordinates = kb.createContextCoordinates(tag, kb.getOwner(), null, null, null, null, SharkCS.DIRECTION_INOUT);
-                final ContextPoint contextPoint = kb.createContextPoint(contextCoordinates);
-                contextPoint.addInformation(inputText).setName(INFORMATION_NAME);
-                //TODO: Bug?! - cpChanged not called?!
-                //TODO: would like to print information... L.cps2String
-
-                Toast.makeText(v.getContext(), String.format("Added: %s", inputText), Toast.LENGTH_SHORT).show();
-            } catch (SharkKBException e) {
+                alice.addInformation(inputText);
+                Toast.makeText(v.getContext(), String.format("Added Information to Alice:\n%s", inputText), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
                 LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
                 Toast.makeText(v.getContext(), String.format("Error occurred: %s", e.getMessage()), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
@@ -111,7 +67,9 @@ public class NfcSharkDemoFragment extends Fragment {
     final View.OnClickListener printKBClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
+            final String data = L.kb2String(currentID.getKB());
+            L.l(data);
+            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", data));
             kbListAdapter.notifyDataSetChanged();
         }
     };
@@ -139,7 +97,6 @@ public class NfcSharkDemoFragment extends Fragment {
                 case R.id.activity_nfc_sharkdemo_input_add:
                     toastMsg = R.string.activity_nfc_sharkdemo_hint_add;
                     break;
-
             }
 
             if (toastMsg != 0) {
@@ -149,14 +106,33 @@ public class NfcSharkDemoFragment extends Fragment {
         }
     };
 
+    private View.OnClickListener startClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            try {
+                if (currentID == null || alice.name.equals(currentID.getName())) {
+                    currentID = bob;
+                } else {
+                    alice.sendInformation(bob.getPeer());
+                    currentID = alice;
+                }
+
+                ownerInformation.setText(currentID.getLongName());
+                clearClickListener.onClick(null);
+            } catch (IllegalStateException e) {
+                Toast.makeText(getActivity(), "Cannot sent empty information. Please add something first.", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), "Exception occurred: '" + e.getMessage() + "'. Check Log for details.", Toast.LENGTH_LONG).show();
+                LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
+            }
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
-
-        final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
-        ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
-
-        root.findViewById(R.id.activity_nfc_sharkdemo_start).setOnClickListener(startClickListener);
 
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);
@@ -170,44 +146,40 @@ public class NfcSharkDemoFragment extends Fragment {
         clearListButton.setOnClickListener(clearClickListener);
         clearListButton.setOnLongClickListener(infoLongClickListener);
 
+
+        ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
         userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
         kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
-        initShark(kbList);
+
+
+        kbListAdapter = new MyKbListAdapter(this.getActivity());
+        knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
+        knowledgePortListener = new KnowledgePortAdapterListenerImpl(kbListAdapter);
+        kbList.setAdapter(kbListAdapter);
+
+        initShark();
+
+        Button startButton = (Button) root.findViewById(R.id.activity_nfc_sharkdemo_start);
+        startButton.setOnClickListener(startClickListener);
+        startButton.performClick();
 
         return root;
     }
 
-    private void initShark(ListView kbList) {
-        kbListAdapter = new MyKbListAdapter(this.getActivity());
-        knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
-
-        kbList.setAdapter(kbListAdapter);
-
+    private void initShark() {
         try {
-            kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
-            kb.addListener(knowledgeBaseListener);
-            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
-            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
-            kbListAdapter.notifyDataSetChanged();
-        } catch (SharkKBException e) {
-            LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
+            engine = new AndroidSharkEngine(getActivity());
+
+            alice = new Alice(knowledgeBaseListener, engine, knowledgePortListener);
+            bob = new Bob(knowledgeBaseListener, engine, knowledgePortListener);
+
+            engine.stopNfc();
+
+        } catch (Exception e) {
             e.printStackTrace();
+            Toast.makeText(getActivity(), "Exception on init: '" + e.getMessage() + "'. Check Log for details.", Toast.LENGTH_LONG).show();
+            LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
         }
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     private void clearUserInput() {

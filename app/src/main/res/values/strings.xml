@@ -58,10 +58,9 @@
     <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically. Benchmark will start immediately after connection is setup.\nBenchmark results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 1024 bytes</string>
     <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
 
-    <string name="activity_nfc_sharkdemo_start">prepare sending</string>
+    <string name="activity_nfc_sharkdemo_start">Switch Identity / Toggle send-receive</string>
     <string name="activity_nfc_sharkdemo_input_hint">Add information to KB</string>
-    <string name="activity_nfc_sharkdemo_info">Your device id, used as KB owner: %1$s</string>
-    <string name="activity_nfc_sharkdemo_hint_add">Creates contextpoint if needed and adds information to knowledgebase</string>
+    <string name="activity_nfc_sharkdemo_hint_add">Creates contextpoint if needed and adds information to Alice\'s knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_clear">Clears output list</string>
 

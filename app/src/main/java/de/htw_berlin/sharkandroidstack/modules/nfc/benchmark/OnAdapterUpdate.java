@@ -11,9 +11,8 @@ public class OnAdapterUpdate {
     private final Runnable updater;
     private final WeakReference<Activity> activity;
     private final MyResultAdapter adapter;
-    protected long count = 0;
+    protected long countByte = 0;
     protected int countMsg = 0;
-    protected int tagCount = 0;
     private long startTime = 0;
 
     public OnAdapterUpdate(MyResultAdapter adapter, Activity activity, Runnable updater) {
@@ -41,22 +40,19 @@ public class OnAdapterUpdate {
     }
 
     public long readAndResetTimer() {
+        if (startTime == 0) {
+            return -1;
+        }
         long stopTime = System.currentTimeMillis();
         final long diff = stopTime - startTime;
         startTime = 0;
         return diff;
     }
 
-    public long readAndResetCount() {
-        long countTmp = count;
-        count = 0;
+    public long readAndResetByteCount() {
+        long countTmp = countByte;
+        countByte = 0;
         return countTmp;
-    }
-
-    public int readAndResetTagCount() {
-        int tmp = tagCount;
-        tagCount = 0;
-        return tmp;
     }
 
     public int readAndResetMsgCount() {

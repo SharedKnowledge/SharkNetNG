@@ -7,65 +7,51 @@ import android.nfc.NfcAdapter;
 import android.os.Build;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
+import net.sharkfw.protocols.MessageStub;
 import net.sharkfw.protocols.RequestHandler;
-import net.sharkfw.protocols.StreamConnection;
-import net.sharkfw.protocols.StreamStub;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 
 /**
  * Created by mn-io on 22.01.16.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NfcStreamStub implements StreamStub {
+public class NfcMessageStub implements MessageStub {
+
+    public static final String SMART_CARD_IDENTIFIER = "SHARK NFC";
 
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
-    private final NfcReaderCallback nfcReaderCallback;
     private final NfcMessageReceivedHandler receivedRequestHandler;
     private final NfcMessageSendHandler sendRequestHandler;
     private boolean isStarted = false;
 
-    public NfcStreamStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
+    public NfcMessageStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
         this.activity = activity;
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(context);
         if (this.nfcAdapter == null) {
             throw new SharkProtocolNotSupportedException("NFC is not supported");
         }
 
-        receivedRequestHandler = new NfcMessageReceivedHandler();
+        receivedRequestHandler = new NfcMessageReceivedHandler(this);
         sendRequestHandler = new NfcMessageSendHandler();
-        nfcReaderCallback = new NfcReaderCallback(receivedRequestHandler);
-    }
-
-    @Override
-    public StreamConnection createStreamConnection(String addressString) throws IOException {
-        return null;
-    }
-
-    @Override
-    public String getLocalAddress() {
-        return null;
     }
 
     @Override
     public void setHandler(RequestHandler handler) {
-        sendRequestHandler.setHandler(handler);
         receivedRequestHandler.setHandler(handler);
     }
 
     @Override
     public void stop() {
-        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler);
+        NfcAdapterHelper.prepareSending(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = false;
     }
 
     @Override
     public void start() {
-        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
+        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = true;
     }
 
@@ -74,4 +60,18 @@ public class NfcStreamStub implements StreamStub {
         return isStarted;
     }
 
+    @Override
+    public void setReplyAddressString(String addr) {
+
+    }
+
+    @Override
+    public void sendMessage(byte[] msg, String recAddress) throws IOException {
+        sendRequestHandler.setData(msg);
+    }
+
+    @Override
+    public String getReplyAddressString() {
+        return null;
+    }
 }

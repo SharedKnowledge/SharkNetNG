@@ -1,11 +1,14 @@
-package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
 
 import junit.framework.TestCase;
 
-public class SmartCardEmulationServiceTest extends TestCase {
+/**
+ * Created by mn-io on 25.01.2016.
+ */
+public class NfcMessageSendHandlerTest extends TestCase {
 
     public void testGetBytesFromBuffer() throws Exception {
-        final SmartCardEmulationService service = new SmartCardEmulationService();
+        final NfcMessageSendHandler service = new NfcMessageSendHandler();
 
         service.byteBuffer = "Hello World".getBytes();
 

@@ -11,9 +11,6 @@ import java.util.List;
  */
 public class LogManager {
 
-    //TODO: connect shark log with android LogManager...
-    //TODO: implement kb log
-
     public final static ArrayList<ArrayList<LogEntry>> logEntries = new ArrayList<>();
 
     public final static ArrayList<String> logIds = new ArrayList<>();

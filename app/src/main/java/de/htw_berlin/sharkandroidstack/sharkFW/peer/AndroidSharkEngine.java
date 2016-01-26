@@ -17,7 +17,7 @@ import net.sharkfw.system.SharkSecurityException;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcStreamStub;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.NfcMessageStub;
 
 public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     Context context;
@@ -29,9 +29,9 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
         this.context = context;
     }
 
-    public AndroidSharkEngine(Context context, Activity activity) {
+    public AndroidSharkEngine(Activity activity) {
         super();
-        this.context = context;
+        this.context = activity.getApplicationContext();
         this.activityRef = new WeakReference<>(activity);
     }
 
@@ -62,7 +62,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     @Override
     protected Stub createNfcStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
         if (currentStub == null) {
-            currentStub = new NfcStreamStub(context, activityRef);
+            currentStub = new NfcMessageStub(context, activityRef);
             currentStub.setHandler(kepStub);
         }
         return currentStub;
@@ -91,6 +91,13 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     @Override
     public void stopBluetooth() throws SharkProtocolNotSupportedException {
         throw new SharkProtocolNotSupportedException("TODO: Timm");
+    }
+
+    @Override
+    public Stub getProtocolStub(int type) throws SharkProtocolNotSupportedException {
+        //TODO this function is called by the parent but the parent function itself look likes a big mess
+        // and it does not look like it is designed to work with start/stop methods.
+        return currentStub;
     }
 
     @Override

@@ -12,22 +12,18 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
  */
 public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {
 
-    private int msgLength;
+    private int size;
 
     public OnMessageSendImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
         super(adapter, activity, updater);
     }
 
-    public void setMsgLength(int msgLength) {
-        this.msgLength = msgLength;
-    }
-
     @Override
     public byte[] getNextMessage() {
-        byte[] message = AndroidUtils.generateRandomString(msgLength).getBytes();
+        byte[] message = AndroidUtils.generateRandomString(size).getBytes();
 
         startTimer();
-        count += message.length;
+        countByte += message.length;
         countMsg++;
 
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message);
@@ -37,7 +33,6 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
     @Override
     public void onDeactivated(int reason) {
-        tagCount++;
         String r = "";
         switch (reason) {
             case HostApduService.DEACTIVATION_DESELECTED:
@@ -50,6 +45,11 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_LOST_TAG, r);
         update(dataHolder);
+    }
+
+    @Override
+    public void setMaxSize(int size) {
+        this.size = size;
     }
 }
 

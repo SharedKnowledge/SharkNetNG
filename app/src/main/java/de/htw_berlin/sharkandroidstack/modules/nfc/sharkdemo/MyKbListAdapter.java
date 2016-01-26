@@ -18,7 +18,7 @@ import de.htw_berlin.sharkandroidstack.R;
 public class MyKbListAdapter extends BaseAdapter {
 
     public static final String SRC_KB_LISTENER = "KB Listener";
-    public static final String SRC_KP = "Knowledge Port";
+    public static final String SRC_KP_LISTENER = "KP Listener";
 
     private final ArrayList<MyDataHolder> data = new ArrayList<>();
 
@@ -95,10 +95,10 @@ public class MyKbListAdapter extends BaseAdapter {
                 headerField.setText(data.type);
             }
 
-            if (SRC_KB_LISTENER == data.src) {
+            if (SRC_KB_LISTENER.equals(data.src)) {
                 headerField.setGravity(Gravity.LEFT);
                 headerField.invalidate();
-            } else if (SRC_KP == data.src) {
+            } else if (SRC_KP_LISTENER == data.src) {
                 headerField.setGravity(Gravity.RIGHT);
                 headerField.invalidate();
             }
