@@ -120,13 +120,10 @@ public class NfcBenchmarkFragment extends Fragment {
         handler.postDelayed(addResultsAsync, timeout);
     }
 
-    //TODO: remove this updater?
     final Runnable updateListSending = new Runnable() {
         @Override
         public void run() {
-            if (!benchmarkState.sendState()) {
-                return;
-            }
+            benchmarkState.sendState();
         }
     };
 
