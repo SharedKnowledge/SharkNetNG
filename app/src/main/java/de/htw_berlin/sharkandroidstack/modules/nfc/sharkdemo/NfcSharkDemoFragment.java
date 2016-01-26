@@ -198,7 +198,7 @@ public class NfcSharkDemoFragment extends Fragment {
 //            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
             kbListAdapter.notifyDataSetChanged();
 
-            engine = new AndroidSharkEngine(getActivity().getApplicationContext(), getActivity());
+            engine = new AndroidSharkEngine(getActivity());
 
             String aliceOrBob = SettingsManager.getValue(SettingsManager.KEY_KB_OWNER_PREFERENCES);
             String other = "alice".equals(aliceOrBob) ? "bob" : "alice";

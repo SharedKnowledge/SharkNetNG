@@ -29,10 +29,9 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
         this.context = context;
     }
 
-    //TODO: activity is enough
-    public AndroidSharkEngine(Context context, Activity activity) {
+    public AndroidSharkEngine(Activity activity) {
         super();
-        this.context = context;
+        this.context = activity.getApplicationContext();
         this.activityRef = new WeakReference<>(activity);
     }
 
@@ -96,7 +95,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
 
     @Override
     public Stub getProtocolStub(int type) throws SharkProtocolNotSupportedException {
-        //TODO this is called but the parent function look likes a big mess
+        //TODO this function is called by the parent but the parent function itself look likes a big mess
         // and it does not look like it is designed to work with start/stop methods.
         return currentStub;
     }
