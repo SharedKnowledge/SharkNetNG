@@ -13,17 +13,16 @@ import net.sharkfw.protocols.RequestHandler;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
-
 /**
  * Created by mn-io on 22.01.16.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcMessageStub implements MessageStub {
 
+    public static final String SMART_CARD_IDENTIFIER = "SHARK NFC";
+
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
-    private final NfcReaderCallback nfcReaderCallback;
     private final NfcMessageReceivedHandler receivedRequestHandler;
     private final NfcMessageSendHandler sendRequestHandler;
     private boolean isStarted = false;
@@ -37,7 +36,6 @@ public class NfcMessageStub implements MessageStub {
 
         receivedRequestHandler = new NfcMessageReceivedHandler(this);
         sendRequestHandler = new NfcMessageSendHandler();
-        nfcReaderCallback = new NfcReaderCallback(sendRequestHandler, receivedRequestHandler);
     }
 
     @Override
@@ -47,13 +45,13 @@ public class NfcMessageStub implements MessageStub {
 
     @Override
     public void stop() {
-        NfcAdapterHelper.prepareSending(activity.get(), sendRequestHandler, receivedRequestHandler);
+        NfcAdapterHelper.prepareSending(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = false;
     }
 
     @Override
     public void start() {
-        NfcAdapterHelper.prepareReceiving(activity.get(), nfcReaderCallback);
+        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = true;
     }
 
@@ -70,7 +68,6 @@ public class NfcMessageStub implements MessageStub {
     //TODO: ignore address..
     @Override
     public void sendMessage(byte[] msg, String recAddress) throws IOException {
-        //System.out.println("mario: trying to send " + new String(msg) + " to " + recAddress);
         sendRequestHandler.setData(msg);
     }
 

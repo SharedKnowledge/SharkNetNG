@@ -21,17 +21,24 @@ public class IsoDepTransceiver implements Runnable {
 
     private final Thread thread;
 
+    private byte[] initialHandshakeIdentifier;
     private IsoDep isoDep;
     private OnMessageReceived onMessageReceived;
     private OnMessageSend onMessageSendCallback;
 
-    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCall) {
+    public IsoDepTransceiver(String smartCardIdentifier, Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCall) {
+        if (smartCardIdentifier != null) {
+            this.initialHandshakeIdentifier = smartCardIdentifier.getBytes();
+        }
+
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
+
         if (onMessageSendCall != null) {
             this.onMessageSendCallback = onMessageSendCall;
             onMessageSendCall.setMaxSize(isoDep.getMaxTransceiveLength());
         }
+
         onMessageReceived.newTag(tag);
 
         thread = new Thread(this);
@@ -44,7 +51,7 @@ public class IsoDepTransceiver implements Runnable {
             isoDep.connect();
             final byte[] selectAidApdu = createSelectAidApdu(AID_ANDROID);
             byte[] response = isoDep.transceive(selectAidApdu);
-            if (!Arrays.equals(response, SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE)) {
+            if (!Arrays.equals(response, initialHandshakeIdentifier)) {
                 return;
             }
 

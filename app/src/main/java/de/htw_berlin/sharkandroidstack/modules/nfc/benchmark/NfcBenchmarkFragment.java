@@ -21,7 +21,6 @@ import java.math.RoundingMode;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService.NfcReaderCallback;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 import static de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
@@ -39,7 +38,6 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final int DEFAULT_MESSAGE_LENGTH = 1024 / MSG_LENGTH_SCALE_FACTOR;
 
     public static final String MSG_PAYLOAD_RECEIVED = "Payload handled: ";
-    public static final String MSG_PAYLOAD_SENT = "Payload sent: ";
     public static final String MSG_TIME_ELAPSED = "Time elapsed by timer: ";
     public static final String MSG_TIME_MEASURED = "Time measured*: ";
     public static final String MSG_THROUGHPUT = "Throughput: ";
@@ -69,7 +67,6 @@ public class NfcBenchmarkFragment extends Fragment {
     private SeekBar durationInput;
     private TextView durationOutput;
 
-    NfcReaderCallback readerCallback;
     MyResultAdapter resultAdapter;
 
     NfcBenchmarkState benchmarkState;
@@ -214,11 +211,6 @@ public class NfcBenchmarkFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
-        if (readerCallback == null) {
-            readerCallback = new NfcReaderCallback(onMessageSendCallback, onMessageReceivedCallback);
-        }
-
         benchmarkState.resetState();
     }
 

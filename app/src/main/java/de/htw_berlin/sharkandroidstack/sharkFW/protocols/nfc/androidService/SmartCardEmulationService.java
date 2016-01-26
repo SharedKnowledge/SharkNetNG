@@ -16,23 +16,27 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class SmartCardEmulationService extends HostApduService {
 
-    //TODO: set SmartCardEmulationService.INITIAL_TYPE_OF_SERVICE to current fragment..
     //TODO: start/stop service on activity start
-    //TODO: stream ...
 
-    public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
+    //public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
     public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL_PASSIVE = {(byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFC,};
 
     private static OnMessageSend src;
     private static OnMessageReceived sink;
-
+    private static byte[] handshakeIdentifier;
+    private static boolean isValidReader;
 
     @Override
     public void onDeactivated(int reason) {
-        src.onDeactivated(reason);
+        if (src != null) {
+            src.onDeactivated(reason);
+        }
+
         if (sink != null) {
             sink.tagLost();
         }
+
+        isValidReader = false;
     }
 
     @Override
@@ -42,7 +46,12 @@ public class SmartCardEmulationService extends HostApduService {
         }
 
         if (selectAidApdu(data)) {
-            return INITIAL_TYPE_OF_SERVICE;
+            isValidReader = true;
+            return handshakeIdentifier;
+        }
+
+        if (!isValidReader) {
+            return null;
         }
 
         if (sink != null && !Arrays.equals(IsoDepTransceiver.KEEP_CHANNEL_OPEN_SIGNAL_ACTIVE, data)) {
@@ -57,6 +66,10 @@ public class SmartCardEmulationService extends HostApduService {
         return nextMessage;
     }
 
+    public static void setInitialHandshakeResponse(String identifier) {
+        handshakeIdentifier = identifier.getBytes();
+        isValidReader = false;
+    }
 
     public static void setSource(OnMessageSend src) {
         SmartCardEmulationService.src = src;

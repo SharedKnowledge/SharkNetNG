@@ -22,6 +22,7 @@ class NfcBenchmarkState {
     static final int STATE_RUNNING = 3;
     static final int STATE_STOPPED = 4;
     static final int STATE_RECEIVING = 5;
+    public static final String SMART_CARD_IDENTIFIER = "NFC_BENCHMARK";
 
     private final NfcBenchmarkFragment fragment;
     private final NfcMainActivity activity;
@@ -62,7 +63,7 @@ class NfcBenchmarkState {
 
         fragment.resultAdapter.clear();
 
-        NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
+        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
@@ -72,7 +73,7 @@ class NfcBenchmarkState {
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
-        NfcAdapterHelper.prepareSending(activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
+        NfcAdapterHelper.prepareSending(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
@@ -105,7 +106,7 @@ class NfcBenchmarkState {
             timer = null;
         }
 
-        NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
+        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
