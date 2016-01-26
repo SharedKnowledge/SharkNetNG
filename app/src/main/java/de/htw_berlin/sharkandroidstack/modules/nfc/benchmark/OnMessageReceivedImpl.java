@@ -2,6 +2,7 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.benchmark;
 
 import android.app.Activity;
 import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
 
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
@@ -11,6 +12,8 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
  */
 public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageReceived {
 
+    private int maxMsgSize;
+
     public OnMessageReceivedImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
         super(adapter, activity, updater);
     }
@@ -19,7 +22,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     public void onMessage(byte[] message) {
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message);
         if (message != null) {
-            count += message.length;
+            countByte += message.length;
         }
         countMsg++;
         update(dataHolder);
@@ -43,7 +46,15 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     public void newTag(Tag tag) {
         startTimer();
         tagCount++;
+        maxMsgSize = IsoDep.get(tag).getMaxTransceiveLength();
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_NEW_TAG, tag.toString());
         update(dataHolder);
     }
+
+    public int readAndResetMsgSize() {
+        int tmp = maxMsgSize;
+        maxMsgSize = 0;
+        return tmp;
+    }
+
 }

@@ -119,6 +119,8 @@
         android:id="@+id/activity_nfc_benchmark_results"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/activity_nfc_benchmark_progress_container" />
+        android:layout_below="@id/activity_nfc_benchmark_progress_container"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll" />
 
 </RelativeLayout>

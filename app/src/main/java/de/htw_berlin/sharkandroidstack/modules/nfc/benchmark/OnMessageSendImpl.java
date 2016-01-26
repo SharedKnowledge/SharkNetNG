@@ -23,7 +23,7 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
         byte[] message = AndroidUtils.generateRandomString(size).getBytes();
 
         startTimer();
-        count += message.length;
+        countByte += message.length;
         countMsg++;
 
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_OUT, MyDataHolder.TYPE_DATA, message);

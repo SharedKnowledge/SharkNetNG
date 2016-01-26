@@ -21,13 +21,12 @@ class NfcBenchmarkState {
     static final int STATE_PREPARED = 2;
     static final int STATE_RUNNING = 3;
     static final int STATE_STOPPED = 4;
-    static final int STATE_RECEIVING = 4;
+    static final int STATE_RECEIVING = 5;
 
     private final NfcBenchmarkFragment fragment;
     private final NfcMainActivity activity;
 
     private int currentState = 0;
-    private boolean needReset = false;
     private CountDownTimer timer;
 
     public NfcBenchmarkState(NfcBenchmarkFragment fragment, NfcMainActivity activity) {
@@ -35,28 +34,24 @@ class NfcBenchmarkState {
         this.activity = activity;
     }
 
-    public void nextStateForSending() {
+    public boolean nextStateForSending() {
         switch (currentState) {
             case STATE_RESET:
-                preparedState();
-                return;
+                return preparedState();
             case STATE_RUNNING:
-                stoppedState();
-                return;
+                return stoppedState();
             case STATE_PREPARED:
-                resetState();
-                return;
+                return resetState();
             case STATE_STOPPED:
-                resetState();
-                return;
+                return resetState();
         }
+        return false;
     }
 
-    void resetState() {
+    boolean resetState() {
         if (!updateStateIfPossible(STATE_RESET)) {
-            return;
+            return false;
         }
-        needReset = false;
 
         fragment.startSendingButton.setVisibility(VISIBLE);
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_start);
@@ -68,22 +63,23 @@ class NfcBenchmarkState {
         fragment.resultAdapter.clear();
 
         NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
+        return true;
     }
 
-    void preparedState() {
+    boolean preparedState() {
         if (!updateStateIfPossible(STATE_PREPARED)) {
-            return;
+            return false;
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
         NfcAdapterHelper.prepareSending(activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
+        return true;
     }
 
-    void sendState() {
-        if (needReset || !updateStateIfPossible(STATE_RUNNING)) {
-            return;
+    boolean sendState() {
+        if (!updateStateIfPossible(STATE_RUNNING)) {
+            return false;
         }
-        needReset = true;
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_stop);
         fragment.startSendingButton.setCompoundDrawablesWithIntrinsicBounds(0, 0, ic_media_pause, 0);
@@ -92,11 +88,13 @@ class NfcBenchmarkState {
 
         timer = fragment.prepareTimer();
         timer.start();
+
+        return true;
     }
 
-    void stoppedState() {
+    boolean stoppedState() {
         if (!updateStateIfPossible(STATE_STOPPED)) {
-            return;
+            return false;
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_abort);
@@ -108,14 +106,12 @@ class NfcBenchmarkState {
         }
 
         NfcAdapterHelper.prepareReceiving(activity, fragment.readerCallback);
+        return true;
     }
 
-    void receivingState() {
-        if (STATE_RUNNING == currentState) {
-            return;
-        }
+    boolean receivingState() {
         if (!updateStateIfPossible(STATE_RECEIVING)) {
-            return;
+            return false;
         }
 
         if (timer != null) {
@@ -126,6 +122,7 @@ class NfcBenchmarkState {
         fragment.startSendingButton.setVisibility(GONE);
         fragment.setResultVisibility(View.VISIBLE, GONE);
         fragment.backFromReceivingButton.setVisibility(VISIBLE);
+        return true;
     }
 
     boolean isState(int state) {
@@ -133,14 +130,21 @@ class NfcBenchmarkState {
     }
 
     private boolean updateStateIfPossible(final int state) {
+        if (STATE_STOPPED == currentState && STATE_RESET != state) {
+            return false;
+        }
+
+        if ((STATE_RUNNING == currentState || STATE_PREPARED == currentState) && STATE_RECEIVING == state) {
+            return false;
+        }
+
+        if (STATE_RECEIVING == currentState && (STATE_RUNNING == state || STATE_PREPARED == state)) {
+            return false;
+        }
         if (state == currentState) {
             return false;
         }
         currentState = state;
         return true;
-    }
-
-    public boolean isStopped() {
-        return currentState == STATE_STOPPED;
     }
 }
