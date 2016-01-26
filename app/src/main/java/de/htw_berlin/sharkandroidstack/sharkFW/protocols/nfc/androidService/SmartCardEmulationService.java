@@ -5,6 +5,8 @@ import android.nfc.cardemulation.HostApduService;
 import android.os.Build;
 import android.os.Bundle;
 
+import java.util.Arrays;
+
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
 
@@ -19,6 +21,7 @@ public class SmartCardEmulationService extends HostApduService {
     //TODO: stream ...
 
     public static final byte[] INITIAL_TYPE_OF_SERVICE = "Hello".getBytes();
+    public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL = {(byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFD,};
 
     private static OnMessageSend src;
     private static OnMessageReceived sink;
@@ -42,13 +45,13 @@ public class SmartCardEmulationService extends HostApduService {
             return INITIAL_TYPE_OF_SERVICE;
         }
 
-        if (sink != null && !new String(data).equals("nothing")) {
+        if (sink != null && !Arrays.equals(KEEP_CHANNEL_OPEN_SIGNAL, data)) {
             sink.onMessage(data);
         }
 
         byte[] nextMessage = src.getNextMessage();
         if (nextMessage == null) {
-            nextMessage = "nothing".getBytes();
+            nextMessage = KEEP_CHANNEL_OPEN_SIGNAL;
         }
 
         return nextMessage;

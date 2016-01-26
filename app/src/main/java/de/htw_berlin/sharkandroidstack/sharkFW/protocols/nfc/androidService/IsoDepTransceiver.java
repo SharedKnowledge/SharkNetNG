@@ -17,6 +17,7 @@ public class IsoDepTransceiver implements Runnable {
 
     public static final byte[] CLA_INS_P1_P2 = {0x00, (byte) 0xA4, 0x04, 0x00};
     public static final byte[] AID_ANDROID = {(byte) 0xF0, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+    public static final byte[] KEEP_CHANNEL_OPEN_SIGNAL = {(byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFE, (byte) 0xFF, (byte) 0xFD,};
 
     private final Thread thread;
 
@@ -48,16 +49,17 @@ public class IsoDepTransceiver implements Runnable {
             }
 
             while (isoDep.isConnected() && !Thread.interrupted()) {
-                byte[] nextMessage = onMessageSendCallback != null ? onMessageSendCallback.getNextMessage() : "nothing".getBytes();
+                byte[] nextMessage = onMessageSendCallback != null ? onMessageSendCallback.getNextMessage() : KEEP_CHANNEL_OPEN_SIGNAL;
                 if (nextMessage == null) {
-                    nextMessage = "nothing".getBytes();
+                    nextMessage = KEEP_CHANNEL_OPEN_SIGNAL;
                 }
                 System.out.println("mario: working as IDT");
                 System.out.println("mario: sending1: " + Arrays.toString(nextMessage) + " / " + new String(nextMessage));
 
                 response = isoDep.transceive(nextMessage); // TODO: tag lost if null response = therefore always send data to allow bidirectional...
                 System.out.println("mario: received2: " + Arrays.toString(response) + " / " + new String(response));
-                if (!new String(response).equals("nothing")) {
+                if (!Arrays.equals(KEEP_CHANNEL_OPEN_SIGNAL, response)) {
+                    System.out.println("handle upstream");
                     onMessageReceived.onMessage(response);
                 }
             }
