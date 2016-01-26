@@ -33,7 +33,6 @@ public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend 
 
     @Override
     public void onDeactivated(int reason) {
-        tagCount++;
         String r = "";
         switch (reason) {
             case HostApduService.DEACTIVATION_DESELECTED:

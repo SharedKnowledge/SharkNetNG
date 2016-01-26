@@ -13,6 +13,7 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageReceived {
 
     private int maxMsgSize;
+    private int tagCount = 0;
 
     public OnMessageReceivedImpl(MyResultAdapter adapter, Runnable updater, Activity activity) {
         super(adapter, activity, updater);
@@ -20,6 +21,7 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
 
     @Override
     public void onMessage(byte[] message) {
+        startTimer();
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message);
         if (message != null) {
             countByte += message.length;
@@ -54,6 +56,12 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     public int readAndResetMsgSize() {
         int tmp = maxMsgSize;
         maxMsgSize = 0;
+        return tmp;
+    }
+
+    public int readAndResetTagCount() {
+        int tmp = tagCount;
+        tagCount = 0;
         return tmp;
     }
 

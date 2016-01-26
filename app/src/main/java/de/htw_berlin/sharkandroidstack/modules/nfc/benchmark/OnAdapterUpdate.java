@@ -13,7 +13,6 @@ public class OnAdapterUpdate {
     private final MyResultAdapter adapter;
     protected long countByte = 0;
     protected int countMsg = 0;
-    protected int tagCount = 0;
     private long startTime = 0;
 
     public OnAdapterUpdate(MyResultAdapter adapter, Activity activity, Runnable updater) {
@@ -54,12 +53,6 @@ public class OnAdapterUpdate {
         long countTmp = countByte;
         countByte = 0;
         return countTmp;
-    }
-
-    public int readAndResetTagCount() {
-        int tmp = tagCount;
-        tagCount = 0;
-        return tmp;
     }
 
     public int readAndResetMsgCount() {
