@@ -29,7 +29,6 @@ import net.sharkfw.system.SharkSecurityException;
 
 import java.io.IOException;
 
-import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
@@ -159,8 +158,8 @@ public class NfcSharkDemoFragment extends Fragment {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
 
         final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
-        //TODO: check real id
-        ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
+
+        ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), SettingsManager.getValue(SettingsManager.KEY_KB_OWNER_PREFERENCES)));
 
         root.findViewById(R.id.activity_nfc_sharkdemo_start).setOnClickListener(startClickListener);
 
@@ -191,7 +190,7 @@ public class NfcSharkDemoFragment extends Fragment {
         kbList.setAdapter(kbListAdapter);
 
         try {
-            // uses default owner from settings!
+            // uses default owner from settings
             kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
 
             kb.addListener(knowledgeBaseListener);
@@ -218,18 +217,16 @@ public class NfcSharkDemoFragment extends Fragment {
                 kb.addInterest(cc);
                 kp = new StandardKP(engine, cc, kb);
                 kp.addListener(knowledgePortListener);
-                PeerSemanticTag bob = kb.createPeerSemanticTag(other, other + "Id", "tcp://localhost:1000");
+                PeerSemanticTag bob = kb.createPeerSemanticTag(other, other + "Id", "NFC");
                 final InMemoKnowledge k = new InMemoKnowledge();
                 k.addContextPoint(cp);
                 engine.startNfc();
-
                 engine.sendKnowledge(k, bob, kp);
             } else {
                 //Bob
                 String bobName = aliceOrBob;
                 System.out.println("mario2: I am bob " + bobName);
-
-                PeerSemanticTag bob = kb.createPeerSemanticTag(bobName, bobName + "Id", "tcp://localhost:1001");
+                PeerSemanticTag bob = kb.createPeerSemanticTag(bobName, bobName + "Id", "NFC");
                 ContextCoordinates interest = kb.createContextCoordinates(shark, null, bob, null, null, null, SharkCS.DIRECTION_IN);
                 kp = new StandardKP(engine, interest, kb);
                 kp.addListener(knowledgePortListener);

@@ -65,7 +65,6 @@ public class NfcMessageStub implements MessageStub {
 
     }
 
-    //TODO: ignore address..
     @Override
     public void sendMessage(byte[] msg, String recAddress) throws IOException {
         sendRequestHandler.setData(msg);

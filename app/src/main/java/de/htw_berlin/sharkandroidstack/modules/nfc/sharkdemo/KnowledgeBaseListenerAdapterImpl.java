@@ -15,7 +15,6 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 /**
  * Created by mn-io on 22.01.16.
  */
-// TODO: move to package for generic re-usage
 public class KnowledgeBaseListenerAdapterImpl implements KnowledgeBaseListener {
     private MyKbListAdapter kbListAdapter;
     private String logId;
