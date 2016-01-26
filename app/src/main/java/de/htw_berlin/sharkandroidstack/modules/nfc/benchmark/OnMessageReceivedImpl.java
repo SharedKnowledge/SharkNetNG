@@ -38,9 +38,8 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     }
 
     @Override
-    public void tagLost(Tag tag) {
-        String data = tag != null ? tag.toString() : null;
-        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_LOST_TAG, data);
+    public void tagLost() {
+        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_LOST_TAG, "");
         update(dataHolder);
     }
 

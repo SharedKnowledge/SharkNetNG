@@ -159,6 +159,7 @@ public class NfcSharkDemoFragment extends Fragment {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
 
         final TextView ownerInformation = (TextView) root.findViewById(R.id.activity_nfc_sharkdemo_owner_id);
+        //TODO: check real id
         ownerInformation.setText(String.format(root.getContext().getString(R.string.activity_nfc_sharkdemo_info), AndroidUtils.deviceId));
 
         root.findViewById(R.id.activity_nfc_sharkdemo_start).setOnClickListener(startClickListener);
@@ -220,7 +221,6 @@ public class NfcSharkDemoFragment extends Fragment {
                 PeerSemanticTag bob = kb.createPeerSemanticTag(other, other + "Id", "tcp://localhost:1000");
                 final InMemoKnowledge k = new InMemoKnowledge();
                 k.addContextPoint(cp);
-
                 engine.startNfc();
 
                 engine.sendKnowledge(k, bob, kp);

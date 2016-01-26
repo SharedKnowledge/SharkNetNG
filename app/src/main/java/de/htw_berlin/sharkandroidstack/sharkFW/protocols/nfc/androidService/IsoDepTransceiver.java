@@ -20,13 +20,11 @@ public class IsoDepTransceiver implements Runnable {
 
     private final Thread thread;
 
-    private Tag tag;
     private IsoDep isoDep;
     private OnMessageReceived onMessageReceived;
     private OnMessageSend onMessageSendCallback;
 
     public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCall) {
-        this.tag = tag;
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
         if (onMessageSendCall != null) {
@@ -54,7 +52,11 @@ public class IsoDepTransceiver implements Runnable {
                 if (nextMessage == null) {
                     nextMessage = "nothing".getBytes();
                 }
-                response = isoDep.transceive(nextMessage); // TODO: tag lost if null response
+                System.out.println("mario: working as IDT");
+                System.out.println("mario: sending1: " + Arrays.toString(nextMessage) + " / " + new String(nextMessage));
+
+                response = isoDep.transceive(nextMessage); // TODO: tag lost if null response = therefore always send data to allow bidirectional...
+                System.out.println("mario: received2: " + Arrays.toString(response) + " / " + new String(response));
                 if (!new String(response).equals("nothing")) {
                     onMessageReceived.onMessage(response);
                 }
@@ -62,8 +64,10 @@ public class IsoDepTransceiver implements Runnable {
 
             isoDep.close();
         } catch (TagLostException ignore) {
-            onMessageReceived.tagLost(tag);
+            System.out.println("mario: tag lost");
+            onMessageReceived.tagLost();
         } catch (IOException e) {
+            System.out.println("mario: error " + e.getMessage());
             onMessageReceived.onError(e);
         }
     }

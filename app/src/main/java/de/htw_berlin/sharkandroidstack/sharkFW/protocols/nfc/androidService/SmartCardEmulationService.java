@@ -27,6 +27,9 @@ public class SmartCardEmulationService extends HostApduService {
     @Override
     public void onDeactivated(int reason) {
         src.onDeactivated(reason);
+        if (sink != null) {
+            sink.tagLost();
+        }
     }
 
     @Override
@@ -39,7 +42,7 @@ public class SmartCardEmulationService extends HostApduService {
             return INITIAL_TYPE_OF_SERVICE;
         }
 
-        if (!new String(data).equals("nothing")) {
+        if (sink != null && !new String(data).equals("nothing")) {
             sink.onMessage(data);
         }
 
