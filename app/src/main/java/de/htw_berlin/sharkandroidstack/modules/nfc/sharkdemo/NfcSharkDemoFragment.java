@@ -194,9 +194,6 @@ public class NfcSharkDemoFragment extends Fragment {
             kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
 
             kb.addListener(knowledgeBaseListener);
-            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
-//            tag = kb.createSemanticTag(SEMANTIC_TAG_NAME, SEMANTIC_TAG_SI);
-            kbListAdapter.notifyDataSetChanged();
 
             engine = new AndroidSharkEngine(getActivity());
 
@@ -223,6 +220,9 @@ public class NfcSharkDemoFragment extends Fragment {
                 PeerSemanticTag bob = kb.createPeerSemanticTag(other, other + "Id", "tcp://localhost:1000");
                 final InMemoKnowledge k = new InMemoKnowledge();
                 k.addContextPoint(cp);
+
+                engine.startNfc();
+
                 engine.sendKnowledge(k, bob, kp);
             } else {
                 //Bob
@@ -233,7 +233,6 @@ public class NfcSharkDemoFragment extends Fragment {
                 ContextCoordinates interest = kb.createContextCoordinates(shark, null, bob, null, null, null, SharkCS.DIRECTION_IN);
                 kp = new StandardKP(engine, interest, kb);
                 kp.addListener(knowledgePortListener);
-                engine.startNfc();
             }
         } catch (SharkKBException e) {
             LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
@@ -245,6 +244,9 @@ public class NfcSharkDemoFragment extends Fragment {
         } catch (SharkProtocolNotSupportedException e) {
             e.printStackTrace();
         }
+
+        kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", L.kb2String(kb)));
+        kbListAdapter.notifyDataSetChanged();
     }
 
     @Override

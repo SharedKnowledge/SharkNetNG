@@ -25,13 +25,14 @@ public class IsoDepTransceiver implements Runnable {
     private OnMessageReceived onMessageReceived;
     private OnMessageSend onMessageSendCallback;
 
-    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCallback) {
+    public IsoDepTransceiver(Tag tag, IsoDep isoDep, OnMessageReceived onMessageReceived, OnMessageSend onMessageSendCall) {
         this.tag = tag;
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
-        this.onMessageSendCallback = onMessageSendCallback;
-        onMessageSendCallback.setMaxSize(isoDep.getMaxTransceiveLength());
-
+        if (onMessageSendCall != null) {
+            this.onMessageSendCallback = onMessageSendCall;
+            onMessageSendCall.setMaxSize(isoDep.getMaxTransceiveLength());
+        }
         onMessageReceived.newTag(tag);
 
         thread = new Thread(this);
@@ -49,12 +50,14 @@ public class IsoDepTransceiver implements Runnable {
             }
 
             while (isoDep.isConnected() && !Thread.interrupted()) {
-                byte[] nextMessage = onMessageSendCallback.getNextMessage();
+                byte[] nextMessage = onMessageSendCallback != null ? onMessageSendCallback.getNextMessage() : "nothing".getBytes();
                 if (nextMessage == null) {
-                    nextMessage = new byte[0];
+                    nextMessage = "nothing".getBytes();
                 }
-                response = isoDep.transceive(nextMessage);
-                onMessageReceived.onMessage(response);
+                response = isoDep.transceive(nextMessage); // TODO: tag lost if null response
+                if (!new String(response).equals("nothing")) {
+                    onMessageReceived.onMessage(response);
+                }
             }
 
             isoDep.close();

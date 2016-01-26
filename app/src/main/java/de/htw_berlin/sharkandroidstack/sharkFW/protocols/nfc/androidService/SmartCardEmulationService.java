@@ -39,8 +39,16 @@ public class SmartCardEmulationService extends HostApduService {
             return INITIAL_TYPE_OF_SERVICE;
         }
 
-        sink.onMessage(data);
-        return src.getNextMessage();
+        if (!new String(data).equals("nothing")) {
+            sink.onMessage(data);
+        }
+
+        byte[] nextMessage = src.getNextMessage();
+        if (nextMessage == null) {
+            nextMessage = "nothing".getBytes();
+        }
+
+        return nextMessage;
     }
 
 
