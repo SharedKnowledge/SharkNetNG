@@ -44,7 +44,6 @@ public class SmartCardEmulationService extends HostApduService {
 
         if (Arrays.equals(IsoDepTransceiver.AID_APDU, data)) {
             isValidReader = true;
-            System.out.println("mario: selectAidApdu   " + new String(data) + " / " + Arrays.toString(data));
             return handshakeIdentifier;
         }
 

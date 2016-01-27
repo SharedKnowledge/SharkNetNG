@@ -37,7 +37,12 @@ public class NfcBenchmarkFragment extends Fragment {
     public static final int MSG_LENGTH_SCALE_FACTOR = 8;
     public static final int DEFAULT_MESSAGE_LENGTH = 1024 / MSG_LENGTH_SCALE_FACTOR;
 
+    public static final String MSG_HEADER_SENT = "Sent:\n";
+    public static final String MSG_HEADER_RECEIVED = "Received:\n";
     public static final String MSG_PAYLOAD_RECEIVED = "Payload handled: ";
+    public static final String MSG_INVALID_TIME_MEASURED = "Invalid time measured.\n";
+    public static final String MSG_MSG_LENGTH = "Message length: ";
+    public static final String MSG_MAX_MSG_LENGTH_RESPONSE = "Max message length response: ";
     public static final String MSG_TIME_ELAPSED = "Time elapsed by timer: ";
     public static final String MSG_TIME_MEASURED = "Time measured*: ";
     public static final String MSG_THROUGHPUT = "Throughput: ";
@@ -267,6 +272,9 @@ public class NfcBenchmarkFragment extends Fragment {
                 calcStats(onMessageSendCallback) + MSG_NEW_LINE + MSG_NEW_LINE +
                 calcStats(onMessageReceivedCallback) + MSG_TIME_HINT;
 
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println(msg);
+
         final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg);
         resultAdapter.add(dataHolder);
         resultAdapter.notifyDataSetChanged();
@@ -291,22 +299,24 @@ public class NfcBenchmarkFragment extends Fragment {
         int msgCount = adapter.readAndResetMsgCount();
         long timer = adapter.readAndResetTimer();
         int tagCount = 0;
-        int maxMsgSize = 0;
+        int msgLength = 0;
+        int maxResponseLength = 0;
 
         timer -= benchmarkState.isState(NfcBenchmarkState.STATE_RECEIVING) ? TIMEOUT_RECEIVING_ADD_RESULT : TIMEOUT_SENDING_ADD_RESULT;
 
         if (adapter instanceof OnMessageSendImpl) {
-            src = "Sent";
+            src = MSG_HEADER_SENT;
+            msgLength = Integer.valueOf(msgLengthOutput.getText().toString());
         } else {
-            src = "Received";
+            src = MSG_HEADER_RECEIVED;
             final OnMessageReceivedImpl onMessageReceivedAdapter = (OnMessageReceivedImpl) adapter;
             tagCount = onMessageReceivedAdapter.readAndResetTagCount();
-            maxMsgSize = onMessageReceivedAdapter.readAndResetMsgSize();
+            maxResponseLength = onMessageReceivedAdapter.readAndResetMsgSize();
         }
 
-        final StringBuilder msg = new StringBuilder(src).append(":\n");
+        final StringBuilder msg = new StringBuilder(src);
         if (timer < 0) {
-            return msg.append("Invalid time measured.\n").toString();
+            return msg.append(MSG_INVALID_TIME_MEASURED).toString();
         }
 
         final BigDecimal timerBigDecimal = BigDecimal.valueOf(timer);
@@ -325,8 +335,11 @@ public class NfcBenchmarkFragment extends Fragment {
             msg.append(MSG_THROUGHPUT).append(bytePerSecond).append(MSG_BYTE_S).append(bitsPerSecond).append(MSG_BIT_S);
         }
 
-        if (maxMsgSize > 0) {
-            msg.append("Max payload per response: ").append(maxMsgSize).append(MSG_BYTES);
+        if (msgLength > 0) {
+            msg.append(MSG_MSG_LENGTH).append(msgLength).append(MSG_BYTES);
+        }
+        if (maxResponseLength > 0) {
+            msg.append(MSG_MAX_MSG_LENGTH_RESPONSE).append(maxResponseLength).append(MSG_BYTES);
         }
 
         msg.append(MSG_MSG_DETECTED).append(msgCount).append(MSG_NEW_LINE);
