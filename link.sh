@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #path to SharkFW
 #Mario
-SOURCE=/Users/mario/Work/SharkFW/src/java
+#SOURCE=/Users/mario/Work/SharkFW/src/java
 #Micha
-#SOURCE=/home/micha/dev/shark/projects/SharkFW/src/java
+SOURCE=/home/micha/dev/shark/projects/SharkFW/src/java
 
 #Fixed to java sources, do not change
 ROOT=./app/src/main/java

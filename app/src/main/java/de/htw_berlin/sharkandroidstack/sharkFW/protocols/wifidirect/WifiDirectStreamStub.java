@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.NetworkInfo;
 import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
@@ -17,9 +18,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 
+import net.sharkfw.knowledgeBase.ASIPSpace;
+import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;
 import net.sharkfw.protocols.StreamStub;
+import net.sharkfw.system.SharkNotSupportedException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -177,6 +181,16 @@ public class WifiDirectStreamStub
     @Override
     public boolean started() {
         return _isStarted;
+    }
+
+    @Override
+    public void offer(ASIPSpace interest) throws SharkNotSupportedException {
+
+    }
+
+    @Override
+    public void offer(Knowledge knowledge) throws SharkNotSupportedException {
+
     }
 
     @Override
