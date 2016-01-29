@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:id="@+id/activity_nfc_sharkdemo_input_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/activity_nfc_sharkdemo_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/activity_nfc_sharkdemo_input_hint"
+            android:inputType="textMultiLine" />
+
+        <ImageButton
+            android:id="@+id/activity_nfc_sharkdemo_input_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:src="@android:drawable/ic_menu_add" />
+
+        <ImageButton
+            android:id="@+id/activity_nfc_sharkdemo_input_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:src="@android:drawable/ic_menu_send" />
+
+    </LinearLayout>
+
+    <include layout="@layout/module_nfc_sharkdemo_common" />
+</RelativeLayout>
