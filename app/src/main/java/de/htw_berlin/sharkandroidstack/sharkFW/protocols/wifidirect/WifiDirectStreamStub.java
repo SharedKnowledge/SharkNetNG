@@ -107,6 +107,6 @@ public class WifiDirectStreamStub implements StreamStub, WifiP2pManager.DnsSdTxt
 
     @Override
     public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> txtRecordMap, WifiP2pDevice srcDevice) {
-        
+
     }
 }
