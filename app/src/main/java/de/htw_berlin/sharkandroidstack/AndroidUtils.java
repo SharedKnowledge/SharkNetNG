@@ -1,7 +1,10 @@
 package de.htw_berlin.sharkandroidstack;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import java.util.Random;
 
@@ -29,5 +32,11 @@ public final class AndroidUtils {
             randStr.append(ch);
         }
         return randStr.toString();
+    }
+
+    public static void clearUserInput(Activity activity, TextView view) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        view.setText("");
     }
 }

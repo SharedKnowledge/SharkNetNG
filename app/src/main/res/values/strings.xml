@@ -64,6 +64,9 @@
     <string name="activity_nfc_sharkdemo_hint_add">Creates contextpoint if needed and adds information to Alice\'s knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_clear">Clears output list</string>
+    <string name="activity_nfc_sharkdemo_hint_send">Starts NFC and sends knowledge when connected.</string>
+    <string name="activity_nfc_sharkdemo_intro_title">Shark NFC Demo</string>
+    <string name="activity_nfc_sharkdemo_intro_body">Usage:\n\nAlice stores information and you can add new one to her KB. As Alice you can send your knowledge to Bob. Bob can receive information from Alice and assimilates his knowledge.\n\nHint: Press long on a button to get some help.\n\nCoded by Mario Neises (mario.neises@student.htw-berlin.de)</string>
 
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>

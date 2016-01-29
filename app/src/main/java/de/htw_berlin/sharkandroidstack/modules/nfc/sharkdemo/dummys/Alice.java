@@ -1,88 +1,122 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
+
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
-import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
-import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
-import net.sharkfw.kp.KPListener;
-import net.sharkfw.peer.SharkEngine;
-import net.sharkfw.peer.StandardKP;
-import net.sharkfw.system.SharkSecurityException;
 
-import java.io.IOException;
-
-import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.KnowledgeBaseListenerAdapterImpl;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
+import de.htw_berlin.sharkandroidstack.AndroidUtils;
+import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
+import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 /**
- * Created by mn-io on 26.01.2016.
+ * Created by mn-io on 29.01.2016.
  */
-public class Alice extends SharkDemoIdentity {
-    public static String name = "Alice";
+public class Alice extends Actor {
 
-    private SharkKB kb;
-    private PeerSemanticTag peer;
-    private ContextCoordinates cc;
-    private StandardKP kp;
-    private SharkEngine engine;
+    private EditText userInput;
     private ContextPoint cp;
+    private PeerSemanticTag remotePeer;
 
-    public Alice(KnowledgeBaseListenerAdapterImpl knowledgeBaseListener, SharkEngine engine, KPListener knowledgePortListener) throws SharkKBException {
-        this.engine = engine;
-        kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
-        kb.addListener(knowledgeBaseListener);
+    final View.OnClickListener sendClickListener = new View.OnClickListener() {
 
-        //TODO: Address is absolutely not needed here, but framework requires something
-        peer = kb.createPeerSemanticTag(name, name + "Id", "tcp://localhost:123");
-        kb.setOwner(peer);
-
-        SemanticTag topic = kb.createSemanticTag("Shark", "http://www.sharksystem.net/");
-        cc = kb.createContextCoordinates(topic, peer, peer, null, null, null, SharkCS.DIRECTION_OUT);
-
-        kp = new StandardKP(engine, cc, kb);
-        kp.addListener(knowledgePortListener);
-    }
-
-    public void addInformation(String msg) throws SharkKBException, SharkProtocolNotSupportedException, IOException, SharkSecurityException {
-        cp = kb.createContextPoint(cc);
-        cp.addInformation(msg);
-        kb.addInterest(cc);
-        //TODO: Bug?! - cpChanged not called?!
-    }
-
-    @Override
-    public void sendInformation(PeerSemanticTag otherPeer) throws SharkProtocolNotSupportedException, IOException, SharkSecurityException, SharkKBException {
-        if (cp == null) {
-            throw new IllegalStateException("Context Point cannot be null, call addInformation() first.");
+        @Override
+        public void onClick(View v) {
+            sendInformation();
         }
-        final InMemoKnowledge k = new InMemoKnowledge();
-        k.addContextPoint(cp);
-        engine.startNfc();
-        engine.sendKnowledge(k, otherPeer, kp);
+    };
+
+    final View.OnClickListener userInputAddClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final String inputText = userInput.getText().toString().trim();
+            if (inputText.length() == 0) {
+                return;
+            }
+
+            AndroidUtils.clearUserInput(fragment.getActivity(), userInput);
+            addInformation(inputText);
+        }
+    };
+
+    public Alice(String name, NfcSharkDemoFragment fragment) {
+        super(name, fragment);
     }
 
-    @Override
-    public SharkKB getKB() {
-        return kb;
+    public void initView(View root, Runnable updater) {
+        super.initView(root, updater);
+
+        userInput = (EditText) root.findViewById(R.id.activity_nfc_sharkdemo_input);
+        ImageButton sendButton = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_send);
+        sendButton.setOnClickListener(sendClickListener);
+        sendButton.setOnLongClickListener(infoLongClickListener);
+
+        final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
+        userInputAdd.setOnClickListener(userInputAddClickListener);
+        userInputAdd.setOnLongClickListener(infoLongClickListener);
     }
 
-    @Override
-    public String getName() {
-        return name;
+    public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
+        super.initShark(engine);
+        ContextCoordinates cc = kb.createContextCoordinates(topic, peer, peer, null, null, null, SharkCS.DIRECTION_OUT);
+        super.initKp(cc);
     }
 
-    @Override
-    public String getLongName() {
-        return "Alice - I can send information to Bob ONCE.";
+    public void setRemotePeer(PeerSemanticTag remotePeer) {
+        if (remotePeer == null) {
+            throw new IllegalArgumentException("Remote Peer cannot be null.");
+        }
+        this.remotePeer = remotePeer;
     }
 
-    @Override
-    public PeerSemanticTag getPeer() {
-        return peer;
+    private void addInformation(String msg) {
+        try {
+            cp = kb.createContextPoint(cc);
+            cp.addInformation(msg);
+            kb.addInterest(cc);
+            //TODO: Bug?! - cpChanged not called?!
+            showToast(String.format("Added Information to Alice.\nConnect other device with Bob now.", msg));
+        } catch (Exception e) {
+            handleError(e);
+        }
+    }
+
+    private void sendInformation() {
+        if (cp == null) {
+            showToast("Cannot sent empty information. Please add something first.");
+            return;
+        }
+
+        try {
+            final InMemoKnowledge k = new InMemoKnowledge();
+            k.addContextPoint(cp);
+            engine.startNfc();
+            engine.sendKnowledge(k, remotePeer, kp);
+
+        } catch (Exception e) {
+            handleError(e);
+        }
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleError(Throwable t) {
+        t.printStackTrace();
+        LogManager.addThrowable(NfcMainActivity.LOG_ID, t);
+        String msg = String.format("Error occurred: %s\nCheck Log for details.", t.getMessage());
+        showToast(msg);
     }
 }
