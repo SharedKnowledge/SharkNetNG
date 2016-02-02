@@ -23,6 +23,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
     private static CommunicationManager instance = new CommunicationManager();
     private List<WifiDirectPeer> peers = new LinkedList<>();
     private WifiDirectConnectionController wifiDirectConnectionController;
+
     private WifiDirectPeerListener wifiDirectPeerListener;
     private StubController stubControllerListener;
     private Context context = null;

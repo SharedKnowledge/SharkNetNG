@@ -58,6 +58,13 @@ public class WifiDirectStreamStub
     private int threadRuns = 0;
     private NetworkInfo _networkInfo;
 
+    private boolean isStarted = false;
+    private WifiP2pManager manager;
+    private WifiP2pManager.Channel channel;
+    private Map<String, String> txtRecordMap;
+
+    private CommunicationManager communicationManager;
+
     public WifiDirectStreamStub(Context context, WeakReference<Activity> activity) {
         _context = context;
         _activity = activity;

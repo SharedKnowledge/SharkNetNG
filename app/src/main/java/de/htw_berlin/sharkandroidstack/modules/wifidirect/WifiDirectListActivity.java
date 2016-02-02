@@ -24,7 +24,6 @@ import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.CommunicationManager;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeerListener;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectStatus;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
