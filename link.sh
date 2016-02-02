@@ -13,6 +13,10 @@ TEST=./app/src/androidTest/java
 rm -rf $ROOT/net/sharkfw
 rm -rf $TEST/net/sharkfw
 
+#asip
+mkdir -p $ROOT/net/sharkfw/asip
+ln -s $SOURCE/core/net/sharkfw/asip/*.java                                   $ROOT/net/sharkfw/asip/
+
 #android
 mkdir -p $ROOT/net/sharkfw/peer
 ln -s $SOURCE/android/net/sharkfw/peer/*.java                                   $ROOT/net/sharkfw/peer/

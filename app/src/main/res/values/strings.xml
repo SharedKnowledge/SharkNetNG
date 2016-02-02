@@ -13,6 +13,7 @@
     <string name="side_nav_item_nfc">NFC Benchmark</string>
     <string name="side_nav_item_mariodemo">Demo</string>
     <string name="side_nav_item_wifidirect">WiFi direct</string>
+    <string name="side_nav_item_wifidirectList">WiFi Direct List</string>
 
     <!-- modules / activities -->
     <!--   intro -->

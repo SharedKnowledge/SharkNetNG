@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.htw_berlin.sharkandroidstack">
+<manifest package="de.htw_berlin.sharkandroidstack"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.NFC"/>
 
     <application
         android:name=".android.Application"
@@ -20,54 +20,56 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".system_modules.settings.SettingsActivity"
             android:label="@string/side_nav_item_settings"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".system_modules.log.LogActivity"
             android:label="@string/side_nav_item_log"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!-- needed for NFC -->
         <activity
             android:name=".modules.nfc.NfcMainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".sharkFW.protocols.nfc.androidService.SmartCardEmulationService"
             android:exported="true"
             android:permission="android.permission.BIND_NFC_SERVICE">
             <intent-filter>
-                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
-                android:resource="@xml/apduservice" />
+                android:resource="@xml/apduservice"/>
         </service>
         <!-- end of NFC -->
 
         <activity
             android:name=".modules.mariodemo.MarioDemoMainActivity"
             android:label="@string/side_nav_item_mariodemo"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".modules.wifidirect.WifiDirectMainActivity"
             android:label="@string/side_nav_item_wifidirect"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="e63aa2ab8026befa38a9e9a241dc3edd525413db" />
+            android:value="e63aa2ab8026befa38a9e9a241dc3edd525413db"/>
+
+        <activity android:name=".modules.wifidirect.WifiDirectListActivity">
+        </activity>
     </application>
 
 </manifest>
