@@ -8,6 +8,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.os.Build;
+import android.os.Handler;
 
 import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;
@@ -47,6 +48,8 @@ public class WifiDirectStreamStub implements StreamStub {
     private Map<String, String> txtRecordMap;
 
     private CommunicationManager communicationManager;
+    private Handler threadHandler;
+    private Runnable thread;
 
     public WifiDirectStreamStub(Context context, WeakReference<Activity> activity) {
         this.context = context;
@@ -65,17 +68,24 @@ public class WifiDirectStreamStub implements StreamStub {
                 WifiP2pDnsSdServiceInfo.newInstance("_shark", "_presence._tcp", this.txtRecordMap);
 
         this.manager.addLocalService(this.channel, serviceInfo, new WifiActionListener("Add Local Service"));
-
-
-        // TODO Set TxtListener to CommunicationManager
         this.manager.setDnsSdResponseListeners(this.channel, null, communicationManager);
         this.serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
         communicationManager.onStatusChanged(INITIATED);
-    }
 
-//    public void setStatusListener(Status statusListener) {
-//        this.statusListener = statusListener;
-//    }
+        threadHandler = new Handler();
+        thread = new Runnable() {
+            @Override
+            public void run() {
+                manager.removeServiceRequest(
+                        channel, serviceRequest, new WifiActionListener("Remove service request"));
+                manager.addServiceRequest(
+                        channel, serviceRequest, new WifiActionListener("Add service request"));
+                manager.discoverServices(channel, new WifiActionListener("Discover services"));
+                threadHandler.postDelayed(this, 10000);
+            }
+        };
+
+    }
 
     public String getMACAddress() {
         try {
@@ -106,6 +116,7 @@ public class WifiDirectStreamStub implements StreamStub {
 
     @Override
     public void stop() {
+        threadHandler.removeCallbacks(thread);
         this.manager.removeServiceRequest(
                 this.channel, serviceRequest, new WifiActionListener("Remove service request"));
         communicationManager.onStatusChanged(STOPPED);
@@ -113,9 +124,10 @@ public class WifiDirectStreamStub implements StreamStub {
 
     @Override
     public void start() throws IOException {
-        this.manager.addServiceRequest(
-                this.channel, serviceRequest, new WifiActionListener("Add service request"));
-        this.manager.discoverServices(this.channel, new WifiActionListener("Discover services"));
+        threadHandler.post(thread);
+//        this.manager.addServiceRequest(
+//                this.channel, serviceRequest, new WifiActionListener("Add service request"));
+//        this.manager.discoverServices(this.channel, new WifiActionListener("Discover services"));
         communicationManager.onStatusChanged(DISCOVERING);
     }
 
@@ -123,5 +135,4 @@ public class WifiDirectStreamStub implements StreamStub {
     public boolean started() {
         return isStarted;
     }
-
 }

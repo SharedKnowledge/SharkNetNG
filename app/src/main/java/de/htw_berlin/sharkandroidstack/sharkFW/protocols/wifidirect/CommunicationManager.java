@@ -57,6 +57,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     @Override
     public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> txtRecordMap, WifiP2pDevice srcDevice) {
+        Log.d("onDnsSdTxtRecordAvailable", "new entries.");
         if(srcDevice!=null && !txtRecordMap.isEmpty())
             Log.d("TxtRecods", "Records received.");
         else
