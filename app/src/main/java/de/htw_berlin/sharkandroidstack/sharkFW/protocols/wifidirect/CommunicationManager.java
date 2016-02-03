@@ -1,10 +1,12 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -15,11 +17,7 @@ import java.util.Map;
  * Created by micha on 28.01.16.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStreamStub.Status{
-
-    public interface WifiDirectPeerListener {
-        public void onNewPeer(List<WifiDirectPeer> peers);
-    }
+public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStatus {
 
     interface ControllerActions{
         public void onConnect(WifiDirectPeer peer);
@@ -31,6 +29,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
     private ControllerActions controllerActionsListener;
     private WifiDirectPeerListener wifiDirectPeerListener;
     private StubController stubControllerListener;
+    private Context context = null;
 
     public CommunicationManager() {}
 
@@ -48,6 +47,10 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     public void setWifiDirectPeerListener(WifiDirectPeerListener wifiDirectPeerListener) {
         this.wifiDirectPeerListener = wifiDirectPeerListener;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -72,8 +75,12 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         this.stubControllerListener.onStubRestart();
     }
 
-    public void startStub() throws IOException {
-        this.stubControllerListener.onStubStart();
+    public void startStub() {
+        try {
+            this.stubControllerListener.onStubStart();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void stopStub(){
@@ -82,23 +89,30 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     @Override
     public void onStatusChanged(int status) {
+        String toastText="";
         switch (status){
-            case WifiDirectStreamStub.DISCOVERING:
+            case WifiDirectStatus.DISCOVERING:
                 Log.d("onStatusChanged", "DISCOVERING...");
+                toastText="DISCOVERING";
                 break;
-            case WifiDirectStreamStub.CONNECTED:
+            case WifiDirectStatus.CONNECTED:
                 Log.d("onStatusChanged", "CONNECTED.");
+                toastText="CONNECTED";
                 break;
-            case WifiDirectStreamStub.DISCONNECTED:
-                Log.d("onStatusChanged", "DISCONECTED.");
+            case WifiDirectStatus.DISCONNECTED:
+                Log.d("onStatusChanged", "DISCONNECTED.");
+                toastText="DISCONNECTED";
                 break;
-            case WifiDirectStreamStub.STOPPED:
+            case WifiDirectStatus.STOPPED:
                 Log.d("onStatusChanged", "STOPPED.");
+                toastText="STOPPED";
                 break;
-            case WifiDirectStreamStub.INITIATED:
+            case WifiDirectStatus.INITIATED:
                 Log.d("onStatusChanged", "INITIATED.");
+                toastText="INITIATED";
                 break;
         }
+        if(context!=null)
+            Toast.makeText(this.context,toastText, Toast.LENGTH_SHORT).show();
     }
-
 }

@@ -29,16 +29,6 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.StubControll
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class WifiDirectStreamStub implements StreamStub, StubController {
 
-    interface Status{
-        public void onStatusChanged(int status);
-    }
-
-    public static final int INITIATED = 0;
-    public static final int DISCOVERING = 1;
-    public static final int CONNECTED = 2;
-    public static final int STOPPED = 3;
-    public static final int DISCONNECTED = 4;
-
     private WifiP2pDnsSdServiceRequest serviceRequest;
     private Context context;
     private final WeakReference<Activity> activity;
@@ -54,6 +44,8 @@ public class WifiDirectStreamStub implements StreamStub, StubController {
     private Handler threadHandler;
     private Runnable thread;
     private int threadRuns = 0;
+
+    private WifiDirectStatus statusListener;
 
     public WifiDirectStreamStub(Context context, WeakReference<Activity> activity) {
         this.context = context;
@@ -74,7 +66,7 @@ public class WifiDirectStreamStub implements StreamStub, StubController {
 
         this.manager.setDnsSdResponseListeners(this.channel, null, communicationManager);
         this.serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
-        communicationManager.onStatusChanged(INITIATED);
+        this.communicationManager.onStatusChanged(WifiDirectStatus.INITIATED);
 
         threadHandler = new Handler();
         thread = new Runnable() {
@@ -128,7 +120,7 @@ public class WifiDirectStreamStub implements StreamStub, StubController {
             threadHandler.removeCallbacks(thread);
             this.manager.removeServiceRequest(
                     this.channel, serviceRequest, new WifiActionListener("Remove service request"));
-            communicationManager.onStatusChanged(STOPPED);
+            communicationManager.onStatusChanged(WifiDirectStatus.STOPPED);
             isStarted=!isStarted;
         }
     }
@@ -137,7 +129,7 @@ public class WifiDirectStreamStub implements StreamStub, StubController {
     public void start() throws IOException {
         if(!isStarted){
             threadHandler.post(thread);
-            communicationManager.onStatusChanged(DISCOVERING);
+            communicationManager.onStatusChanged(WifiDirectStatus.DISCOVERING);
             isStarted=!isStarted;
         }
     }

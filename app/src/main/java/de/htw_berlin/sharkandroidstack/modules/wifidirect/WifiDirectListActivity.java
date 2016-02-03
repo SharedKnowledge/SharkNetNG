@@ -2,7 +2,9 @@ package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 
@@ -14,26 +16,49 @@ import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.CommunicationManager;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeerListener;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectStatus;
 
-public class WifiDirectListActivity extends ParentActivity implements CommunicationManager.WifiDirectPeerListener{
+public class WifiDirectListActivity extends ParentActivity implements WifiDirectPeerListener{
 
     private ListView list;
     private AndroidSharkEngine engine;
     private WifiDirectPeerAdapter peerAdapter;
+    private CommunicationManager communicationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLayoutResource(R.layout.module_wifi_direct_list_activity);
+        setOptionsMenu(R.menu.module_wifidirectlist_menu);
+
+        this.communicationManager = CommunicationManager.getInstance();
+        this.communicationManager.setWifiDirectPeerListener(this);
+        this.communicationManager.setContext(this);
 
         list = (ListView) findViewById(R.id.wifidirectListView);
-
-        CommunicationManager.getInstance().setWifiDirectPeerListener(this);
-
         peerAdapter = new WifiDirectPeerAdapter(this);
         list.setAdapter(peerAdapter);
 
         engine = new AndroidSharkEngine(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case R.id.wifidirect_menu_start:
+                this.communicationManager.startStub();
+                break;
+            case R.id.wifidirect_menu_stop:
+                this.communicationManager.stopStub();
+                break;
+            case R.id.wifidirect_menu_refresh:
+                this.communicationManager.restartStub();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

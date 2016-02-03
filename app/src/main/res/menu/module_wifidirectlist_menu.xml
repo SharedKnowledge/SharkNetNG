@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/wifidirect_menu_start"
+        android:icon="@android:drawable/ic_media_play"
+        android:title="@string/menu_wifidirect_start"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/wifidirect_menu_stop"
+        android:icon="@android:drawable/ic_media_pause"
+        android:title="@string/menu_wifidirect_stop"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/wifidirect_menu_refresh"
+        android:icon="@android:drawable/ic_menu_rotate"
+        android:title="@string/menu_wifidirect_refresh"
+        app:showAsAction="ifRoom" />
+</menu>

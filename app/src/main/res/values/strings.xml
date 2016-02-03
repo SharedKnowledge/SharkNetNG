@@ -68,4 +68,10 @@
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
 
+    <!-- WifiDirect-->
+    <string name="menu_wifidirect_start">Start</string>
+    <string name="menu_wifidirect_stop">Stop</string>
+    <string name="menu_wifidirect_refresh">Refresh</string>
+
+
 </resources>
