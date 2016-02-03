@@ -1,12 +1,10 @@
 package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.peer.SharkEngine;
 
 import java.io.IOException;
 import java.util.List;

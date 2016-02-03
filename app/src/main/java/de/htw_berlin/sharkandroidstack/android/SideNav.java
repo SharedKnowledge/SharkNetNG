@@ -21,7 +21,6 @@ public class SideNav {
     public final static Object[][] modules = new Object[][]{
             new Object[]{R.string.side_nav_item_nfc, NfcMainActivity.class},
             new Object[]{R.string.side_nav_item_mariodemo, MarioDemoMainActivity.class},
-//            new Object[]{R.string.side_nav_item_wifidirect, WifiDirectMainActivity.class},
-            new Object[]{R.string.side_nav_item_wifidirectList, WifiDirectListActivity.class},
+            new Object[]{R.string.side_nav_item_wifidirectList, WifiDirectListActivity.class}
     };
 }
