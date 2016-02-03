@@ -3,6 +3,7 @@ package de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.wifi.p2p.WifiP2pDevice;
+import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.util.Log;
@@ -17,7 +18,12 @@ import java.util.Map;
  * Created by micha on 28.01.16.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStatus {
+public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStatus, WifiP2pManager.PeerListListener {
+
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peers) {
+
+    }
 
     interface ControllerActions{
         public void onConnect(WifiDirectPeer peer);

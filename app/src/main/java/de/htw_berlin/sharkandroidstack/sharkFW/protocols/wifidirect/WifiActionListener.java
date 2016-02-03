@@ -16,11 +16,22 @@ public class WifiActionListener implements WifiP2pManager.ActionListener {
 
     @Override
     public void onSuccess() {
-        Log.d("WifiP2P", message + " successfull");
+//        Log.d("WifiP2P", message + " successfull");
     }
 
     @Override
     public void onFailure(int reason) {
-        Log.d("WifiP2P", message + " failed. Reason: " + reason);
+        String reasonText = "";
+        switch (reason){
+            case 0:
+                reasonText="ERROR";
+                break;
+            case 1:
+                reasonText="P2P_UNSUPPORTED";
+                break;
+            case 2:
+                reasonText="BUSY";
+        }
+        Log.d("WifiP2P", message + " failed. Reason: " + reasonText);
     }
 }

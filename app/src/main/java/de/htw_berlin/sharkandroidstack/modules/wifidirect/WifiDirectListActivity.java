@@ -1,5 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
+import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -80,6 +82,24 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
             e.printStackTrace();
         } catch (SharkProtocolNotSupportedException e) {
             e.printStackTrace();
+        }
+    }
+
+    public boolean isWifiEnabled(){
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        if(wifiManager != null) {
+            return wifiManager.isWifiEnabled();
+        }else{
+            return false;
+        }
+    }
+
+    public boolean setWifiEnabled(boolean enabled){
+        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+        if(wifiManager != null) {
+            return wifiManager.setWifiEnabled(enabled);
+        }else{
+            return false;
         }
     }
 
