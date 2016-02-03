@@ -44,30 +44,12 @@ public class WifiDirectPeerAdapter extends BaseAdapter {
         return 0;
     }
 
-//    public void add(WifiP2pDevice device){
-//        if(!mDeviceList.contains(device)){
-//            mDeviceList.add(device);
-//            notifyDataSetChanged();
-//        }
-//    }
-
-//    public void setList(WifiP2pDeviceList devices){
-//        Iterator iterator = devices.getDeviceList().iterator();
-//        mDeviceList.clear();
-//        while(iterator.hasNext()){
-//            mDeviceList.add((WifiP2pDevice) iterator.next());
-//        }
-////        Log.d("setList", ""+mDeviceList.size());
-//        notifyDataSetChanged();
-//    }
-
     public void setList(List<WifiDirectPeer> peers){
         Iterator iterator = peers.iterator();
         mDeviceList.clear();
         while(iterator.hasNext()){
             mDeviceList.add((WifiDirectPeer) iterator.next());
         }
-//        Log.d("setList", ""+mDeviceList.size());
         notifyDataSetChanged();
     }
 
@@ -80,7 +62,6 @@ public class WifiDirectPeerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         WifiDirectPeer peer = getItem(position);
         WifiP2pDevice device = peer.getDevice();
-
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {

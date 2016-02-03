@@ -6,6 +6,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Build;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -15,12 +16,6 @@ import java.util.Map;
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStreamStub.Status{
-
-    public interface StubController{
-        public void onStubStart();
-        public void onStubStop();
-        public void onStubRestart();
-    }
 
     public interface WifiDirectPeerListener {
         public void onNewPeer(List<WifiDirectPeer> peers);
@@ -57,18 +52,32 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     @Override
     public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> txtRecordMap, WifiP2pDevice srcDevice) {
-        Log.d("onDnsSdTxtRecordAvailable", "new entries.");
-        if(srcDevice!=null && !txtRecordMap.isEmpty())
-            Log.d("TxtRecods", "Records received.");
-        else
-            Log.d("TxtRecods", "No Records received");
+        Log.d("onDnsSdTxtRecordAvailable", srcDevice.toString());
 
         WifiDirectPeer newPeer = new WifiDirectPeer(srcDevice, txtRecordMap);
-        if(!this.peers.contains(newPeer)){
+        if(this.peers.contains(newPeer)){
+            WifiDirectPeer peer = this.peers.get(this.peers.indexOf(newPeer));
+            if(peer.getLastUpdated()< newPeer.getLastUpdated()){
+                this.peers.remove(peer);
+                this.peers.add(newPeer);
+            }
+        } else {
             this.peers.add(newPeer);
         }
         if(!peers.isEmpty())
             wifiDirectPeerListener.onNewPeer(peers);
+    }
+
+    public void restartStub(){
+        this.stubControllerListener.onStubRestart();
+    }
+
+    public void startStub() throws IOException {
+        this.stubControllerListener.onStubStart();
+    }
+
+    public void stopStub(){
+        this.stubControllerListener.onStubStop();
     }
 
     @Override
