@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,9 +21,12 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.Communicatio
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeerListener;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectStatus;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
+import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 public class WifiDirectListActivity extends ParentActivity implements WifiDirectPeerListener{
 
+    public final static String LOG_ID = "wifidirect";
     private ListView list;
     private AndroidSharkEngine engine;
     private WifiDirectPeerAdapter peerAdapter;
@@ -33,6 +37,7 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
         super.onCreate(savedInstanceState);
         setLayoutResource(R.layout.module_wifi_direct_list_activity);
         setOptionsMenu(R.menu.module_wifidirectlist_menu);
+        LogManager.registerLog(LOG_ID, "wifidirect module");
 
         this.communicationManager = CommunicationManager.getInstance();
         this.communicationManager.setWifiDirectPeerListener(this);
@@ -49,6 +54,7 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        Intent intent;
         switch (id){
             case R.id.wifidirect_menu_start:
                 this.communicationManager.startStub();
@@ -59,6 +65,12 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
             case R.id.wifidirect_menu_refresh:
                 this.communicationManager.restartStub();
                 break;
+            case R.id.wifidirect_menu_log:
+                intent = new Intent(this, LogActivity.class);
+                intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
+                intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

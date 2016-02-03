@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
@@ -24,8 +23,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.StubController;
-
 /**
  * Created by micha on 28.01.16.
  */
@@ -33,7 +30,6 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.StubControll
 public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStub, StubController {
 
     private IntentFilter intentFilter;
-    //    private WifiP2pDnsSdServiceRequest serviceRequest;
     private Context context;
     private final WeakReference<Activity> activity;
     private RequestHandler handler;
@@ -48,8 +44,6 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
     private Handler threadHandler;
     private Runnable thread;
     private int threadRuns = 0;
-
-    private WifiDirectStatus statusListener;
 
     public WifiDirectStreamStub(Context context, WeakReference<Activity> activity) {
         this.context = context;
@@ -81,6 +75,10 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
         thread = new Runnable() {
             @Override
             public void run() {
+                removeServiceAdvertizer();
+                stopServiceDiscovery();
+                addServiceAdvertizer();
+                startServiceDiscovery();
 //                int timer = threadRuns < 3 ? 30000 - 10000*threadRuns : 10000 ;
 //                threadRuns++;
                 threadHandler.postDelayed(this, 10000);
@@ -120,8 +118,8 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
     public void stop() {
         if(isStarted){
             threadHandler.removeCallbacks(thread);
-            manager.clearServiceRequests(channel, new WifiActionListener("Remove serviceRequest"));
-            manager.clearLocalServices(channel, new WifiActionListener("Remove localService"));
+            stopServiceDiscovery();
+            removeServiceAdvertizer();
             communicationManager.onStatusChanged(WifiDirectStatus.STOPPED);
             isStarted=!isStarted;
         }
@@ -131,12 +129,6 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
     public void start() throws IOException {
         if(!isStarted){
             threadHandler.post(thread);
-
-//            manager.addLocalService(
-//                    channel, serviceInfo, new WifiActionListener("Add localService"));
-//            manager.addServiceRequest(
-//                    channel, serviceRequest, new WifiActionListener("Add serviceRequest"));
-//            manager.discoverServices(channel, new WifiActionListener("Discover services"));
             communicationManager.onStatusChanged(WifiDirectStatus.DISCOVERING);
             isStarted=!isStarted;
         }
@@ -189,8 +181,6 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
 
     @Override
     public void onStubRestart() {
-        manager.discoverServices(channel, new WifiActionListener("Discover services"));
-//        threadHandler.post(thread);
     }
 
     @Override

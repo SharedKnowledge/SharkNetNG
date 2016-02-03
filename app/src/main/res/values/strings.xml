@@ -72,6 +72,7 @@
     <string name="menu_wifidirect_start">Start</string>
     <string name="menu_wifidirect_stop">Stop</string>
     <string name="menu_wifidirect_refresh">Refresh</string>
+    <string name="menu_wifidirect_log">Log</string>
 
 
 </resources>
