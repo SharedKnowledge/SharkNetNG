@@ -63,10 +63,14 @@
             android:name=".modules.wifidirect.WifiDirectMainActivity"
             android:label="@string/side_nav_item_wifidirect"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".modules.wifidirect.WifiDirectListActivity"
-                  android:label="@string/side_nav_item_wifidirect"
-                  android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+        <activity
+            android:name=".modules.wifidirect.WifiDirectListActivity"
+            android:label="@string/side_nav_item_wifidirect"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".modules.wifidirect.WifiDirectChatActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e63aa2ab8026befa38a9e9a241dc3edd525413db"/>

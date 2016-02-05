@@ -20,11 +20,6 @@ import java.util.Map;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStatus, WifiP2pManager.PeerListListener {
 
-    @Override
-    public void onPeersAvailable(WifiP2pDeviceList peers) {
-
-    }
-
     interface ControllerActions{
         public void onConnect(WifiDirectPeer peer);
         public void onDisconnect(WifiDirectPeer peer);
@@ -37,7 +32,6 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
     private StubController stubControllerListener;
     private Context context = null;
     private WifiDirectPeer connectedPeer;
-
     public CommunicationManager() {}
 
     public static CommunicationManager getInstance(){
@@ -56,16 +50,42 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         this.wifiDirectPeerListener = wifiDirectPeerListener;
     }
 
-    public WifiDirectPeer getConnectedPeer() {
-        return connectedPeer;
-    }
-
     public void setConnectedPeer(WifiDirectPeer connectedPeer) {
         this.connectedPeer = connectedPeer;
     }
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+
+    public WifiDirectPeer getConnectedPeer() {
+        return connectedPeer;
+    }
+
+    public List<WifiDirectPeer> getPeers() {
+        return peers;
+    }
+
+    public void restartStub(){
+        this.stubControllerListener.onStubRestart();
+    }
+
+    public void startStub() {
+        try {
+            this.stubControllerListener.onStubStart();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void stopStub(){
+        this.stubControllerListener.onStubStop();
+    }
+
+    @Override
+    public void onPeersAvailable(WifiP2pDeviceList peers) {
+
     }
 
     @Override
@@ -84,22 +104,6 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         }
         if(!peers.isEmpty())
             wifiDirectPeerListener.onNewPeer(peers);
-    }
-
-    public void restartStub(){
-        this.stubControllerListener.onStubRestart();
-    }
-
-    public void startStub() {
-        try {
-            this.stubControllerListener.onStubStart();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void stopStub(){
-        this.stubControllerListener.onStubStop();
     }
 
     @Override

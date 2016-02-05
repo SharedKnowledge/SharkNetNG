@@ -6,6 +6,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,13 +26,16 @@ import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectSt
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
-public class WifiDirectListActivity extends ParentActivity implements WifiDirectPeerListener{
+public class WifiDirectListActivity
+        extends ParentActivity
+        implements WifiDirectPeerListener, AdapterView.OnItemClickListener{
 
     public final static String LOG_ID = "wifidirect";
     private ListView list;
     private AndroidSharkEngine engine;
     private WifiDirectPeerAdapter peerAdapter;
     private CommunicationManager communicationManager;
+    private List<WifiDirectPeer> peerList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,7 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
         list = (ListView) findViewById(R.id.wifidirectListView);
         peerAdapter = new WifiDirectPeerAdapter(this);
         list.setAdapter(peerAdapter);
+        list.setOnItemClickListener(this);
 
         engine = new AndroidSharkEngine(this);
     }
@@ -118,6 +124,19 @@ public class WifiDirectListActivity extends ParentActivity implements WifiDirect
     @Override
     public void onNewPeer(List<WifiDirectPeer> peers) {
         Log.d("LIST", "New Peers found: " + peers.size());
+        peerList = peers;
         peerAdapter.setList(peers);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        WifiDirectPeer peer = peerList.get(position);
+
+        // TODO Check if peer is still available elsa make toast and remove peer from list
+
+        communicationManager.setConnectedPeer(peer);
+
+        Intent intent = new Intent(this, WifiDirectChatActivity.class);
+        startActivity(intent);
     }
 }
