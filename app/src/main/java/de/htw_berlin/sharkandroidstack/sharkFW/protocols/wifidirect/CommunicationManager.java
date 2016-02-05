@@ -36,6 +36,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
     private WifiDirectPeerListener wifiDirectPeerListener;
     private StubController stubControllerListener;
     private Context context = null;
+    private WifiDirectPeer connectedPeer;
 
     public CommunicationManager() {}
 
@@ -53,6 +54,14 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     public void setWifiDirectPeerListener(WifiDirectPeerListener wifiDirectPeerListener) {
         this.wifiDirectPeerListener = wifiDirectPeerListener;
+    }
+
+    public WifiDirectPeer getConnectedPeer() {
+        return connectedPeer;
+    }
+
+    public void setConnectedPeer(WifiDirectPeer connectedPeer) {
+        this.connectedPeer = connectedPeer;
     }
 
     public void setContext(Context context) {
