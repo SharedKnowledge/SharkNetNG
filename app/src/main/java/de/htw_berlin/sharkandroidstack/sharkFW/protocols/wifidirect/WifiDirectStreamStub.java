@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
@@ -27,7 +28,7 @@ import java.util.Map;
  * Created by micha on 28.01.16.
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStub, StubController {
+public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStub, StubController, WifiP2pManager.ConnectionInfoListener {
 
     private IntentFilter intentFilter;
     private Context context;
@@ -205,5 +206,10 @@ public class WifiDirectStreamStub extends BroadcastReceiver implements StreamStu
         } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION.equals(action)) {
             // Respond to this device's wifi state changing
         }
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+
     }
 }

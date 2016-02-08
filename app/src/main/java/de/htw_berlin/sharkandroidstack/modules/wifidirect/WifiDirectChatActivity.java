@@ -26,7 +26,7 @@ public class WifiDirectChatActivity extends ParentActivity {
         setOptionsMenu(R.menu.module_wifi_direct_chat_menu);
     }
 
-    
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
