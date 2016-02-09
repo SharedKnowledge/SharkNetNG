@@ -9,6 +9,8 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import net.sharkfw.system.L;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -93,7 +95,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     @Override
     public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> txtRecordMap, WifiP2pDevice srcDevice) {
-//        Log.d("onDnsSdTxtRecordAvailable", srcDevice.toString());
+//        L.d("onDnsSdTxtRecordAvailable", srcDevice.toString());
 
         WifiDirectPeer newPeer = new WifiDirectPeer(srcDevice, txtRecordMap);
         if(this.peers.contains(newPeer)){
@@ -114,23 +116,23 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         String toastText="";
         switch (status){
             case WifiDirectStatus.DISCOVERING:
-                Log.d("onStatusChanged", "DISCOVERING...");
+                L.d("onStatusChanged", "DISCOVERING...");
                 toastText="DISCOVERING";
                 break;
             case WifiDirectStatus.CONNECTED:
-                Log.d("onStatusChanged", "CONNECTED.");
+                L.d("onStatusChanged", "CONNECTED.");
                 toastText="CONNECTED";
                 break;
             case WifiDirectStatus.DISCONNECTED:
-                Log.d("onStatusChanged", "DISCONNECTED.");
+                L.d("onStatusChanged", "DISCONNECTED.");
                 toastText="DISCONNECTED";
                 break;
             case WifiDirectStatus.STOPPED:
-                Log.d("onStatusChanged", "STOPPED.");
+                L.d("onStatusChanged", "STOPPED.");
                 toastText="STOPPED";
                 break;
             case WifiDirectStatus.INITIATED:
-                Log.d("onStatusChanged", "INITIATED.");
+                L.d("onStatusChanged", "INITIATED.");
                 toastText="INITIATED";
                 break;
         }

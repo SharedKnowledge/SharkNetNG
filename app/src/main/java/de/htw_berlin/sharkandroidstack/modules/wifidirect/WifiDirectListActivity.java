@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
+import net.sharkfw.system.L;
 
 import java.io.IOException;
 import java.util.List;
@@ -109,7 +110,7 @@ public class WifiDirectListActivity
 
     @Override
     public void onNewPeer(List<WifiDirectPeer> peers) {
-        Log.d("LIST", "New Peers found: " + peers.size());
+        L.d("LIST", "New Peers found: " + peers.size());
         peerList = peers;
         peerAdapter.setList(peers);
     }
@@ -129,7 +130,7 @@ public class WifiDirectListActivity
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
         Toast.makeText(this, "onConnectionInfoAvailable", Toast.LENGTH_SHORT).show();
-        Log.d("ListActivity", "onConnectionInfoAvailable");
+        L.d("ListActivity", "onConnectionInfoAvailable");
     }
 
     public void checkWifiState(){

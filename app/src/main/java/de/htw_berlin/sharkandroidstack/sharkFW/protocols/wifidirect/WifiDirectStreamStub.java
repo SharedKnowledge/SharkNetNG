@@ -24,6 +24,7 @@ import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;
 import net.sharkfw.protocols.StreamStub;
 import net.sharkfw.system.SharkNotSupportedException;
+import net.sharkfw.system.L;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -97,9 +98,9 @@ public class WifiDirectStreamStub
         thread = new Runnable() {
             @Override
             public void run() {
-                removeServiceAdvertizer();
+                removeServiceAdvertiser();
                 stopServiceDiscovery();
-                addServiceAdvertizer();
+                addServiceAdvertiser();
                 startServiceDiscovery();
 //                int timer = threadRuns < 3 ? 30000 - 10000*threadRuns : 10000 ;
 //                threadRuns++;
@@ -141,7 +142,7 @@ public class WifiDirectStreamStub
         if(_isStarted){
             threadHandler.removeCallbacks(thread);
             stopServiceDiscovery();
-            removeServiceAdvertizer();
+            removeServiceAdvertiser();
             _communicationManager.onStatusChanged(WifiDirectStatus.STOPPED);
             _isStarted=!_isStarted;
         }
@@ -166,11 +167,11 @@ public class WifiDirectStreamStub
         _context.unregisterReceiver(this);
     }
 
-    private void addServiceAdvertizer(){
+    private void addServiceAdvertiser(){
         _manager.addLocalService(_channel, _serviceInfo, new WifiActionListener("Add LocalService"));
     }
 
-    private void removeServiceAdvertizer(){
+    private void removeServiceAdvertiser(){
         _manager.clearLocalServices(_channel, new WifiActionListener("Clear LocalServices"));
     }
 
@@ -250,13 +251,13 @@ public class WifiDirectStreamStub
 
     @Override
     public void onConnectionInfoAvailable(WifiP2pInfo info) {
-        Log.d("onConnectionInfoAvailable", info.toString());
+        L.d("onConnectionInfoAvailable", info.toString());
         _communicationManager.onStatusChanged(WifiDirectStatus.CONNECTED);
     }
 
     @Override
     public void onConnect(WifiDirectPeer peer) {
-        Log.d("STUB", "onConnect");
+        L.d("STUB", "onConnect");
         final WifiP2pConfig config = new WifiP2pConfig();
         config.deviceAddress = peer.getDevice().deviceAddress;
         config.wps.setup = WpsInfo.PBC;
@@ -264,12 +265,12 @@ public class WifiDirectStreamStub
         _manager.connect(_channel, config, new WifiP2pManager.ActionListener() {
             @Override
             public void onSuccess() {
-                Log.d("connect", "SUCCESS");
+                L.d("connect", "SUCCESS");
             }
 
             @Override
             public void onFailure(int reason) {
-                Log.d("connect", "FAILURE");
+                L.d("connect", "FAILURE");
             }
         });
     }
