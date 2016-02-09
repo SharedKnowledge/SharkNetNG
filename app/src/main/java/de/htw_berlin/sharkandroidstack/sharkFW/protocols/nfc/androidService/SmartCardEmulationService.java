@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.OnMessageSend;
+import de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.readerWriterMode.IsoDepTransceiver;
 
 /**
  * Created by mn-io on 22.01.16.

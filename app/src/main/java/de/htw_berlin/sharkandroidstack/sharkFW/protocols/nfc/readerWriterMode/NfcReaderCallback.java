@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.androidService;
+package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc.readerWriterMode;
 
 import android.annotation.TargetApi;
 import android.nfc.NfcAdapter;
