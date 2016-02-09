@@ -12,6 +12,7 @@ import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharkfw.peer.StandardKP;
 import net.sharkfw.system.L;
 
@@ -123,7 +124,7 @@ public class Actor {
         peer = kb.createPeerSemanticTag(name, name + "Id", "tcp://localhost:124");
         kb.setOwner(peer);
 
-        topic = kb.createSemanticTag("Shark", "http://www.sharksystem.net/");
+        topic = InMemoSharkKB.createInMemoSemanticTag("Shark", "http://www.sharksystem.net/");
     }
 
     public void initKp(ContextCoordinates cc) {

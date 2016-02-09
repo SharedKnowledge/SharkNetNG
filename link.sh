@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 #path to SharkFW
 #Mario
-#SOURCE=/Users/mario/Work/SharkFW/src/java
+SOURCE=/Users/mario/Work/SharkFW/src/java
 #Micha
-SOURCE=/home/micha/dev/shark/projects/SharkFW/src/java
+#SOURCE=/home/micha/dev/shark/projects/SharkFW/src/java
 
 #Fixed to java sources, do not change
 ROOT=./app/src/main/java
@@ -26,6 +26,10 @@ ln -s $SOURCE/android/net/sharkfw/protocols/wifidirect/*.java                   
 mkdir -p $ROOT/net/sharkfw/kep/format
 ln -s $SOURCE/core/net/sharkfw/kep/*.java                                       $ROOT/net/sharkfw/kep/
 ln -s $SOURCE/core/net/sharkfw/kep/format/*.java                                $ROOT/net/sharkfw/kep/format
+
+#core
+mkdir -p $ROOT/net/sharkfw/asip/format
+ln -s $SOURCE/core/net/sharkfw/asip/*.java                                       $ROOT/net/sharkfw/asip/
 
 mkdir -p $ROOT/net/sharkfw/knowledgeBase/geom/inmemory
 mkdir -p $ROOT/net/sharkfw/knowledgeBase/{inmemory,sync}

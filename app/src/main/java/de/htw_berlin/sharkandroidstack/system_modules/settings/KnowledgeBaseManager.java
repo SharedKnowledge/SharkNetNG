@@ -84,8 +84,8 @@ public class KnowledgeBaseManager {
         kb.setOwner(ownerSemanticTag);
 
         if (withCp) {
-            final SemanticTag tag1 = kb.createSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 1", ownerSemanticTag.getName() + " Subject Identifier 1");
-            final SemanticTag tag2 = kb.createSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 2", ownerSemanticTag.getName() + " Subject Identifier 2");
+            final SemanticTag tag1 = InMemoSharkKB.createInMemoSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 1", ownerSemanticTag.getName() + " Subject Identifier 1");
+            final SemanticTag tag2 = InMemoSharkKB.createInMemoSemanticTag(ownerSemanticTag.getName() + " Semantic Tag 2", ownerSemanticTag.getName() + " Subject Identifier 2");
             final ContextCoordinates contextCoordinates1 = kb.createContextCoordinates(tag1, ownerSemanticTag, null, null, null, null, SharkCS.DIRECTION_INOUT);
             final ContextCoordinates contextCoordinates2 = kb.createContextCoordinates(tag2, ownerSemanticTag, null, null, null, null, SharkCS.DIRECTION_INOUT);
 
