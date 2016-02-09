@@ -20,14 +20,9 @@ import java.util.Map;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListener, WifiDirectStatus, WifiP2pManager.PeerListListener {
 
-    interface ControllerActions{
-        public void onConnect(WifiDirectPeer peer);
-        public void onDisconnect(WifiDirectPeer peer);
-    }
-
     private static CommunicationManager instance = new CommunicationManager();
     private List<WifiDirectPeer> peers = new LinkedList<>();
-    private ControllerActions controllerActionsListener;
+    private WifiDirectConnectionController wifiDirectConnectionController;
     private WifiDirectPeerListener wifiDirectPeerListener;
     private StubController stubControllerListener;
     private Context context = null;
@@ -38,8 +33,8 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         return instance;
     }
 
-    public void setControllerActionsListener(ControllerActions controllerActionsListener) {
-        this.controllerActionsListener = controllerActionsListener;
+    public void setConnectionController(WifiDirectConnectionController wifiDirectConnectionController) {
+        this.wifiDirectConnectionController = wifiDirectConnectionController;
     }
 
     public void setStubControllerListener(StubController stubControllerListener) {
@@ -57,7 +52,6 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
     public void setContext(Context context) {
         this.context = context;
     }
-
 
     public WifiDirectPeer getConnectedPeer() {
         return connectedPeer;
@@ -83,6 +77,14 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
         this.stubControllerListener.onStubStop();
     }
 
+    public void connect(WifiDirectPeer peer){
+        wifiDirectConnectionController.onConnect(peer);
+    }
+
+    public void disconnect(WifiDirectPeer peer){
+        wifiDirectConnectionController.onDisconnect(peer);
+    }
+
     @Override
     public void onPeersAvailable(WifiP2pDeviceList peers) {
 
@@ -90,7 +92,7 @@ public class CommunicationManager implements WifiP2pManager.DnsSdTxtRecordListen
 
     @Override
     public void onDnsSdTxtRecordAvailable(String fullDomainName, Map<String, String> txtRecordMap, WifiP2pDevice srcDevice) {
-        Log.d("onDnsSdTxtRecordAvailable", srcDevice.toString());
+//        Log.d("onDnsSdTxtRecordAvailable", srcDevice.toString());
 
         WifiDirectPeer newPeer = new WifiDirectPeer(srcDevice, txtRecordMap);
         if(this.peers.contains(newPeer)){

@@ -3,6 +3,8 @@ package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pInfo;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,7 +30,8 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 public class WifiDirectListActivity
         extends ParentActivity
-        implements WifiDirectPeerListener, AdapterView.OnItemClickListener{
+        implements WifiDirectPeerListener, AdapterView.OnItemClickListener,
+        WifiP2pManager.ConnectionInfoListener{
 
     public final static String LOG_ID = "wifidirect";
     private ListView list;
@@ -43,6 +46,8 @@ public class WifiDirectListActivity
         setLayoutResource(R.layout.module_wifi_direct_list_activity);
         setOptionsMenu(R.menu.module_wifidirectlist_menu);
         LogManager.registerLog(LOG_ID, "wifidirect module");
+
+//        checkWifiState();
 
         this.communicationManager = CommunicationManager.getInstance();
         this.communicationManager.setWifiDirectPeerListener(this);
@@ -103,24 +108,6 @@ public class WifiDirectListActivity
         }
     }
 
-    public boolean isWifiEnabled(){
-        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        if(wifiManager != null) {
-            return wifiManager.isWifiEnabled();
-        }else{
-            return false;
-        }
-    }
-
-    public boolean setWifiEnabled(boolean enabled){
-        WifiManager wifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
-        if(wifiManager != null) {
-            return wifiManager.setWifiEnabled(enabled);
-        }else{
-            return false;
-        }
-    }
-
     @Override
     public void onNewPeer(List<WifiDirectPeer> peers) {
         Log.d("LIST", "New Peers found: " + peers.size());
@@ -132,11 +119,27 @@ public class WifiDirectListActivity
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         WifiDirectPeer peer = peerList.get(position);
 
-        // TODO Check if peer is still available elsa make toast and remove peer from list
+        // TODO Check if peer is still available else make toast and remove peer from list
 
         communicationManager.setConnectedPeer(peer);
 
         Intent intent = new Intent(this, WifiDirectChatActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onConnectionInfoAvailable(WifiP2pInfo info) {
+        Toast.makeText(this, "onConnectionInfoAvailable", Toast.LENGTH_SHORT).show();
+        Log.d("ListActivity", "onConnectionInfoAvailable");
+    }
+
+    public void checkWifiState(){
+        WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+        if(!wifiManager.isWifiEnabled())
+            wifiManager.setWifiEnabled(true);
+        else{
+            wifiManager.setWifiEnabled(false);
+            wifiManager.setWifiEnabled(true);
+        }
     }
 }
