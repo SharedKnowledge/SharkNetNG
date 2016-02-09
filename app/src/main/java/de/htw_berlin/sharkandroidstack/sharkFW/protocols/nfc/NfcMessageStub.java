@@ -45,13 +45,13 @@ public class NfcMessageStub implements MessageStub {
 
     @Override
     public void stop() {
-        NfcAdapterHelper.prepareSending(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
+        NfcAdapterHelper.actAsSmartCard(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = false;
     }
 
     @Override
     public void start() {
-        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
+        NfcAdapterHelper.actAsNfcReaderWriter(SMART_CARD_IDENTIFIER, activity.get(), sendRequestHandler, receivedRequestHandler);
         isStarted = true;
     }
 

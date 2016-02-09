@@ -63,7 +63,7 @@ class NfcBenchmarkState {
 
         fragment.resultAdapter.clear();
 
-        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
+        NfcAdapterHelper.actAsNfcReaderWriter(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
@@ -73,7 +73,7 @@ class NfcBenchmarkState {
         }
 
         fragment.startSendingButton.setText(R.string.activity_nfc_benchmark_ready);
-        NfcAdapterHelper.prepareSending(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
+        NfcAdapterHelper.actAsSmartCard(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
@@ -106,7 +106,7 @@ class NfcBenchmarkState {
             timer = null;
         }
 
-        NfcAdapterHelper.prepareReceiving(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
+        NfcAdapterHelper.actAsNfcReaderWriter(SMART_CARD_IDENTIFIER, activity, fragment.onMessageSendCallback, fragment.onMessageReceivedCallback);
         return true;
     }
 
