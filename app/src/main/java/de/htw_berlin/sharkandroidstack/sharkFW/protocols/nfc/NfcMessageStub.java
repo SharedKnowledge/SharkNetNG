@@ -7,8 +7,11 @@ import android.nfc.NfcAdapter;
 import android.os.Build;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
+import net.sharkfw.knowledgeBase.ASIPSpace;
+import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.protocols.MessageStub;
 import net.sharkfw.protocols.RequestHandler;
+import net.sharkfw.system.SharkNotSupportedException;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -68,6 +71,14 @@ public class NfcMessageStub implements MessageStub {
     @Override
     public void sendMessage(byte[] msg, String recAddress) throws IOException {
         sendRequestHandler.setData(msg);
+    }
+
+    @Override
+    public void offer(ASIPSpace interest) throws SharkNotSupportedException {
+    }
+
+    @Override
+    public void offer(Knowledge knowledge) throws SharkNotSupportedException {
     }
 
     @Override

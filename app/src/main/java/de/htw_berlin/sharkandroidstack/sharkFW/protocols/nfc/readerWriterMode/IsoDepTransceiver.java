@@ -36,13 +36,12 @@ public class IsoDepTransceiver implements Runnable {
 
         this.isoDep = isoDep;
         this.onMessageReceived = onMessageReceived;
+        onMessageReceived.newTag(tag);
 
         if (onMessageSendCall != null) {
             this.onMessageSendCallback = onMessageSendCall;
             onMessageSendCall.setMaxSize(isoDep.getMaxTransceiveLength());
         }
-
-        onMessageReceived.newTag(tag);
 
         thread = new Thread(this);
         thread.start();
@@ -71,6 +70,9 @@ public class IsoDepTransceiver implements Runnable {
             isoDep.close();
         } catch (TagLostException ignore) {
             onMessageReceived.tagLost();
+            if(onMessageSendCallback != null) {
+                onMessageSendCallback.onDeactivated(-1);
+            }
         } catch (IOException e) {
             onMessageReceived.onError(e);
         }
