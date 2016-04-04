@@ -1,6 +1,6 @@
 package de.htw_berlin.sharkandroidstack.sharkFW.protocols.bluetooth;
 
-import net.sharkfw.knowledgeBase.ASIPSpace;
+import net.sharkfw.asip.ASIPSpace;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.protocols.StreamConnection;

@@ -3,8 +3,8 @@ package de.htw_berlin.sharkandroidstack.sharkFW.peer;
 import android.app.Activity;
 import android.content.Context;
 
+import net.sharkfw.asip.SharkStub;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.kep.SharkStub;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
@@ -46,7 +46,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
             currentStub.stop();
         }
         //TODO: this (SharkEngine not used for WifiDirectStreamStub), kebStub should be set by setHandler()
-        currentStub = new WifiDirectStreamStub(context, this, kepStub);
+//        currentStub = new WifiDirectStreamStub(context, this, kepStub);
         return currentStub;
     }
 
@@ -63,7 +63,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     protected Stub createNfcStreamStub(SharkStub kepStub) throws SharkProtocolNotSupportedException {
         if (currentStub == null) {
             currentStub = new NfcMessageStub(context, activityRef);
-            currentStub.setHandler(kepStub);
+//            currentStub.setHandler(kepStub);
         }
         return currentStub;
     }
@@ -100,12 +100,11 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
         return currentStub;
     }
 
-    @Override
     public void sendKnowledge(Knowledge k, PeerSemanticTag recipient, KnowledgePort kp) throws SharkSecurityException, SharkKBException, IOException {
         if (currentStub != null && currentStub instanceof WifiDirectStreamStub) {
             WifiDirectStreamStub wifiStub = (WifiDirectStreamStub) currentStub;
             recipient.setAddresses(new String[]{wifiStub.getConnectionStr()});
         }
-        super.sendKnowledge(k, recipient, kp);
+//        super.sendKnowledge(k, recipient, kp);
     }
 }
