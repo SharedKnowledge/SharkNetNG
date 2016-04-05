@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.kep.SharkStub;
+import net.sharkfw.kep.KEPStub;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
@@ -41,7 +41,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
      */
 
     @Override
-    protected Stub createWifiDirectStreamStub(SharkStub kepStub) throws SharkProtocolNotSupportedException {
+    protected Stub createWifiDirectStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
         if (currentStub != null) {
             currentStub.stop();
         }
@@ -60,7 +60,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     }
 
     @Override
-    protected Stub createNfcStreamStub(SharkStub kepStub) throws SharkProtocolNotSupportedException {
+    protected Stub createNfcStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
         if (currentStub == null) {
             currentStub = new NfcMessageStub(context, activityRef);
             currentStub.setHandler(kepStub);
@@ -79,7 +79,7 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
     }
 
     @Override
-    protected Stub createBluetoothStreamStub(SharkStub kepStub) throws SharkProtocolNotSupportedException {
+    protected Stub createBluetoothStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
         throw new SharkProtocolNotSupportedException("TODO: Timm");
     }
 
