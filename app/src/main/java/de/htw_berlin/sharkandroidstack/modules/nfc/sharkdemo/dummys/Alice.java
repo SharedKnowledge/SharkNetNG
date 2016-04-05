@@ -102,7 +102,7 @@ public class Alice extends Actor {
             final InMemoKnowledge k = new InMemoKnowledge();
             k.addContextPoint(cp);
             engine.startNfc();
-            engine.sendKnowledge(k, remotePeer, kp);
+            engine.sendKEPKnowledge(k, remotePeer, kp);
 
         } catch (Exception e) {
             handleError(e);

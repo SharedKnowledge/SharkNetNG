@@ -121,7 +121,7 @@ public class Actor {
         kb.addListener(knowledgeBaseListener);
 
         //TODO: Address is absolutely not needed here, but framework requires something
-        peer = kb.createPeerSemanticTag(name, name + "Id", "tcp://localhost:124");
+        peer = InMemoSharkKB.createInMemoPeerSemanticTag(name, name + "Id", "tcp://localhost:124");
         kb.setOwner(peer);
 
         topic = InMemoSharkKB.createInMemoSemanticTag("Shark", "http://www.sharksystem.net/");

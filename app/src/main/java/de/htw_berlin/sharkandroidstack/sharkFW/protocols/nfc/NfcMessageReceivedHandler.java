@@ -50,10 +50,7 @@ public class NfcMessageReceivedHandler implements OnMessageReceived {
     public void newTag(Tag tag) {
     }
 
-
     public void setHandler(RequestHandler handler) {
         this.handler = handler;
     }
-
-
 }
