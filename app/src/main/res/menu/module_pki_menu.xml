@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/pki_menu_item_show_log"
+        android:title="@string/mariodemo_menu_item_show_log"
+        app:showAsAction="ifRoom" />
+</menu>

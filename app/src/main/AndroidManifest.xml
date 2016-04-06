@@ -57,6 +57,11 @@
         <!-- end of NFC -->
 
         <activity
+            android:name=".modules.pki.PkiMainActivity"
+            android:label="@string/side_nav_item_pki"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
             android:name=".modules.mariodemo.MarioDemoMainActivity"
             android:label="@string/side_nav_item_mariodemo"
             android:theme="@style/AppTheme.NoActionBar" />

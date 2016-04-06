@@ -11,6 +11,7 @@
 
     <string name="sidenav_menu_cat_modules">Modules</string>
     <string name="side_nav_item_nfc">NFC Benchmark</string>
+    <string name="side_nav_item_pki">PKI</string>
     <string name="side_nav_item_mariodemo">Demo</string>
     <string name="side_nav_item_wifidirect">WiFi direct</string>
 
@@ -36,6 +37,9 @@
     <string name="mariodemo_menu_item_example">Settings</string>
     <string name="marioodemo_menu_item_details">Favorite</string>
     <string name="mariodemo_menu_item_show_log">Show Log</string>
+
+    <!--   pki -->
+    <string name="pki_menu_item_show_log">Show Log</string>
 
     <!--   nfc -->
     <string name="menu_nfc_log">Log</string>
