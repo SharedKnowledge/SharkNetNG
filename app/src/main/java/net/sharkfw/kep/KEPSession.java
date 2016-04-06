@@ -1,21 +1,21 @@
 package net.sharkfw.kep;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.peer.KEPInMessage;
 import net.sharkfw.peer.SharkEngine;
 import net.sharkfw.peer.SharkEngine.SecurityLevel;
 import net.sharkfw.peer.SharkEngine.SecurityReplyPolicy;
-import net.sharkfw.pki.SharkPublicKeyStorage;
 import net.sharkfw.protocols.StreamConnection;
 import net.sharkfw.security.pki.storage.SharkPkiStorage;
 import net.sharkfw.system.L;
 import net.sharkfw.system.SharkNotSupportedException;
 import net.sharkfw.system.SharkSecurityException;
 import net.sharkfw.system.Streamer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 
 /**
  * This class handles communications over an established <code>StreamConnection</code>.

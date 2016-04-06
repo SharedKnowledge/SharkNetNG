@@ -1,6 +1,6 @@
 package net.sharkfw.security.pki.storage;
 
-import net.sharkfw.pki.SharkCertificate;
+import net.sharkfw.security.pki.SharkCertificate;
 
 /**
  * Interface describing a listener for SharkPkiStorage events

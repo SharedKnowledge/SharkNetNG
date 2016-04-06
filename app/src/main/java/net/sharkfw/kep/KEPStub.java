@@ -1,15 +1,11 @@
 package net.sharkfw.kep;
 
-import java.security.PrivateKey;
-import java.util.Enumeration;
-import java.util.Iterator;
 import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.Information;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.SharkCS;
-import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.peer.KEPInMessage;
-import net.sharkfw.pki.SharkPublicKeyStorage;
+import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.peer.SharkEngine;
 import net.sharkfw.peer.SharkEngine.SecurityLevel;
 import net.sharkfw.peer.SharkEngine.SecurityReplyPolicy;
@@ -17,6 +13,10 @@ import net.sharkfw.protocols.RequestHandler;
 import net.sharkfw.security.pki.storage.SharkPkiStorage;
 import net.sharkfw.system.InterestStore;
 import net.sharkfw.system.KnowledgeStore;
+
+import java.security.PrivateKey;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  * A KEPStub encapsulates a number (0 .. n) of supported and active

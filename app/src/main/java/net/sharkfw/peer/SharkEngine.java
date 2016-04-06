@@ -1,22 +1,34 @@
 package net.sharkfw.peer;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
-import net.sharkfw.kep.*;
+import net.sharkfw.kep.KEPMessage;
+import net.sharkfw.kep.KEPOutMessage;
+import net.sharkfw.kep.KEPStub;
+import net.sharkfw.kep.KnowledgeSerializer;
+import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.kep.format.XMLSerializer;
-import net.sharkfw.knowledgeBase.*;
+import net.sharkfw.knowledgeBase.ContextCoordinates;
+import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.Information;
+import net.sharkfw.knowledgeBase.Interest;
+import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.PeerSTSet;
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SemanticTag;
+import net.sharkfw.knowledgeBase.SharkCS;
+import net.sharkfw.knowledgeBase.SharkKB;
+import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.SystemPropertyHolder;
 import net.sharkfw.knowledgeBase.inmemory.InMemoContextPoint;
 import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.pki.SharkPublicKeyStorage;
-import net.sharkfw.protocols.*;
+import net.sharkfw.protocols.MessageStub;
+import net.sharkfw.protocols.Protocols;
+import net.sharkfw.protocols.RequestHandler;
+import net.sharkfw.protocols.SharkOutputStream;
+import net.sharkfw.protocols.StreamConnection;
+import net.sharkfw.protocols.StreamStub;
+import net.sharkfw.protocols.Stub;
+import net.sharkfw.protocols.UTF8SharkOutputStream;
 import net.sharkfw.security.pki.storage.SharkPkiStorage;
 import net.sharkfw.system.EnumerationChain;
 import net.sharkfw.system.L;
@@ -24,6 +36,15 @@ import net.sharkfw.system.SharkException;
 import net.sharkfw.system.SharkNotSupportedException;
 import net.sharkfw.system.SharkSecurityException;
 import net.sharkfw.system.Util;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * This class is the facade for the Shark-System. It provides a single interface to the user/developer where

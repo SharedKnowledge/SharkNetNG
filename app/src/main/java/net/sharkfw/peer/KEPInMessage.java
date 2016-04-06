@@ -1,5 +1,39 @@
 package net.sharkfw.peer;
 
+import net.sharkfw.kep.DecryptingInputStream;
+import net.sharkfw.kep.KEPMessage;
+import net.sharkfw.kep.KEPOutMessage;
+import net.sharkfw.kep.KEPStub;
+import net.sharkfw.kep.KnowledgeSerializer;
+import net.sharkfw.kep.VerifyingInputStream;
+import net.sharkfw.knowledgeBase.AbstractSharkKB;
+import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.Information;
+import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.PeerSTSet;
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.STSet;
+import net.sharkfw.knowledgeBase.SemanticTag;
+import net.sharkfw.knowledgeBase.SharkCS;
+import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.SharkVocabulary;
+import net.sharkfw.knowledgeBase.SystemPropertyHolder;
+import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
+import net.sharkfw.peer.SharkEngine.SecurityLevel;
+import net.sharkfw.peer.SharkEngine.SecurityReplyPolicy;
+import net.sharkfw.protocols.MessageStub;
+import net.sharkfw.protocols.PeerAddress;
+import net.sharkfw.protocols.SharkInputStream;
+import net.sharkfw.protocols.StandardSharkInputStream;
+import net.sharkfw.protocols.StreamConnection;
+import net.sharkfw.security.pki.storage.SharkPkiStorage;
+import net.sharkfw.system.L;
+import net.sharkfw.system.SharkException;
+import net.sharkfw.system.SharkNotSupportedException;
+import net.sharkfw.system.SharkSecurityException;
+import net.sharkfw.system.Util;
+import net.sharkfw.system.Utils;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,17 +44,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
-import net.sharkfw.kep.*;
-import net.sharkfw.knowledgeBase.*;
-import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.peer.SharkEngine.SecurityLevel;
-import net.sharkfw.peer.SharkEngine.SecurityReplyPolicy;
-import net.sharkfw.pki.SharkPublicKeyStorage;
-import net.sharkfw.protocols.*;
-import net.sharkfw.security.pki.storage.SharkPkiStorage;
-import net.sharkfw.system.*;
 
 
 /**
