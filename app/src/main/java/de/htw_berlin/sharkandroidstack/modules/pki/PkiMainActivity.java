@@ -19,7 +19,7 @@ public class PkiMainActivity extends ParentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setFragment(new MyFragment)
+        setFragment(new CertManagerFragment());
 
         setOptionsMenu(R.menu.module_pki_menu);
         LogManager.registerLog(LOG_ID, "PKI");
