@@ -121,4 +121,20 @@ public class SharkCertificate implements Certificate {
         result = 31 * result + validity.hashCode();
         return result;
     }
+
+    /*
+    author: Mario Neises
+     */
+    @Override
+    public String toString() {
+        StringBuilder transmitters = new StringBuilder();
+        for (PeerSemanticTag transmitter : transmitterList) {
+            transmitters.append(transmitter + ", ");
+        }
+        transmitters.deleteCharAt(transmitters.length()-1);
+        transmitters.deleteCharAt(transmitters.length()-1);
+
+        return String.format("SharkCertificate{subjectPublicKey=%s, issuer=%s, subject=%s, trustLevel=%s, validity=%s, transmitterList=%s}",
+                subjectPublicKey, issuer, subject, trustLevel, validity, transmitters);
+    }
 }
