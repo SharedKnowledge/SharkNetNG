@@ -12,6 +12,9 @@ import net.sharkfw.security.key.storage.SharkKeyStorage;
 import net.sharkfw.security.pki.SharkCertificate;
 import net.sharkfw.security.pki.storage.SharkPkiStorage;
 
+import java.util.ArrayList;
+
+import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 import de.htw_berlin.sharkandroidstack.modules.pki.system.CertManager;
@@ -23,6 +26,8 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
  */
 public class PkiMainActivity extends ParentActivity {
     private static final String LOG_ID = "pki";
+
+    public static final ArrayList<String> infos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +56,7 @@ public class PkiMainActivity extends ParentActivity {
 
     private void setupPki() {
         SharkKeyStorage sharkKeyStorage = CertManager.createAndStoreKeys(this.getApplicationContext(), SharkKeyPairAlgorithm.RSA, 1024);
-        PeerSemanticTag me = InMemoSharkKB.createInMemoPeerSemanticTag("alice", "aliceId", "tcp://localhost:12341");
+        PeerSemanticTag me = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
         SharkCertificate certificate = CertManager.createSelfSignedCertificate(me, sharkKeyStorage.getPublicKey(), 10);
 
         InMemoSharkKB kb = new InMemoSharkKB();
@@ -59,9 +64,13 @@ public class PkiMainActivity extends ParentActivity {
         try {
             SharkPkiStorage store = CertManager.createStore(kb, me, sharkKeyStorage.getPrivateKey());
             store.addSharkCertificate(certificate);
+
+            infos.add(String.format("My Identity: %s", me));
+            infos.add(String.format("Keys: \nPublic:%s, \nPrivate: %s", sharkKeyStorage.getPublicKey(), sharkKeyStorage.getPrivateKey()));
+            infos.add(String.format("Certificate: %s", certificate));
+
         } catch (Exception e) {
             Toast.makeText(this.getApplicationContext(), "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            ;
             LogManager.addThrowable(LOG_ID, e);
         }
     }
