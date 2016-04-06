@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.LinkedList;
 
 /**
- * Created by m on 4/6/16.
+ * Created by mn-io on 06.04.16.
  */
 public class CertManager {
 

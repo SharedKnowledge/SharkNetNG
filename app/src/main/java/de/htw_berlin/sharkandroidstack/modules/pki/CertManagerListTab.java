@@ -11,7 +11,7 @@ import android.widget.Toast;
 import de.htw_berlin.sharkandroidstack.R;
 
 /**
- * Created by m on 4/6/16.
+ * Created by mn-io on 06.04.16.
  */
 public class CertManagerListTab extends RelativeLayout {
     public CertManagerListTab(Context context, AttributeSet attrs) {

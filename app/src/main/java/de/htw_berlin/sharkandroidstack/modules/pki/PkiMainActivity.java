@@ -22,7 +22,7 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 /**
- * Created by m on 4/6/16.
+ * Created by mn-io on 06.04.16.
  */
 public class PkiMainActivity extends ParentActivity {
     private static final String LOG_ID = "pki";

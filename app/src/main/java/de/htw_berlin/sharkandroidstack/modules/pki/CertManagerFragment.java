@@ -17,7 +17,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
- * Created by m on 4/6/16.
+ * Created by mn-io on 06.04.16.
  */
 public class CertManagerFragment extends Fragment {
 
