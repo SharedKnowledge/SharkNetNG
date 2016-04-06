@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<de.htw_berlin.sharkandroidstack.modules.pki.CertManagerInfoTab xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/module_pki_cert_mananager_info_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Infos...." />
+    </ScrollView>
+
+</de.htw_berlin.sharkandroidstack.modules.pki.CertManagerInfoTab>
