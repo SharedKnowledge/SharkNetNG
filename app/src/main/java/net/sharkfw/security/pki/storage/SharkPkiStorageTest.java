@@ -1,10 +1,19 @@
 package net.sharkfw.security.pki.storage;
 
 import junit.framework.TestCase;
-import net.sharkfw.knowledgeBase.*;
+
+import net.sharkfw.knowledgeBase.ContextCoordinates;
+import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SharkCS;
+import net.sharkfw.knowledgeBase.SharkCSAlgebra;
+import net.sharkfw.knowledgeBase.SharkKB;
+import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharkfw.security.pki.Certificate;
 import net.sharkfw.security.pki.SharkCertificate;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +46,7 @@ public class SharkPkiStorageTest extends TestCase {
     private PeerSemanticTag alice;
     private PeerSemanticTag bob;
     private LinkedList<PeerSemanticTag> peerList;
-    private TimeSemanticTag time;
+    //    private TimeSemanticTag time;
     private Date date;
     private PrivateKey privateKey;
     private PublicKey publicKey;
@@ -49,7 +58,7 @@ public class SharkPkiStorageTest extends TestCase {
         testKB = new InMemoSharkKB();
         alice = InMemoSharkKB.createInMemoPeerSemanticTag("alice", "http://www.alice.de", "192.168.0.1");
         bob = InMemoSharkKB.createInMemoPeerSemanticTag("bob", new String[]{"http://www.bob.de", "http://www.bob.net", "http://www.bob.com"}, new String[]{"192.168.0.2", "192.168.0.3", "192.168.0.4"});
-        time = InMemoSharkKB.createInMemoTimeSemanticTag(TimeSemanticTag.FIRST_MILLISECOND_EVER, System.currentTimeMillis());
+//        time = InMemoSharkKB.createInMemoTimeSemanticTag(TimeSemanticTag.FIRST_MILLISECOND_EVER, System.currentTimeMillis());
 
         date = new Date();
         date.setTime(new SimpleDateFormat("dd.MM.yyyy").parse(DATE_TIME).getTime());
