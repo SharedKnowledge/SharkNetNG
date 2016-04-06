@@ -18,5 +18,8 @@ cp -R $SOURCE/j2seMail/net/sharkfw/* $ROOT
 cp -R $SOURCE/j2se_android/net/sharkfw/* $ROOT
 cp -R $SOURCE/j2seTests/net/sharkfw/* $ROOT
 
+# does not compile
 rm -f $ROOT/genericProfile/BasicGPKPTest.java
 rm -f $ROOT/wasp/WASPSerializer.java
+# confusing with pki/security
+rm -f $ROOT/pki/*
