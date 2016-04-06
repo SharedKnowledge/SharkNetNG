@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.pki;
+package de.htw_berlin.sharkandroidstack.modules.pki.system;
 
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.Interest;
@@ -24,17 +24,10 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
-public class SharkSecurityStack {
-
-    private static SharkKeyGenerator keyGenerator = new SharkKeyGenerator(SharkKeyPairAlgorithm.RSA, 1024);
-
-    public PeerSemanticTag createPeerSemanticTag(String name, String si, String address) {
-        return InMemoSharkKB.createInMemoPeerSemanticTag(name, si, address);
-    }
+public class SharkApiHelper {
 
     public static Date getDate(String dateFormattedLikeDdMmYyyy) throws ParseException {
         Date validUntil = new Date();
@@ -42,21 +35,14 @@ public class SharkSecurityStack {
         return validUntil;
     }
 
-    public static Date getDate(int yearsInFuture) throws IllegalArgumentException {
-        if (yearsInFuture <= 0) {
-            throw new IllegalArgumentException("Has to be a number larger 0");
-        }
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, yearsInFuture);
-        return cal.getTime();
-    }
-
-    public static SharkCertificate createCertificate(PeerSemanticTag me, Date validUntil, SharkKeyGenerator keyGenerator) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static SharkCertificate createCertificate(PeerSemanticTag me, Date validUntil) throws NoSuchAlgorithmException, InvalidKeySpecException {
         LinkedList<PeerSemanticTag> peerList = new LinkedList<>();
         peerList.addFirst(me);
 
+        final SharkKeyGenerator keyGenerator = new SharkKeyGenerator(SharkKeyPairAlgorithm.RSA, 1024);
         PublicKey publicKey = keyGenerator.getPublicKey();
+
 //        TODO: TEST
 //        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 //        PublicKey publicKey = keyFactory.generatePublic(new X509EncodedKeySpec(keyGenerator.getPublicKey().getEncoded()));
