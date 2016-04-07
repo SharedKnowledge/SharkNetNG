@@ -7,12 +7,6 @@ import android.widget.Toast;
 
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.security.key.SharkKeyPairAlgorithm;
-import net.sharkfw.security.key.storage.SharkKeyStorage;
-import net.sharkfw.security.pki.SharkCertificate;
-import net.sharkfw.security.pki.storage.SharkPkiStorage;
-
-import java.util.ArrayList;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
@@ -27,7 +21,7 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 public class PkiMainActivity extends ParentActivity {
     private static final String LOG_ID = "pki";
 
-    public static final ArrayList<String> infos = new ArrayList<>();
+    public static CertManager certManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,24 +49,24 @@ public class PkiMainActivity extends ParentActivity {
     }
 
     private void setupPki() {
-        SharkKeyStorage sharkKeyStorage = CertManager.createAndStoreKeys(this.getApplicationContext(), SharkKeyPairAlgorithm.RSA, 1024);
         PeerSemanticTag me = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
-        SharkCertificate certificate = CertManager.createSelfSignedCertificate(me, sharkKeyStorage.getPublicKey(), 10);
 
-        InMemoSharkKB kb = new InMemoSharkKB();
-
+        String text = "";
         try {
-            SharkPkiStorage store = CertManager.createStore(kb, me, sharkKeyStorage.getPrivateKey());
-            store.addSharkCertificate(certificate);
+            if (certManager == null) {
+                certManager = new CertManager(this.getApplicationContext(), me);
+                text = "New CertManager created.";
 
-            infos.add(String.format("My Identity: %s", me));
-            infos.add(String.format("Keys: \nPublic:%s, \nPrivate: %s", sharkKeyStorage.getPublicKey(), sharkKeyStorage.getPrivateKey()));
-            infos.add(String.format("Certificate: %s", certificate));
-
+            } else {
+                text = "Found existing CertManager.";
+                Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
-            Toast.makeText(this.getApplicationContext(), "An error occurred: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            text = "An error occurred: " + e.getMessage();
             LogManager.addThrowable(LOG_ID, e);
         }
+
+        Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     private void startLogActivity() {
