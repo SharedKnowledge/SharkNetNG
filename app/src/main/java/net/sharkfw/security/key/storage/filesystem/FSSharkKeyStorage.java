@@ -2,7 +2,12 @@ package net.sharkfw.security.key.storage.filesystem;
 
 import net.sharkfw.security.key.storage.SharkKeyStorage;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * @author ac
@@ -26,17 +31,24 @@ public class FSSharkKeyStorage {
      */
     public boolean save(SharkKeyStorage sharkKeyStorage) {
         try {
-            FileOutputStream fileOutputStream =  new FileOutputStream(filePath);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(sharkKeyStorage);
-            objectOutputStream.close();
-            fileOutputStream.close();
+            this.saveAndThrowExceptions(sharkKeyStorage);
         } catch (FileNotFoundException e) {
             return false;
         } catch (IOException e) {
             return false;
         }
         return true;
+    }
+
+    /*
+    author: Mario Neises
+    */
+    public void saveAndThrowExceptions(SharkKeyStorage sharkKeyStorage) throws IOException {
+        FileOutputStream fileOutputStream =  new FileOutputStream(filePath);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(sharkKeyStorage);
+        objectOutputStream.close();
+        fileOutputStream.close();
     }
 
     /**
