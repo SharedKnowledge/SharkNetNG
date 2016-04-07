@@ -19,20 +19,19 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
  * Created by mn-io on 06.04.16.
  */
 public class PkiMainActivity extends ParentActivity {
-    private static final String LOG_ID = "pki";
-
+    static final String LOG_ID = "pki";
     public static CertManager certManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setupPki();
-
         setFragment(new CertManagerFragment());
 
         setOptionsMenu(R.menu.module_pki_menu);
         LogManager.registerLog(LOG_ID, "PKI");
+
+        setupPki();
     }
 
     @Override
@@ -51,19 +50,17 @@ public class PkiMainActivity extends ParentActivity {
     private void setupPki() {
         PeerSemanticTag me = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
 
-        String text = "";
+        String text;
         try {
             if (certManager == null) {
-                certManager = new CertManager(this.getApplicationContext(), me);
+                certManager = new CertManager(this, me);
                 text = "New CertManager created.";
-
             } else {
                 text = "Found existing CertManager.";
-                Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             text = "An error occurred: " + e.getMessage();
-            LogManager.addThrowable(LOG_ID, e);
+            LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
         }
 
         Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
