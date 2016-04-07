@@ -3,8 +3,8 @@ package de.htw_berlin.sharkandroidstack.sharkFW.peer;
 import android.app.Activity;
 import android.content.Context;
 
-import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.kep.KEPStub;
+import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
@@ -61,6 +61,10 @@ public class AndroidSharkEngine extends J2SEAndroidSharkEngine {
 
     @Override
     protected Stub createNfcStreamStub(KEPStub kepStub) throws SharkProtocolNotSupportedException {
+        if(activityRef == null) {
+            throw new IllegalStateException("NFC needs an activity to bind to. Init engine with proper constructor.");
+        }
+
         if (currentStub == null) {
             currentStub = new NfcMessageStub(context, activityRef);
             currentStub.setHandler(kepStub);
