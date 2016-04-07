@@ -5,7 +5,6 @@ import android.content.Context;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
-import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.Knowledge;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
@@ -13,7 +12,6 @@ import net.sharkfw.knowledgeBase.SharkCSAlgebra;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharkfw.kp.KPListener;
-import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.security.key.SharkKeyPairAlgorithm;
 import net.sharkfw.security.key.storage.SharkKeyStorage;
 import net.sharkfw.security.pki.Certificate;
@@ -46,25 +44,6 @@ public class CertManager {
     private final SharkCertificate certificate;
     // ..end
 
-    public static final KPListener kpListener = new KPListener() {
-        @Override
-        public void exposeSent(KnowledgePort kp, SharkCS sentMutualInterest) {
-            System.out.println("mario: expose sent " + sentMutualInterest);
-        }
-
-        @Override
-        public void insertSent(KnowledgePort kp, Knowledge sentKnowledge) {
-            System.out.println("mario: insert sent " + sentKnowledge);
-
-        }
-
-        @Override
-        public void knowledgeAssimilated(KnowledgePort kp, ContextPoint newCP) {
-            System.out.println("mario: knowledge assimilated " + newCP);
-
-        }
-    };
-
     public CertManager(Activity activity, PeerSemanticTag identity) throws SharkKBException, NoSuchAlgorithmException, IOException, SharkProtocolNotSupportedException {
         Context applicationContext = activity.getApplicationContext();
 
@@ -89,18 +68,24 @@ public class CertManager {
 
         engine = new AndroidSharkEngine(activity);
         kp = new SharkPkiKP(engine, store, Certificate.TrustLevel.FULL, null);
-        kp.addListener(kpListener);
 
         engine.stopNfc();
     }
 
+    public void addKPListener(KPListener kpListener) {
+        kp.addListener(kpListener);
+    }
+
+    public void removeKPListener(KPListener kpListener) {
+        kp.removeListener(kpListener);
+    }
 
     public void send(PeerSemanticTag to) throws SharkProtocolNotSupportedException, IOException, SharkKBException, SharkSecurityException {
         Knowledge knowledge = SharkCSAlgebra.extract(store.getSharkPkiStorageKB(), topic);
 
         engine.startNfc();
         engine.sendKnowledge(knowledge, to, kp);
-        engine.stopNfc();
+//        engine.stopNfc();
     }
 
     public String[] getTempInfos() {
