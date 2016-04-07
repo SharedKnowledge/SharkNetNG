@@ -6,6 +6,7 @@ import net.sharkfw.system.SharkException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -134,7 +135,13 @@ public class SharkCertificate implements Certificate {
         transmitters.deleteCharAt(transmitters.length()-1);
         transmitters.deleteCharAt(transmitters.length()-1);
 
-        return String.format("SharkCertificate{subjectPublicKey=%s, issuer=%s, subject=%s, trustLevel=%s, validity=%s, transmitterList=%s}",
-                subjectPublicKey, issuer, subject, trustLevel, validity, transmitters);
+        String fingerprint = null;
+        try {
+            fingerprint = Arrays.toString(getFingerprint());
+        } catch (SharkException e) {
+            fingerprint = "N/A because of Error: " + e.toString();
+        }
+        return String.format("SharkCertificate{subjectPublicKey=%s, issuer=%s, subject=%s, trustLevel=%s, validity=%s, fingerprint=%s, transmitterList=%s}",
+                subjectPublicKey, issuer, subject, trustLevel, validity, fingerprint, transmitters);
     }
 }
