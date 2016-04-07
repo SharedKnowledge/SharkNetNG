@@ -135,13 +135,13 @@ public class SharkCertificate implements Certificate {
         transmitters.deleteCharAt(transmitters.length()-1);
         transmitters.deleteCharAt(transmitters.length()-1);
 
-        String fingerprint = null;
+        String fingerprint;
         try {
             fingerprint = Arrays.toString(getFingerprint());
         } catch (SharkException e) {
             fingerprint = "N/A because of Error: " + e.toString();
         }
-        return String.format("SharkCertificate{subjectPublicKey=%s, issuer=%s, subject=%s, trustLevel=%s, validity=%s, fingerprint=%s, transmitterList=%s}",
-                subjectPublicKey, issuer, subject, trustLevel, validity, fingerprint, transmitters);
+        return String.format("SharkCertificate{issuer=%s, subject=%s, subjectPublicKey=%s, trustLevel=%s, validity=%s, fingerprint=%s, transmitterList=%s}",
+                issuer, subject, subjectPublicKey, trustLevel, validity, fingerprint, transmitters);
     }
 }

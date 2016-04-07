@@ -21,6 +21,7 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 public class PkiMainActivity extends ParentActivity {
     static final String LOG_ID = "pki";
     public static CertManager certManager;
+    public static PeerSemanticTag myIdentity = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +49,10 @@ public class PkiMainActivity extends ParentActivity {
     }
 
     private void setupPki() {
-        PeerSemanticTag me = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
-
         String text;
         try {
             if (certManager == null) {
-                certManager = new CertManager(this, me);
+                certManager = new CertManager(this, myIdentity);
                 text = "New CertManager created.";
             } else {
                 text = "Found existing CertManager.";

@@ -24,6 +24,8 @@ import net.sharkfw.system.SharkSecurityException;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
 
@@ -102,13 +104,24 @@ public class CertManager {
     }
 
     public String[] getTempInfos() {
-        String[] strings = new String[3];
+        String[] strings = new String[4];
 
         strings[0] = String.format("My Identity: %s", identity);
         strings[1] = String.format("Keys: \nPublic:%s, \nPrivate: %s", sharkKeyStorage.getPrivateKey(), sharkKeyStorage.getPrivateKey());
         strings[2] = String.format("Certificate: %s", certificate);
 
+        try {
+            strings[3] = String.valueOf(getCertificates().size());
+        } catch (SharkKBException e) {
+            e.printStackTrace();
+        }
+
         return strings;
+    }
+
+    public ArrayList<SharkCertificate> getCertificates() throws SharkKBException {
+        HashSet<SharkCertificate> set = store.getSharkCertificateList();
+        return new ArrayList<>(set);
     }
 
 }

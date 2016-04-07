@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/background_light"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_horizontal">
+
+    <TextView
+        android:id="@android:id/text1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_header" />
+
+    <LinearLayout
+        android:id="@+id/module_pki_cert_list_entry_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Issuer: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_issuer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subject: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_subject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Subject Public Key: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_subject_pk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Trust Level: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_trust_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Valid until: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_validity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fingerprint: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_fingerprint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Transmitters: "
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/module_pki_cert_list_entry_transmitters"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>
