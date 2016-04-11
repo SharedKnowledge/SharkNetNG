@@ -67,6 +67,10 @@ public class CertManager {
         engine.stopNfc();
     }
 
+    public PeerSemanticTag getIdentity() {
+        return identity;
+    }
+
     public SharkCertificate createSelfSignedCertificate() throws SharkKBException {
         SharkCertificate previousCertificate = store.getSharkCertificate(identity);
         if (previousCertificate != null) {

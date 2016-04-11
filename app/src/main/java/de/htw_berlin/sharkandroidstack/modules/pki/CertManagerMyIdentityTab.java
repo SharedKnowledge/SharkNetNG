@@ -2,6 +2,8 @@ package de.htw_berlin.sharkandroidstack.modules.pki;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,21 @@ public class CertManagerMyIdentityTab extends ScrollView {
     EditText peerAddressNew;
     ImageButton peerAddressAddButton;
 
+    final static TextWatcher onTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            PkiMainActivity.certManager.getIdentity().setName(s.toString());
+        }
+    };
+
     final OnClickListener addSiClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -40,7 +57,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
             }
 
             try {
-                PkiMainActivity.myIdentity.addSI(si);
+                PkiMainActivity.certManager.getIdentity().addSI(si);
                 ArrayAdapter adapter = (ArrayAdapter) peerSiList.getAdapter();
                 adapter.add(si);
                 adapter.notifyDataSetChanged();
@@ -59,7 +76,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
                 return;
             }
 
-            PkiMainActivity.myIdentity.addAddress(address);
+            PkiMainActivity.certManager.getIdentity().addAddress(address);
 
             ArrayAdapter adapter = (ArrayAdapter) peerAddressList.getAdapter();
             adapter.add(address);
@@ -88,7 +105,8 @@ public class CertManagerMyIdentityTab extends ScrollView {
         peerAddressNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_new);
         peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_button);
 
-        peerName.setText(PkiMainActivity.myIdentity.getName());
+        peerName.setText(PkiMainActivity.certManager.getIdentity().getName());
+        peerName.addTextChangedListener(onTextChangedListener);
 
         ArrayAdapter<String> sisAdapter = initAdapterForSis();
         peerSiList.setAdapter(sisAdapter);
@@ -106,7 +124,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
                 public void onClick(View v) {
                     String text = (String) v.getTag();
                     try {
-                        PkiMainActivity.myIdentity.removeSI(text);
+                        PkiMainActivity.certManager.getIdentity().removeSI(text);
                         remove(text);
                         notifyDataSetChanged();
                     } catch (SharkKBException e) {
@@ -130,7 +148,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
             }
         };
 
-        adapter.addAll(PkiMainActivity.myIdentity.getSI());
+        adapter.addAll(PkiMainActivity.certManager.getIdentity().getSI());
         adapter.notifyDataSetChanged();
         return adapter;
     }
@@ -142,7 +160,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
                 @Override
                 public void onClick(View v) {
                     String text = (String) v.getTag();
-                    PkiMainActivity.myIdentity.removeAddress(text);
+                    PkiMainActivity.certManager.getIdentity().removeAddress(text);
 
                     remove(text);
                     notifyDataSetChanged();
@@ -164,7 +182,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
             }
         };
 
-        adapter.addAll(PkiMainActivity.myIdentity.getAddresses());
+        adapter.addAll(PkiMainActivity.certManager.getIdentity().getAddresses());
         adapter.notifyDataSetChanged();
         return adapter;
     }

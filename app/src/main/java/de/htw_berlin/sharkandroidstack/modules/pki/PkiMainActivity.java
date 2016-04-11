@@ -25,7 +25,8 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 public class PkiMainActivity extends ParentActivity {
     static final String LOG_ID = "pki";
     public static CertManager certManager;
-    public static PeerSemanticTag myIdentity = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
+
+    private final static PeerSemanticTag myIdentity = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

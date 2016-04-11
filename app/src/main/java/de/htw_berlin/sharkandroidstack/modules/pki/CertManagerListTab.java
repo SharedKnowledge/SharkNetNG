@@ -221,7 +221,7 @@ public class CertManagerListTab extends RelativeLayout {
 
                 final TextView header = (TextView) view.findViewById(android.R.id.text1);
                 header.setOnClickListener(headerClickListener);
-                if (PkiMainActivity.myIdentity.equals(item.getIssuer())) {
+                if (PkiMainActivity.certManager.getIdentity().equals(item.getIssuer())) {
                     header.setTextColor(getResources().getColor(android.R.color.holo_blue_dark));
                     header.setText(String.format("(me) Issuer Name: %s", item.getIssuer().getName()));
                 } else {
