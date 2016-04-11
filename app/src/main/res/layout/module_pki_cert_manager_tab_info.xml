@@ -1,18 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<de.htw_berlin.sharkandroidstack.modules.pki.CertManagerInfoTab xmlns:android="http://schemas.android.com/apk/res/android"
+<de.htw_berlin.sharkandroidstack.modules.pki.CertManagerMyIdentityTab xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/module_pki_cert_manager_peer_info_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/module_pki_cert_mananager_info_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Infos...." />
-    </ScrollView>
+            android:layout_height="wrap_content"
+            android:text="Peer Name" />
 
-</de.htw_berlin.sharkandroidstack.modules.pki.CertManagerInfoTab>
+        <EditText
+            android:id="@+id/module_pki_cert_manager_peer_name_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_horizontal"
+            android:text="List of subject identifiers" />
+
+        <ListView
+            android:id="@+id/module_pki_cert_manager_peer_si_list"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll" />
+
+        <LinearLayout
+            android:id="@+id/module_pki_cert_manager_peer_si_add_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/module_pki_cert_manager_peer_si_add_new"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/fragment_pki_cert_manager_peer_si_add_hint" />
+
+            <ImageButton
+                android:id="@+id/module_pki_cert_manager_peer_si_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@android:drawable/ic_menu_add" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_horizontal"
+            android:text="List of addresses" />
+
+        <ListView
+            android:id="@+id/module_pki_cert_manager_peer_address_list"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:transcriptMode="alwaysScroll" />
+
+        <LinearLayout
+            android:id="@+id/module_pki_cert_manager_peer_address_add_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/module_pki_cert_manager_peer_address_add_new"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/fragment_pki_cert_manager_peer_address_add_hint" />
+
+            <ImageButton
+                android:id="@+id/module_pki_cert_manager_peer_address_add_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:src="@android:drawable/ic_menu_add" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</de.htw_berlin.sharkandroidstack.modules.pki.CertManagerMyIdentityTab>

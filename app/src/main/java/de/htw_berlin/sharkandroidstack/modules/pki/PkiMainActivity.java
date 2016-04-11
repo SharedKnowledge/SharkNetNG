@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.pki;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -49,20 +50,19 @@ public class PkiMainActivity extends ParentActivity {
     }
 
     private void setupPki() {
-        String text;
         try {
+            String text;
             if (certManager == null) {
                 certManager = new CertManager(this, myIdentity);
                 text = "New CertManager created.";
             } else {
                 text = "Found existing CertManager.";
             }
+            Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            text = "An error occurred: " + e.getMessage();
-            LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+            handleError(this.getApplicationContext(), e);
+            return;
         }
-
-        Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     private void startLogActivity() {
@@ -72,4 +72,8 @@ public class PkiMainActivity extends ParentActivity {
         startActivity(intent);
     }
 
+    static void handleError(Context context, Throwable e) {
+        Toast.makeText(context, "An error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+    }
 }

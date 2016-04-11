@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 /**
  * Created by mn-io on 06.04.16.
@@ -56,33 +55,28 @@ public class CertManagerListTab extends RelativeLayout {
             Toast.makeText(v.getContext(), "Click", Toast.LENGTH_LONG).show();
             PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
 
-            String text;
             try {
                 PkiMainActivity.certManager.send(bob);
-                text = "Done.";
+                String text = "Done.";
+                Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
             } catch (Exception e) {
-                text = "An error occurred: " + e.getMessage();
-                LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+                PkiMainActivity.handleError(v.getContext(), e);
             }
-
-            Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
         }
     };
 
     final OnClickListener createClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            String text;
             try {
                 SharkCertificate certificate = PkiMainActivity.certManager.createSelfSignedCertificate();
-                text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
+                String text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
                 update();
+                Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
             } catch (Exception e) {
-                text = "An error occurred: " + e.getMessage();
-                LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+                PkiMainActivity.handleError(v.getContext(), e);
             }
 
-            Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
         }
     };
 
@@ -153,9 +147,7 @@ public class CertManagerListTab extends RelativeLayout {
             adapter.addAll(certificates);
             adapter.notifyDataSetChanged();
         } catch (SharkKBException e) {
-            String text = "An error occurred while updating: " + e.getMessage();
-            Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-            LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+            PkiMainActivity.handleError(getContext(), e);
         }
     }
 
