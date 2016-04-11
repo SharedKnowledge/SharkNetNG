@@ -1,6 +1,16 @@
 package net.sharkfw.security.pki.storage;
 
-import net.sharkfw.knowledgeBase.*;
+import net.sharkfw.knowledgeBase.ContextCoordinates;
+import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.Information;
+import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SemanticTag;
+import net.sharkfw.knowledgeBase.SharkCS;
+import net.sharkfw.knowledgeBase.SharkCSAlgebra;
+import net.sharkfw.knowledgeBase.SharkKB;
+import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.TimeSemanticTag;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharkfw.security.key.SharkKeyPairAlgorithm;
 import net.sharkfw.security.pki.Certificate;
@@ -14,9 +24,13 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 
-import static net.sharkfw.security.utility.SharkCertificateHelper.*;
+import static net.sharkfw.security.utility.SharkCertificateHelper.getByteArrayFromLinkedList;
+import static net.sharkfw.security.utility.SharkCertificateHelper.getLinkedListFromByteArray;
 
 /**
  * The SharkPkiStorage takes over the administration of the certificates {@link SharkCertificate}.
@@ -240,9 +254,17 @@ public class SharkPkiStorage implements PkiStorage {
         return true;
     }
 
+    /*
+    author: Mario Neises
+     */
     @Override
     public SharkCertificate getSharkCertificate(PeerSemanticTag subject) throws SharkKBException {
         Knowledge knowledge = SharkCSAlgebra.extract(sharkPkiStorageKB, contextCoordinatesFilter);
+
+        if (knowledge == null) {
+            return null;
+        }
+
         for (ContextPoint cp : Collections.list(knowledge.contextPoints())) {
             if(SharkCSAlgebra.identical(subject, cp.getContextCoordinates().getPeer())) {
 

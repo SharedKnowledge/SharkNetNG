@@ -29,11 +29,8 @@ public class CertManagerInfoTab extends RelativeLayout {
         super.setVisibility(visibility);
 
         if (visibility == VISIBLE) {
-            StringBuilder builder = new StringBuilder();
-            for (String info : PkiMainActivity.certManager.getTempInfos()) {
-                builder.append(info + "\n\n");
-            }
-            view.setText(builder);
+//            StringBuilder builder = new StringBuilder();
+//            view.setText(builder);
         }
     }
 }

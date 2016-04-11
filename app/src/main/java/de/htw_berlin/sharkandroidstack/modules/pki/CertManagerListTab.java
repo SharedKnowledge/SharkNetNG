@@ -50,6 +50,42 @@ public class CertManagerListTab extends RelativeLayout {
         }
     };
 
+    final static OnClickListener shareClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(v.getContext(), "Click", Toast.LENGTH_LONG).show();
+            PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
+
+            String text;
+            try {
+                PkiMainActivity.certManager.send(bob);
+                text = "Done.";
+            } catch (Exception e) {
+                text = "An error occurred: " + e.getMessage();
+                LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+            }
+
+            Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    final OnClickListener createClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String text;
+            try {
+                SharkCertificate certificate = PkiMainActivity.certManager.createSelfSignedCertificate();
+                text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
+                update();
+            } catch (Exception e) {
+                text = "An error occurred: " + e.getMessage();
+                LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+            }
+
+            Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
+        }
+    };
+
     final KPListener kpListener = new KPListener() {
         @Override
         public void exposeSent(KnowledgePort kp, SharkCS sentMutualInterest) {
@@ -65,17 +101,14 @@ public class CertManagerListTab extends RelativeLayout {
 
         @Override
         public void knowledgeAssimilated(KnowledgePort kp, ContextPoint newCP) {
-            String text;
-            if (newCP.getContextCoordinates().getTopic().identical(SharkPkiStorage.PKI_CONTEXT_COORDINATE)) {
-                update();
-                text = "Certificate(s) received.";
-            } else {
-                text = "knowledge assimilated";
+            if (!newCP.getContextCoordinates().getTopic().identical(SharkPkiStorage.PKI_CONTEXT_COORDINATE)) {
+                return;
             }
 
+            update();
             vibrator.vibrate(500);
+            String text = "Certificate(s) received.";
             Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
-
         }
     };
 
@@ -93,25 +126,11 @@ public class CertManagerListTab extends RelativeLayout {
         adapter = initAdapter();
         certList.setAdapter(adapter);
 
+        Button shareCertButton = (Button) this.findViewById(R.id.module_pki_cert_mananager_share_cert);
+        shareCertButton.setOnClickListener(shareClickListener);
+
         Button createCertButton = (Button) this.findViewById(R.id.module_pki_cert_mananager_create_cert);
-        createCertButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Click", Toast.LENGTH_LONG).show();
-                PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
-
-                String text;
-                try {
-                    PkiMainActivity.certManager.send(bob);
-                    text = "Done.";
-                } catch (Exception e) {
-                    text = "An error occurred: " + e.getMessage();
-                    LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
-                }
-
-                Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
-            }
-        });
+        createCertButton.setOnClickListener(createClickListener);
     }
 
     @Override

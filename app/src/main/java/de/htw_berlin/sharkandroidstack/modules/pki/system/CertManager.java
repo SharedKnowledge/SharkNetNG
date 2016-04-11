@@ -41,35 +41,42 @@ public class CertManager {
     // temp, only for getTempInfos() so far..
     private SharkKeyStorage sharkKeyStorage;
     private PeerSemanticTag identity;
-    private final SharkCertificate certificate;
     // ..end
 
-    public CertManager(Activity activity, PeerSemanticTag identity) throws SharkKBException, NoSuchAlgorithmException, IOException, SharkProtocolNotSupportedException {
+    public CertManager(Activity activity, PeerSemanticTag identityPeer) throws SharkKBException, NoSuchAlgorithmException, IOException, SharkProtocolNotSupportedException {
         Context applicationContext = activity.getApplicationContext();
 
-        this.identity = identity;
-        this.sharkKeyStorage = SharkApiHelper.restoreKeysFromFile(applicationContext, FILE_NAME_KEY_STORE);
-        if (sharkKeyStorage == null) {
-            sharkKeyStorage = SharkApiHelper.createKeys(SharkKeyPairAlgorithm.RSA, 1024);
-            SharkApiHelper.saveKeysAsFile(applicationContext, sharkKeyStorage, FILE_NAME_KEY_STORE);
-        }
-
-        // TODO: store certs or better: serialize/restore InMemoSharkKB or SharkPkiStorage
-        certificate = SharkApiHelper.createSelfSignedCertificate(identity, sharkKeyStorage.getPublicKey(), 10);
-
-        final InMemoSharkKB kb = new InMemoSharkKB();
-        store = SharkApiHelper.createStore(kb, identity, sharkKeyStorage.getPrivateKey());
-        store.addSharkCertificate(certificate);
+        identity = identityPeer;
+        engine = new AndroidSharkEngine(activity);
 
         topic = InMemoSharkKB.createInMemoContextCoordinates(
                 SharkPkiStorage.PKI_CONTEXT_COORDINATE,
                 identity, null, null, null, null,
                 SharkCS.DIRECTION_INOUT);
 
-        engine = new AndroidSharkEngine(activity);
+        final InMemoSharkKB kb = new InMemoSharkKB(); //new FSSharkKB(applicationContext.getFilesDir().toString());
+
+        sharkKeyStorage = SharkApiHelper.restoreKeysFromFile(applicationContext, FILE_NAME_KEY_STORE);
+        if (sharkKeyStorage == null) {
+            sharkKeyStorage = SharkApiHelper.createKeys(SharkKeyPairAlgorithm.RSA, 1024);
+            SharkApiHelper.saveKeysAsFile(applicationContext, sharkKeyStorage, FILE_NAME_KEY_STORE);
+        }
+
+        store = new SharkPkiStorage(kb, identity, sharkKeyStorage.getPrivateKey());
         kp = new SharkPkiKP(engine, store, Certificate.TrustLevel.FULL, null);
 
         engine.stopNfc();
+    }
+
+    public SharkCertificate createSelfSignedCertificate() throws SharkKBException {
+        SharkCertificate previousCertificate = store.getSharkCertificate(identity);
+        if (previousCertificate != null) {
+            store.deleteSharkCertificate(previousCertificate);
+        }
+
+        SharkCertificate certificate = SharkApiHelper.createSelfSignedCertificate(identity, sharkKeyStorage.getPublicKey(), 10);
+        store.addSharkCertificate(certificate);
+        return certificate;
     }
 
     public void addKPListener(KPListener kpListener) {
@@ -88,24 +95,12 @@ public class CertManager {
 //        engine.stopNfc();
     }
 
-    public String[] getTempInfos() {
-        String[] strings = new String[4];
-
-        strings[0] = String.format("My Identity: %s", identity);
-        strings[1] = String.format("Keys: \nPublic:%s, \nPrivate: %s", sharkKeyStorage.getPrivateKey(), sharkKeyStorage.getPrivateKey());
-        strings[2] = String.format("Certificate: %s", certificate);
-
-        try {
-            strings[3] = String.valueOf(getCertificates().size());
-        } catch (SharkKBException e) {
-            e.printStackTrace();
-        }
-
-        return strings;
-    }
-
     public ArrayList<SharkCertificate> getCertificates() throws SharkKBException {
         HashSet<SharkCertificate> set = store.getSharkCertificateList();
+        if (set == null) {
+            return new ArrayList<>();
+        }
+
         return new ArrayList<>(set);
     }
 

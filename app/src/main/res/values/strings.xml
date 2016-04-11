@@ -40,7 +40,8 @@
 
     <!--   pki -->
     <string name="pki_menu_item_show_log">Show Log</string>
-    <string name="fragment_pki_cert_manager_create_cert">Create certificate</string>
+    <string name="fragment_pki_cert_manager_create_cert">Create new certificate</string>
+    <string name="fragment_pki_cert_manager_share_cert">Share certificate(s)</string>
 
 
     <!--   nfc -->
