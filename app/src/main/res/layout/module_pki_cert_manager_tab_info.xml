@@ -30,7 +30,6 @@
             android:id="@+id/module_pki_cert_manager_peer_si_list"
             android:layout_width="match_parent"
             android:layout_height="100dip"
-            android:stackFromBottom="true"
             android:transcriptMode="alwaysScroll" />
 
         <LinearLayout
