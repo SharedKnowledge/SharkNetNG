@@ -1,13 +1,11 @@
 package de.htw_berlin.sharkandroidstack.modules.pki;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 
 import java.util.HashMap;
 
@@ -15,6 +13,7 @@ import de.htw_berlin.sharkandroidstack.R;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard;
 
 /**
  * Created by mn-io on 06.04.16.
@@ -28,7 +27,10 @@ public class CertManagerFragment extends Fragment {
         public void onTabSelected(TabLayout.Tab tab) {
             String selectedName = tab.getText().toString();
 
-            hideKeyboard();
+            View view = getView();
+            if (view != null) {
+                hideKeyboard(view.getContext(), view);
+            }
 
             for (String name : tabs.keySet()) {
                 int visibility = GONE;
@@ -37,14 +39,6 @@ public class CertManagerFragment extends Fragment {
                 }
 
                 tabs.get(name).setVisibility(visibility);
-            }
-        }
-
-        private void hideKeyboard() {
-            View view = getView();
-            if (view != null && view.getWindowToken() != null) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
         }
 
@@ -62,7 +56,7 @@ public class CertManagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_pki_cert_manager_fragment, container, false);
 
-        tabs.put("Info", root.findViewById(R.id.info));
+        tabs.put("Me", root.findViewById(R.id.info));
         tabs.put("Certs", root.findViewById(R.id.certs));
 
         TabLayout tabLayout = (TabLayout) root.findViewById(R.id.sliding_tabs);
@@ -72,6 +66,8 @@ public class CertManagerFragment extends Fragment {
 
         tabLayout.setOnTabSelectedListener(onTabSelectedListener);
         onTabSelectedListener.onTabSelected(tabLayout.getTabAt(0));
+
+        hideKeyboard(root.getContext(), root);
 
         return root;
     }
