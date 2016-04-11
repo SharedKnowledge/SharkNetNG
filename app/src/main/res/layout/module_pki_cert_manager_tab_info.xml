@@ -13,7 +13,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Peer Name" />
+            android:text="Peer Name"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/module_pki_cert_manager_peer_name_edit"
@@ -24,7 +25,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_horizontal"
-            android:text="List of subject identifiers" />
+            android:text="List of subject identifiers"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/module_pki_cert_manager_peer_si_list"
@@ -57,7 +59,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_horizontal"
-            android:text="List of addresses" />
+            android:text="List of addresses"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@+id/module_pki_cert_manager_peer_address_list"

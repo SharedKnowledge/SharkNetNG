@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
+import net.sharkfw.security.pki.SharkCertificate;
+
+import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
@@ -39,13 +42,29 @@ public class PkiMainActivity extends ParentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        switch (id) {
-            case R.id.pki_menu_item_show_log:
-                startLogActivity();
-                return true;
+        String text = null;
+        try {
+            switch (id) {
+                case R.id.pki_menu_item_show_log:
+                    startLogActivity();
+                    break;
+                case R.id.pki_menu_item_create_cert:
+                    SharkCertificate certificate = PkiMainActivity.certManager.createSelfSignedCertificate();
+                    text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
+                    break;
+                case R.id.pki_menu_item_share_certs:
+                    PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
+                    text = "Done.";
+                    PkiMainActivity.certManager.send(bob);
+                    break;
+            }
+        } catch (Exception e) {
+            PkiMainActivity.handleError(getApplicationContext(), e);
         }
 
+        if (text != null) {
+            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -61,7 +80,6 @@ public class PkiMainActivity extends ParentActivity {
             Toast.makeText(this.getApplicationContext(), text, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             handleError(this.getApplicationContext(), e);
-            return;
         }
     }
 
@@ -73,7 +91,9 @@ public class PkiMainActivity extends ParentActivity {
     }
 
     static void handleError(Context context, Throwable e) {
-        Toast.makeText(context, "An error occurred: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        String text = "An error occurred: " + e.getMessage() + "\nCheck Log for details.";
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
         LogManager.addThrowable(PkiMainActivity.LOG_ID, e);
+        e.printStackTrace();
     }
 }

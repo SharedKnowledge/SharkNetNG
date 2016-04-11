@@ -40,8 +40,8 @@
 
     <!--   pki -->
     <string name="pki_menu_item_show_log">Show Log</string>
-    <string name="fragment_pki_cert_manager_create_cert">Create new certificate</string>
-    <string name="fragment_pki_cert_manager_share_cert">Share certificate(s)</string>
+    <string name="pki_menu_item_create_cert">Create new cert.</string>
+    <string name="pki_menu_item_certs_share">Share certs.</string>
     <string name="fragment_pki_cert_manager_peer_si_add_hint">Add Subject Identifier</string>
     <string name="fragment_pki_cert_manager_peer_address_add_hint">Add Address</string>
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.KnowledgeBaseListener;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkCSAlgebra;
@@ -38,10 +39,8 @@ public class CertManager {
     private final AndroidSharkEngine engine;
     private final SharkPkiKP kp;
 
-    // temp, only for getTempInfos() so far..
     private SharkKeyStorage sharkKeyStorage;
-    private PeerSemanticTag identity;
-    // ..end
+    private final PeerSemanticTag identity;
 
     public CertManager(Activity activity, PeerSemanticTag identityPeer) throws SharkKBException, NoSuchAlgorithmException, IOException, SharkProtocolNotSupportedException {
         Context applicationContext = activity.getApplicationContext();
@@ -85,6 +84,14 @@ public class CertManager {
 
     public void removeKPListener(KPListener kpListener) {
         kp.removeListener(kpListener);
+    }
+
+    public void addKBListener(KnowledgeBaseListener listener) {
+        store.getSharkPkiStorageKB().addListener(listener);
+    }
+
+    public void removeKBListener(KnowledgeBaseListener listener) {
+        store.getSharkPkiStorageKB().removeListener(listener);
     }
 
     public void send(PeerSemanticTag to) throws SharkProtocolNotSupportedException, IOException, SharkKBException, SharkSecurityException {

@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,10 +15,14 @@ import android.widget.Toast;
 
 import net.sharkfw.knowledgeBase.ContextPoint;
 import net.sharkfw.knowledgeBase.Knowledge;
+import net.sharkfw.knowledgeBase.KnowledgeBaseListener;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SNSemanticTag;
+import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKBException;
-import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
+import net.sharkfw.knowledgeBase.SpatialSemanticTag;
+import net.sharkfw.knowledgeBase.TimeSemanticTag;
 import net.sharkfw.kp.KPListener;
 import net.sharkfw.peer.KnowledgePort;
 import net.sharkfw.security.pki.SharkCertificate;
@@ -39,6 +42,91 @@ public class CertManagerListTab extends RelativeLayout {
     ArrayAdapter<SharkCertificate> adapter;
     Vibrator vibrator;
 
+    final KnowledgeBaseListener kbListener = new KnowledgeBaseListener() {
+        @Override
+        public void topicAdded(SemanticTag tag) {
+            System.out.println("tag topicAdded");
+            update();
+        }
+
+        @Override
+        public void peerAdded(PeerSemanticTag tag) {
+            System.out.println("tag peerAdded");
+            update();
+        }
+
+        @Override
+        public void locationAdded(SpatialSemanticTag location) {
+            System.out.println("tag locationAdded");
+            update();
+        }
+
+        @Override
+        public void timespanAdded(TimeSemanticTag time) {
+            System.out.println("tag timespanAdded");
+            update();
+        }
+
+        @Override
+        public void topicRemoved(SemanticTag tag) {
+            System.out.println("tag topicRemoved");
+            update();
+        }
+
+        @Override
+        public void peerRemoved(PeerSemanticTag tag) {
+            System.out.println("tag peerRemoved");
+            update();
+        }
+
+        @Override
+        public void locationRemoved(SpatialSemanticTag tag) {
+            System.out.println("tag locationRemoved");
+            update();
+        }
+
+        @Override
+        public void timespanRemoved(TimeSemanticTag tag) {
+            System.out.println("tag timespanRemoved");
+            update();
+        }
+
+        @Override
+        public void predicateCreated(SNSemanticTag subject, String type, SNSemanticTag object) {
+            System.out.println("tag predicateCreated");
+            update();
+        }
+
+        @Override
+        public void predicateRemoved(SNSemanticTag subject, String type, SNSemanticTag object) {
+            System.out.println("tag predicateRemoved");
+            update();
+        }
+
+        @Override
+        public void tagChanged(SemanticTag tag) {
+            System.out.println("tag tagChanged");
+            update();
+        }
+
+        @Override
+        public void contextPointAdded(ContextPoint cp) {
+            System.out.println("tag contextPointAdded");
+            update();
+        }
+
+        @Override
+        public void cpChanged(ContextPoint cp) {
+            System.out.println("tag cpChanged");
+            update();
+        }
+
+        @Override
+        public void contextPointRemoved(ContextPoint cp) {
+            System.out.println("tag contextPointRemoved");
+        }
+    };
+
     final static OnClickListener headerClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -49,48 +137,17 @@ public class CertManagerListTab extends RelativeLayout {
         }
     };
 
-    final static OnClickListener shareClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(v.getContext(), "Click", Toast.LENGTH_LONG).show();
-            PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
-
-            try {
-                PkiMainActivity.certManager.send(bob);
-                String text = "Done.";
-                Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                PkiMainActivity.handleError(v.getContext(), e);
-            }
-        }
-    };
-
-    final OnClickListener createClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            try {
-                SharkCertificate certificate = PkiMainActivity.certManager.createSelfSignedCertificate();
-                String text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
-                update();
-                Toast.makeText(v.getContext(), text, Toast.LENGTH_LONG).show();
-            } catch (Exception e) {
-                PkiMainActivity.handleError(v.getContext(), e);
-            }
-
-        }
-    };
-
     final KPListener kpListener = new KPListener() {
         @Override
         public void exposeSent(KnowledgePort kp, SharkCS sentMutualInterest) {
-//            Toast.makeText(getContext(), "expose sent", Toast.LENGTH_SHORT).show();
-//            System.out.println("mario: es " + sentMutualInterest);
+            Toast.makeText(getContext(), "expose sent", Toast.LENGTH_SHORT).show();
+            System.out.println("mario: es " + sentMutualInterest);
         }
 
         @Override
         public void insertSent(KnowledgePort kp, Knowledge sentKnowledge) {
-//            Toast.makeText(getContext(), "insert sent", Toast.LENGTH_SHORT).show();
-//            System.out.println("mario: is " + sentKnowledge);
+            Toast.makeText(getContext(), "insert sent", Toast.LENGTH_SHORT).show();
+            System.out.println("mario: is " + sentKnowledge);
         }
 
         @Override
@@ -103,6 +160,20 @@ public class CertManagerListTab extends RelativeLayout {
             vibrator.vibrate(500);
             String text = "Certificate(s) received.";
             Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
+        }
+    };
+
+    final Runnable updateHandler = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                final ArrayList<SharkCertificate> certificates = PkiMainActivity.certManager.getCertificates();
+                adapter.clear();
+                adapter.addAll(certificates);
+                adapter.notifyDataSetChanged();
+            } catch (SharkKBException e) {
+                PkiMainActivity.handleError(getContext(), e);
+            }
         }
     };
 
@@ -119,36 +190,25 @@ public class CertManagerListTab extends RelativeLayout {
         ListView certList = (ListView) this.findViewById(R.id.module_pki_cert_mananager_cert_list);
         adapter = initAdapter();
         certList.setAdapter(adapter);
-
-        Button shareCertButton = (Button) this.findViewById(R.id.module_pki_cert_mananager_share_cert);
-        shareCertButton.setOnClickListener(shareClickListener);
-
-        Button createCertButton = (Button) this.findViewById(R.id.module_pki_cert_mananager_create_cert);
-        createCertButton.setOnClickListener(createClickListener);
     }
 
     @Override
     protected void onAttachedToWindow() {
         update();
         PkiMainActivity.certManager.addKPListener(kpListener);
+        PkiMainActivity.certManager.addKBListener(kbListener);
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         PkiMainActivity.certManager.removeKPListener(kpListener);
+        PkiMainActivity.certManager.removeKBListener(kbListener);
         super.onDetachedFromWindow();
     }
 
     void update() {
-        try {
-            final ArrayList<SharkCertificate> certificates = PkiMainActivity.certManager.getCertificates();
-            adapter.clear();
-            adapter.addAll(certificates);
-            adapter.notifyDataSetChanged();
-        } catch (SharkKBException e) {
-            PkiMainActivity.handleError(getContext(), e);
-        }
+        getHandler().postDelayed(updateHandler, 100);
     }
 
     @NonNull

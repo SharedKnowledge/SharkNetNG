@@ -4,21 +4,6 @@
     android:layout_height="match_parent"
     android:visibility="gone">
 
-    <Button
-        android:id="@+id/module_pki_cert_mananager_create_cert"
-        android:layout_width="match_parent"
-        android:background="@null"
-        android:text="@string/fragment_pki_cert_manager_create_cert"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/module_pki_cert_mananager_share_cert"
-        android:layout_below="@+id/module_pki_cert_mananager_create_cert"
-        android:layout_width="match_parent"
-        android:background="@null"
-        android:text="@string/fragment_pki_cert_manager_share_cert"
-        android:layout_height="wrap_content" />
-
     <ListView
         android:id="@+id/module_pki_cert_mananager_cert_list"
         android:layout_below="@+id/module_pki_cert_mananager_share_cert"

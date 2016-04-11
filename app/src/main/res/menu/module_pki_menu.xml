@@ -2,7 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/pki_menu_item_share_certs"
+        android:title="@string/pki_menu_item_certs_share"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/pki_menu_item_create_cert"
+        android:title="@string/pki_menu_item_create_cert"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/pki_menu_item_show_log"
-        android:title="@string/mariodemo_menu_item_show_log"
+        android:title="@string/pki_menu_item_show_log"
         app:showAsAction="ifRoom" />
 </menu>
