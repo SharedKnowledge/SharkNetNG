@@ -54,9 +54,8 @@ public class PkiMainActivity extends ParentActivity {
                     text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
                     break;
                 case R.id.pki_menu_item_share_certs:
-                    PeerSemanticTag bob = InMemoSharkKB.createInMemoPeerSemanticTag("112663172666e296", "112663172666e296_Id", "tcp://112663172666e296");
+                    PkiMainActivity.certManager.sendMyCertificate();
                     text = "Done.";
-                    PkiMainActivity.certManager.send(bob);
                     break;
             }
         } catch (Exception e) {

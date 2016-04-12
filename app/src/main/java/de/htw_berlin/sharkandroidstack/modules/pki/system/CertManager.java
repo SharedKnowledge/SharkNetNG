@@ -98,11 +98,19 @@ public class CertManager {
         store.getSharkPkiStorageKB().removeListener(listener);
     }
 
-    public void send(PeerSemanticTag to) throws SharkProtocolNotSupportedException, IOException, SharkKBException, SharkSecurityException {
+    public void sendMyCertificate() throws SharkProtocolNotSupportedException, IOException, SharkKBException, SharkSecurityException {
         Knowledge knowledge = SharkCSAlgebra.extract(store.getSharkPkiStorageKB(), topic);
 
+        if (knowledge == null) {
+            throw new RuntimeException("No Certificate found in store. Abort sending.");
+        }
+        // recipient AND SI needed because of SharkEngine recipient.getAddress() which leads to initSecurity with SI at SharkEngine.java line:1176ff
+        // tcp:// needed because of Protocols.java getProtocolName()
+        // TODO: add NFC as supported protocol.
+        PeerSemanticTag dummyKebRecipient = InMemoSharkKB.createInMemoPeerSemanticTag(null, "", "tcp://");
+
         engine.startNfc();
-        engine.sendKnowledge(knowledge, to, kp);
+        engine.sendKnowledge(knowledge, dummyKebRecipient, kp);
 //        engine.stopNfc();
     }
 
