@@ -45,25 +45,25 @@ public class CertManagerListTab extends RelativeLayout {
     final KnowledgeBaseListener kbListener = new KnowledgeBaseListener() {
         @Override
         public void topicAdded(SemanticTag tag) {
-            System.out.println("tag topicAdded");
+            System.out.println("mario: tag topicAdded");
             update();
         }
 
         @Override
         public void peerAdded(PeerSemanticTag tag) {
-            System.out.println("tag peerAdded");
+            System.out.println("mario: tag peerAdded");
             update();
         }
 
         @Override
         public void locationAdded(SpatialSemanticTag location) {
-            System.out.println("tag locationAdded");
+            System.out.println("mario: tag locationAdded");
             update();
         }
 
         @Override
         public void timespanAdded(TimeSemanticTag time) {
-            System.out.println("tag timespanAdded");
+            System.out.println("mario: tag timespanAdded");
             update();
         }
 
@@ -75,55 +75,55 @@ public class CertManagerListTab extends RelativeLayout {
 
         @Override
         public void peerRemoved(PeerSemanticTag tag) {
-            System.out.println("tag peerRemoved");
+            System.out.println("mario: tag peerRemoved");
             update();
         }
 
         @Override
         public void locationRemoved(SpatialSemanticTag tag) {
-            System.out.println("tag locationRemoved");
+            System.out.println("mario: tag locationRemoved");
             update();
         }
 
         @Override
         public void timespanRemoved(TimeSemanticTag tag) {
-            System.out.println("tag timespanRemoved");
+            System.out.println("mario: tag timespanRemoved");
             update();
         }
 
         @Override
         public void predicateCreated(SNSemanticTag subject, String type, SNSemanticTag object) {
-            System.out.println("tag predicateCreated");
+            System.out.println("mario: tag predicateCreated");
             update();
         }
 
         @Override
         public void predicateRemoved(SNSemanticTag subject, String type, SNSemanticTag object) {
-            System.out.println("tag predicateRemoved");
+            System.out.println("mario: tag predicateRemoved");
             update();
         }
 
         @Override
         public void tagChanged(SemanticTag tag) {
-            System.out.println("tag tagChanged");
+            System.out.println("mario: tag tagChanged");
             update();
         }
 
         @Override
         public void contextPointAdded(ContextPoint cp) {
-            System.out.println("tag contextPointAdded");
+            System.out.println("mario: tag contextPointAdded");
             update();
         }
 
         @Override
         public void cpChanged(ContextPoint cp) {
-            System.out.println("tag cpChanged");
+            System.out.println("mario: tag cpChanged");
             update();
         }
 
         @Override
         public void contextPointRemoved(ContextPoint cp) {
-            System.out.println("tag contextPointRemoved");
+            System.out.println("mario: tag contextPointRemoved");
         }
     };
 
