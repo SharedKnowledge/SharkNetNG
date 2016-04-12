@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
 
 import de.htw_berlin.sharkandroidstack.R;
@@ -96,25 +97,45 @@ public class CertManagerMyIdentityTab extends ScrollView {
 
         View container = this.findViewById(R.id.module_pki_cert_manager_peer_info_container);
         peerName = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_name_edit);
-
-        peerSiList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_si_list);
-        peerSiNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_new);
-        peerSiAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_button);
-
-        peerAddressList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_address_list);
-        peerAddressNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_new);
-        peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_button);
-
-        peerName.setText(PkiMainActivity.certManager.getIdentity().getName());
         peerName.addTextChangedListener(onTextChangedListener);
 
+        peerSiList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_si_list);
         ArrayAdapter<String> sisAdapter = initAdapterForSis();
         peerSiList.setAdapter(sisAdapter);
+        peerSiNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_new);
+        peerSiAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_button);
         peerSiAddButton.setOnClickListener(addSiClickListener);
 
+        peerAddressList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_address_list);
         ArrayAdapter<String> addressAdapter = initAdapterForAddresses();
         peerAddressList.setAdapter(addressAdapter);
+        peerAddressNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_new);
+        peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_button);
         peerAddressAddButton.setOnClickListener(addAddressClickListener);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        update();
+    }
+
+    public void update() {
+        if (PkiMainActivity.certManager == null) {
+            return;
+        }
+
+        PeerSemanticTag identity = PkiMainActivity.certManager.getIdentity();
+        peerName.setText(identity.getName());
+
+        ArrayAdapter addressAdapter = (ArrayAdapter) peerAddressList.getAdapter();
+        addressAdapter.addAll(identity.getAddresses());
+        addressAdapter.notifyDataSetChanged();
+
+        ArrayAdapter siAdapter = (ArrayAdapter) peerSiList.getAdapter();
+        siAdapter.addAll(identity.getSI());
+        siAdapter.notifyDataSetChanged();
     }
 
     private ArrayAdapter<String> initAdapterForSis() {
@@ -148,8 +169,7 @@ public class CertManagerMyIdentityTab extends ScrollView {
             }
         };
 
-        adapter.addAll(PkiMainActivity.certManager.getIdentity().getSI());
-        adapter.notifyDataSetChanged();
+
         return adapter;
     }
 
@@ -182,8 +202,6 @@ public class CertManagerMyIdentityTab extends ScrollView {
             }
         };
 
-        adapter.addAll(PkiMainActivity.certManager.getIdentity().getAddresses());
-        adapter.notifyDataSetChanged();
         return adapter;
     }
 

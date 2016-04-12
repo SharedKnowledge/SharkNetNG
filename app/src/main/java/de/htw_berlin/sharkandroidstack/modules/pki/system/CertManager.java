@@ -63,8 +63,6 @@ public class CertManager {
 
         store = new SharkPkiStorage(kb, identity, sharkKeyStorage.getPrivateKey());
         kp = new SharkPkiKP(engine, store, Certificate.TrustLevel.FULL, null);
-
-        engine.stopNfc();
     }
 
     public PeerSemanticTag getIdentity() {
@@ -96,6 +94,10 @@ public class CertManager {
 
     public void removeKBListener(KnowledgeBaseListener listener) {
         store.getSharkPkiStorageKB().removeListener(listener);
+    }
+
+    public void prepareReceiving() throws SharkProtocolNotSupportedException {
+        engine.stopNfc();
     }
 
     public void sendMyCertificate() throws SharkProtocolNotSupportedException, IOException, SharkKBException, SharkSecurityException {

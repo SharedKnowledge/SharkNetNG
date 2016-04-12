@@ -21,6 +21,10 @@ public class NfcMessageStub implements MessageStub {
 
     public static final String SMART_CARD_IDENTIFIER = "SHARK NFC";
 
+    public static final String EXCEPTION_NFC_NOT_SUPOORTED = "NFC is not supported by device";
+    public static final String EXCEPTION_NFC_ANDROID_TOO_OLD = "NFC implementation requires at least android KITKAT API %2$d - Device API is %1$d.";
+    public static final String EXCEPTION_NFC_NOT_ENABLED = "NFC is not enabled in system settings";
+
     private final NfcAdapter nfcAdapter;
     private final WeakReference<Activity> activity;
     private final NfcMessageReceivedHandler receivedRequestHandler;
@@ -30,8 +34,16 @@ public class NfcMessageStub implements MessageStub {
     public NfcMessageStub(Context context, WeakReference<Activity> activity) throws SharkProtocolNotSupportedException {
         this.activity = activity;
         this.nfcAdapter = NfcAdapter.getDefaultAdapter(context);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            String msg = String.format(EXCEPTION_NFC_ANDROID_TOO_OLD, Build.VERSION.SDK_INT, Build.VERSION_CODES.KITKAT);
+            throw new SharkProtocolNotSupportedException(msg);
+        }
         if (this.nfcAdapter == null) {
-            throw new SharkProtocolNotSupportedException("NFC is not supported");
+            throw new SharkProtocolNotSupportedException(EXCEPTION_NFC_NOT_SUPOORTED);
+        }
+        if (!nfcAdapter.isEnabled()) {
+            throw new SharkProtocolNotSupportedException(EXCEPTION_NFC_NOT_ENABLED);
         }
 
         receivedRequestHandler = new NfcMessageReceivedHandler(this);
