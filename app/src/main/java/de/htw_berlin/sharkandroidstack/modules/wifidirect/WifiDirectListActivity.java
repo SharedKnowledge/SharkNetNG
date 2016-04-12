@@ -15,16 +15,16 @@ import android.widget.Toast;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.system.L;
+import net.sharksystem.android.peer.AndroidSharkEngine;
+import net.sharksystem.android.protocols.wifidirect.CommunicationManager;
+import net.sharksystem.android.protocols.wifidirect.WifiDirectPeer;
+import net.sharksystem.android.protocols.wifidirect.WifiDirectPeerListener;
 
 import java.io.IOException;
 import java.util.List;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.sharkFW.peer.AndroidSharkEngine;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.CommunicationManager;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeerListener;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 

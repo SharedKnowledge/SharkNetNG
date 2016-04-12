@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import net.sharksystem.android.protocols.wifidirect.WifiDirectPeer;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.htw_berlin.sharkandroidstack.R;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
 
 /**
  * Created by micha on 17.12.15.

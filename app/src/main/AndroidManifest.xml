@@ -42,18 +42,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <service
-            android:name=".sharkFW.protocols.nfc.androidService.SmartCardEmulationService"
-            android:exported="true"
-            android:permission="android.permission.BIND_NFC_SERVICE">
-            <intent-filter>
-                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
-            </intent-filter>
-
-            <meta-data
-                android:name="android.nfc.cardemulation.host_apdu_service"
-                android:resource="@xml/apduservice"/>
-        </service>
         <!-- end of NFC -->
 
         <activity
@@ -64,7 +52,6 @@
             android:name=".modules.wifidirect.WifiDirectMainActivity"
             android:label="@string/side_nav_item_wifidirect"
             android:theme="@style/AppTheme.NoActionBar"/>
-<<<<<<< f87361af87012e2e1dac9373a780816f71ccea5f
         <activity
             android:name=".modules.wifidirect.WifiDirectListActivity"
             android:label="@string/side_nav_item_wifidirect"
@@ -72,18 +59,11 @@
         <activity
             android:name=".modules.wifidirect.WifiDirectChatActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-=======
->>>>>>> Implement WifiDirectListActivity.
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e63aa2ab8026befa38a9e9a241dc3edd525413db"/>
 
-<<<<<<< f87361af87012e2e1dac9373a780816f71ccea5f
-=======
-        <activity android:name=".modules.wifidirect.WifiDirectListActivity">
-        </activity>
->>>>>>> Implement WifiDirectListActivity.
     </application>
 
 </manifest>

@@ -3,10 +3,11 @@ package de.htw_berlin.sharkandroidstack.modules.wifidirect;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import net.sharksystem.android.protocols.wifidirect.CommunicationManager;
+import net.sharksystem.android.protocols.wifidirect.WifiDirectPeer;
+
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.CommunicationManager;
-import de.htw_berlin.sharkandroidstack.sharkFW.protocols.wifidirect.WifiDirectPeer;
 
 public class WifiDirectChatActivity extends ParentActivity {
 

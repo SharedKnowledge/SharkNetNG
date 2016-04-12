@@ -35,16 +35,16 @@ public class MySimpleKp extends KnowledgePort {
         SharkKB kb = new InMemoSharkKB();
         PeerSemanticTag me = myIdentity;
 
-        this.myInterest = new InMemoSharkKB().createInterest(null, myIdentity, null, null, null, null, SharkCS.DIRECTION_INOUT);
+//        this.myInterest = new InMemoSharkKB().createInterest(null, myIdentity, null, null, null, null, SharkCS.DIRECTION_INOUT);
     }
 
     @Override
-    protected void doInsert(Knowledge knowledge, KEPConnection kepConnection) {
+    protected void handleInsert(Knowledge knowledge, KEPConnection kepConnection) {
         log("knowledge received: (" + L.knowledge2String(knowledge) + ")");
     }
 
     @Override
-    protected void doExpose(SharkCS interest, KEPConnection kepConnection) {
+    protected void handleExpose(SharkCS interest, KEPConnection kepConnection) {
         log("interest received " + L.contextSpace2String(interest));
 
         if (isAnyInterest(interest)) {
@@ -59,12 +59,12 @@ public class MySimpleKp extends KnowledgePort {
         //TODO: if else?
         if (isPeerInterest(interest)) {
             log("Peer interest received " + L.contextSpace2String(interest));
-            log("Trying to send sync interest " + L.contextSpace2String(_kp.getInterest()));
-            try {
-                kepConnection.expose(_kp.getInterest());
-            } catch (SharkException ex) {
-                log("problems:" + ex.getMessage());
-            }
+//            log("Trying to send sync interest " + L.contextSpace2String(_kp.getInterest()));
+//            try {
+//                kepConnection.expose(_kp.getInterest());
+//            } catch (SharkException ex) {
+//                log("problems:" + ex.getMessage());
+//            }
         }
     }
 
