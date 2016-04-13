@@ -2,7 +2,6 @@ package de.htw_berlin.sharkandroidstack.android;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.wifidirect.WifiDirectListActivity;
-import de.htw_berlin.sharkandroidstack.modules.wifidirect.WifiDirectMainActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsActivity;
 

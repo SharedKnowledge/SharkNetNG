@@ -6,7 +6,6 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,7 +15,8 @@ import android.widget.Toast;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.system.L;
 import net.sharksystem.android.peer.AndroidSharkEngine;
-import net.sharksystem.android.protocols.wifidirect.CommunicationManager;
+import net.sharksystem.android.protocols.wifidirect.AndroidKP;
+import net.sharksystem.android.protocols.wifidirect.SharkWifiDirectManager;
 import net.sharksystem.android.protocols.wifidirect.WifiDirectPeer;
 import net.sharksystem.android.protocols.wifidirect.WifiDirectPeerListener;
 
@@ -37,7 +37,7 @@ public class WifiDirectListActivity
     private ListView list;
     private AndroidSharkEngine engine;
     private WifiDirectPeerAdapter peerAdapter;
-    private CommunicationManager communicationManager;
+    private SharkWifiDirectManager sharkWifiDirectManager;
     private List<WifiDirectPeer> peerList;
 
     @Override
@@ -49,9 +49,9 @@ public class WifiDirectListActivity
 
 //        checkWifiState();
 
-        this.communicationManager = CommunicationManager.getInstance();
-        this.communicationManager.setWifiDirectPeerListener(this);
-        this.communicationManager.setContext(this);
+        this.sharkWifiDirectManager = SharkWifiDirectManager.getInstance();
+        this.sharkWifiDirectManager.setWifiDirectPeerListener(this);
+        this.sharkWifiDirectManager.setContext(this);
 
         list = (ListView) findViewById(R.id.wifidirectListView);
         peerAdapter = new WifiDirectPeerAdapter(this);
@@ -59,6 +59,7 @@ public class WifiDirectListActivity
         list.setOnItemClickListener(this);
 
         engine = new AndroidSharkEngine(this);
+        AndroidKP kp = new AndroidKP(engine);
     }
 
     @Override
@@ -68,13 +69,13 @@ public class WifiDirectListActivity
         Intent intent;
         switch (id){
             case R.id.wifidirect_menu_start:
-                this.communicationManager.startStub();
+                this.sharkWifiDirectManager.startStub();
                 break;
             case R.id.wifidirect_menu_stop:
-                this.communicationManager.stopStub();
+                this.sharkWifiDirectManager.stopStub();
                 break;
             case R.id.wifidirect_menu_refresh:
-                this.communicationManager.restartStub();
+                this.sharkWifiDirectManager.restartStub();
                 break;
             case R.id.wifidirect_menu_log:
                 intent = new Intent(this, LogActivity.class);
@@ -121,7 +122,7 @@ public class WifiDirectListActivity
 
         // TODO Check if peer is still available else make toast and remove peer from list
 
-        communicationManager.setConnectedPeer(peer);
+        sharkWifiDirectManager.setConnectedPeer(peer);
 
         Intent intent = new Intent(this, WifiDirectChatActivity.class);
         startActivity(intent);
