@@ -1,9 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
-import net.sharkfw.knowledgeBase.SharkCS;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 
@@ -19,8 +17,7 @@ public class Bob extends Actor {
 
     public void initShark(AndroidSharkEngine engine) throws SharkProtocolNotSupportedException, SharkKBException {
         super.initShark(engine);
-        ContextCoordinates cc = kb.createContextCoordinates(topic, null, peer, null, null, null, SharkCS.DIRECTION_IN);
-        super.initKp(cc);
+        super.initKp();
     }
 
     public PeerSemanticTag getPeer() {

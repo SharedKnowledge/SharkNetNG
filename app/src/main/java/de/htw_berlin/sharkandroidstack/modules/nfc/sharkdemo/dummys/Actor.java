@@ -7,13 +7,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.knowledgeBase.ContextCoordinates;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SemanticTag;
 import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.peer.StandardKP;
 import net.sharkfw.system.L;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 
@@ -37,11 +35,10 @@ public class Actor {
 
     AndroidSharkEngine engine;
     SharkKB kb;
-    ContextCoordinates cc;
 
     PeerSemanticTag peer;
     SemanticTag topic;
-    StandardKP kp;
+    TestKP kp;
 
     KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
     KnowledgePortAdapterListenerImpl knowledgePortListener;
@@ -127,10 +124,9 @@ public class Actor {
         topic = InMemoSharkKB.createInMemoSemanticTag("Shark", "http://www.sharksystem.net/");
     }
 
-    public void initKp(ContextCoordinates cc) {
-        this.cc = cc;
-
-        kp = new StandardKP(engine, cc, kb);
+    public void initKp() {
+        kp = new TestKP(engine);
+        kp.setKB(kb);
         kp.addListener(knowledgePortListener);
     }
 

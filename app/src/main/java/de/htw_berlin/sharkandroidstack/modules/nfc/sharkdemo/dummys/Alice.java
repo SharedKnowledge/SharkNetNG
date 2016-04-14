@@ -5,14 +5,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import net.sharkfw.asip.ASIPInformation;
+import net.sharkfw.asip.ASIPSpace;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.knowledgeBase.ContextCoordinates;
-import net.sharkfw.knowledgeBase.ContextPoint;
+import net.sharkfw.knowledgeBase.PeerSTSet;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
-import net.sharkfw.knowledgeBase.SharkCS;
+import net.sharkfw.knowledgeBase.STSet;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
+import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharksystem.android.peer.AndroidSharkEngine;
+
+import java.util.Iterator;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
@@ -26,8 +30,10 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 public class Alice extends Actor {
 
     private EditText userInput;
-    private ContextPoint cp;
     private PeerSemanticTag remotePeer;
+
+    private ASIPSpace asipSpace;
+    private InMemoKnowledge knowledge;
 
     final View.OnClickListener sendClickListener = new View.OnClickListener() {
 
@@ -69,8 +75,16 @@ public class Alice extends Actor {
 
     public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
         super.initShark(engine);
-        ContextCoordinates cc = kb.createContextCoordinates(topic, peer, peer, null, null, null, SharkCS.DIRECTION_OUT);
-        super.initKp(cc);
+        STSet topics = InMemoSharkKB.createInMemoSTSet();
+        topics.merge(topic);
+
+        PeerSTSet peers = InMemoSharkKB.createInMemoPeerSTSet();
+        peers.merge(peer);
+
+        asipSpace = kb.createASIPSpace(topics, null, peers, peer, null, null, null, ASIPSpace.DIRECTION_OUT);
+        knowledge = new InMemoKnowledge(kb.getVocabulary());
+
+        super.initKp();
     }
 
     public void setRemotePeer(PeerSemanticTag remotePeer) {
@@ -82,10 +96,7 @@ public class Alice extends Actor {
 
     private void addInformation(String msg) {
         try {
-            cp = kb.createContextPoint(cc);
-            cp.addInformation(msg);
-            kb.addInterest(cc);
-            //TODO: Bug?! - cpChanged not called?!
+            knowledge.addInformation(msg, asipSpace);
             showToast(String.format("Added Information to Alice.\nConnect other device with Bob now.", msg));
         } catch (Exception e) {
             handleError(e);
@@ -93,18 +104,16 @@ public class Alice extends Actor {
     }
 
     private void sendInformation() {
-        if (cp == null) {
-            showToast("Cannot sent empty information. Please add something first.");
-            return;
-        }
-
         try {
-            final InMemoKnowledge k = new InMemoKnowledge();
-            k.addContextPoint(cp);
-            engine.startNfc();
-            //TODO: migrate
-            engine.sendKEPKnowledge(k, remotePeer, kp);
+            Iterator<ASIPInformation> information = knowledge.getInformation(asipSpace);
+            boolean hasOne = information.hasNext();
+            if (!hasOne) {
+                showToast("Cannot sent empty information. Please add something first.");
+                return;
+            }
 
+            engine.startNfc();
+            engine.sendASIPKnowledge(knowledge, remotePeer, kp);
         } catch (Exception e) {
             handleError(e);
         }
