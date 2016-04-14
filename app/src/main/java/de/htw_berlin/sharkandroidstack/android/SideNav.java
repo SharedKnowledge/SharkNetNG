@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.android;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.modules.wifidirect.WifiDirectListActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogActivity;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsActivity;
@@ -16,7 +17,7 @@ public class SideNav {
     };
 
     public final static Object[][] modules = new Object[][]{
-//            new Object[]{R.string.side_nav_item_nfc, NfcMainActivity.class},
+            new Object[]{R.string.side_nav_item_nfc, NfcMainActivity.class},
 //            new Object[]{R.string.side_nav_item_mariodemo, MarioDemoMainActivity.class},
             new Object[]{R.string.side_nav_item_wifidirectList, WifiDirectListActivity.class}
     };
