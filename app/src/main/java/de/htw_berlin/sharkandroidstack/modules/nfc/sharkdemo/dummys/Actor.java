@@ -2,26 +2,26 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
 import android.support.design.widget.TabLayout;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import net.sharkfw.asip.ASIPSpace;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
+import net.sharkfw.knowledgeBase.PeerSTSet;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.STSet;
 import net.sharkfw.knowledgeBase.SemanticTag;
-import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
-import net.sharkfw.system.L;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
-import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.KnowledgeBaseListenerAdapterImpl;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.KnowledgePortAdapterListenerImpl;
-import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.MyKbListAdapter;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
-import de.htw_berlin.sharkandroidstack.system_modules.settings.KnowledgeBaseManager;
 
 /**
  * Created by mn-io on 29.01.2016.
@@ -31,34 +31,39 @@ public class Actor {
     String name;
     View root;
     NfcSharkDemoFragment fragment;
-    ListView kbList;
+    ListView msgList;
 
     AndroidSharkEngine engine;
-    SharkKB kb;
 
     PeerSemanticTag peer;
-    SemanticTag topic;
     TestKP kp;
 
-    KnowledgeBaseListenerAdapterImpl knowledgeBaseListener;
-    KnowledgePortAdapterListenerImpl knowledgePortListener;
-    MyKbListAdapter kbListAdapter;
+    ASIPSpace asipSpace;
+    InMemoKnowledge knowledge;
 
-    final View.OnClickListener printKBClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            final String data = L.kb2String(kb);
-            L.l(data);
-            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", data));
-            kbListAdapter.notifyDataSetChanged();
-        }
-    };
+    KnowledgePortAdapterListenerImpl knowledgePortListener;
+
+//    final View.OnClickListener printKBClickListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            final String data = L.kb2String(kb);
+//            L.l(data);
+//            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", data));
+//            kbListAdapter.notifyDataSetChanged();
+//        }
+//    };
 
     final View.OnClickListener clearClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            kbListAdapter.clear();
-            kbListAdapter.notifyDataSetChanged();
+            ArrayAdapter<String> adapter = (ArrayAdapter) msgList.getAdapter();
+            adapter.clear();
+            try {
+                initKnowledge();
+            } catch (SharkKBException e) {
+                NfcMainActivity.handleError(v.getContext(), e);
+            }
+            adapter.notifyDataSetChanged();
         }
     };
 
@@ -96,37 +101,39 @@ public class Actor {
     public void initView(View root, Runnable updater) {
         this.root = root;
         final ImageButton printKB = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_print_kb);
-        printKB.setOnClickListener(printKBClickListener);
-        printKB.setOnLongClickListener(infoLongClickListener);
+//        printKB.setOnClickListener(printKBClickListener);
+//        printKB.setOnLongClickListener(infoLongClickListener);
 
         final ImageButton clearListButton = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_clear);
         clearListButton.setOnClickListener(clearClickListener);
         clearListButton.setOnLongClickListener(infoLongClickListener);
 
-        kbList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_kb_list);
+        msgList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_msg_list);
 
-        kbListAdapter = new MyKbListAdapter(fragment.getActivity());
-        knowledgeBaseListener = new KnowledgeBaseListenerAdapterImpl(kbListAdapter, NfcMainActivity.LOG_ID);
-        knowledgePortListener = new KnowledgePortAdapterListenerImpl(kbListAdapter, updater);
-        kbList.setAdapter(kbListAdapter);
+//        kbListAdapter = new MyKbListAdapter(fragment.getActivity());
+//        knowledgePortListener = new KnowledgePortAdapterListenerImpl(updater);
+//        msgList.setAdapter(kbListAdapter);
     }
 
     public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
         this.engine = engine;
+        peer = InMemoSharkKB.createInMemoPeerSemanticTag(name, name + "Id", "tcp://");
+    }
 
-        kb = KnowledgeBaseManager.getInMemoKb(KnowledgeBaseManager.implementationTypeSimple, false);
-        kb.addListener(knowledgeBaseListener);
+    public void initKnowledge() throws SharkKBException {
+        STSet topics = InMemoSharkKB.createInMemoSTSet();
+        SemanticTag topic = InMemoSharkKB.createInMemoSemanticTag("Shark", "http://www.sharksystem.net/");
+        topics.merge(topic);
 
-        //TODO: Address is absolutely not needed here, but framework requires something
-        peer = InMemoSharkKB.createInMemoPeerSemanticTag(name, name + "Id", "tcp://localhost:124");
-        kb.setOwner(peer);
-
-        topic = InMemoSharkKB.createInMemoSemanticTag("Shark", "http://www.sharksystem.net/");
+        PeerSTSet peers = InMemoSharkKB.createInMemoPeerSTSet();
+        peers.merge(peer);
+        InMemoSharkKB kb = new InMemoSharkKB();
+        asipSpace = kb.createASIPSpace(topics, null, peers, peer, null, null, null, ASIPSpace.DIRECTION_OUT);
+        knowledge = new InMemoKnowledge(kb.getVocabulary());
     }
 
     public void initKp() {
         kp = new TestKP(engine);
-        kp.setKB(kb);
         kp.addListener(knowledgePortListener);
     }
 

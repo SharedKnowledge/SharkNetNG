@@ -1,19 +1,17 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.sharkfw.asip.ASIPInformation;
-import net.sharkfw.asip.ASIPSpace;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
-import net.sharkfw.knowledgeBase.PeerSTSet;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
-import net.sharkfw.knowledgeBase.STSet;
 import net.sharkfw.knowledgeBase.SharkKBException;
-import net.sharkfw.knowledgeBase.inmemory.InMemoKnowledge;
-import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 
 import java.util.Iterator;
@@ -31,9 +29,6 @@ public class Alice extends Actor {
 
     private EditText userInput;
     private PeerSemanticTag remotePeer;
-
-    private ASIPSpace asipSpace;
-    private InMemoKnowledge knowledge;
 
     final View.OnClickListener sendClickListener = new View.OnClickListener() {
 
@@ -71,20 +66,26 @@ public class Alice extends Actor {
         final ImageButton userInputAdd = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_input_add);
         userInputAdd.setOnClickListener(userInputAddClickListener);
         userInputAdd.setOnLongClickListener(infoLongClickListener);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(fragment.getActivity(), R.layout.module_nfc_sharkdemo_list_entry, android.R.id.text1) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final String item = this.getItem(position);
+                final View view = super.getView(position, convertView, parent);
+
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setText(item);
+                return view;
+            }
+        };
+        msgList.setAdapter(adapter);
     }
 
     public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
         super.initShark(engine);
-        STSet topics = InMemoSharkKB.createInMemoSTSet();
-        topics.merge(topic);
+        initKnowledge();
 
-        PeerSTSet peers = InMemoSharkKB.createInMemoPeerSTSet();
-        peers.merge(peer);
-
-        asipSpace = kb.createASIPSpace(topics, null, peers, peer, null, null, null, ASIPSpace.DIRECTION_OUT);
-        knowledge = new InMemoKnowledge(kb.getVocabulary());
-
-        super.initKp();
+//        super.initKp();
     }
 
     public void setRemotePeer(PeerSemanticTag remotePeer) {
@@ -97,6 +98,10 @@ public class Alice extends Actor {
     private void addInformation(String msg) {
         try {
             knowledge.addInformation(msg, asipSpace);
+            ArrayAdapter<String> adapter = (ArrayAdapter) msgList.getAdapter();
+            adapter.add(msg);
+            adapter.notifyDataSetChanged();
+
             showToast(String.format("Added Information to Alice.\nConnect other device with Bob now.", msg));
         } catch (Exception e) {
             handleError(e);

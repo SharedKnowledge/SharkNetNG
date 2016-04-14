@@ -49,9 +49,8 @@ public class WifiDirectListActivity
 
 //        checkWifiState();
 
-        this.sharkWifiDirectManager = SharkWifiDirectManager.getInstance();
+        this.sharkWifiDirectManager = SharkWifiDirectManager.getInstance(this);
         this.sharkWifiDirectManager.setWifiDirectPeerListener(this);
-        this.sharkWifiDirectManager.setContext(this);
 
         list = (ListView) findViewById(R.id.wifidirectListView);
         peerAdapter = new WifiDirectPeerAdapter(this);

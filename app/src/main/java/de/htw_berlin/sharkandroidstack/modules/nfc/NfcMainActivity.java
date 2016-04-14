@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
+import android.content.Context;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Build;
@@ -8,6 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import net.sharksystem.android.protocols.nfc.NfcMessageStub;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
@@ -31,6 +35,7 @@ public class NfcMainActivity extends ParentActivity {
 
     static NfcAdapter nfcAdapter;
     private int lastOptionsItemId = R.id.nfc_menu_item_welcome;
+    static final String SETTINGS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ? ACTION_NFC_SETTINGS : ACTION_WIRELESS_SETTINGS;
 
     final static OnClickListener enableNfcClickListener = new OnClickListener() {
         @Override
@@ -147,5 +152,20 @@ public class NfcMainActivity extends ParentActivity {
         clearView();
         setLayoutResource(R.layout.module_nfc_activity);
         checkNfcSupport();
+    }
+
+    public static void handleError(Context context, Throwable e) {
+        if (e.getMessage().equals(NfcMessageStub.EXCEPTION_NFC_NOT_ENABLED)) {
+            Intent intent = new Intent(SETTINGS);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+            Toast.makeText(context, "Please enable NFC.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String text = "An error occurred: " + e.getMessage() + "\nCheck Log for details";
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        LogManager.addThrowable(LOG_ID, e);
+        e.printStackTrace();
     }
 }
