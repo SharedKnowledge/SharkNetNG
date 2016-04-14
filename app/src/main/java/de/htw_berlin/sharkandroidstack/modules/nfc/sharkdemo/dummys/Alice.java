@@ -20,7 +20,6 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
-import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 /**
  * Created by mn-io on 29.01.2016.
@@ -104,7 +103,7 @@ public class Alice extends Actor {
 
             showToast(String.format("Added Information to Alice.\nConnect other device with Bob now.", msg));
         } catch (Exception e) {
-            handleError(e);
+            NfcMainActivity.handleError(fragment.getActivity(), e);
         }
     }
 
@@ -120,18 +119,11 @@ public class Alice extends Actor {
             engine.startNfc();
             engine.sendASIPKnowledge(knowledge, remotePeer, kp);
         } catch (Exception e) {
-            handleError(e);
+            NfcMainActivity.handleError(fragment.getActivity(), e);
         }
     }
 
     private void showToast(String msg) {
         Toast.makeText(fragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    private void handleError(Throwable t) {
-        t.printStackTrace();
-        LogManager.addThrowable(NfcMainActivity.LOG_ID, t);
-        String msg = String.format("Error occurred: %s\nCheck Log for details.", t.getMessage());
-        showToast(msg);
     }
 }

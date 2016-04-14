@@ -43,16 +43,6 @@ public class Actor {
 
     KnowledgePortAdapterListenerImpl knowledgePortListener;
 
-//    final View.OnClickListener printKBClickListener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            final String data = L.kb2String(kb);
-//            L.l(data);
-//            kbListAdapter.add(new MyKbListAdapter.MyDataHolder("KB in use", data));
-//            kbListAdapter.notifyDataSetChanged();
-//        }
-//    };
-
     final View.OnClickListener clearClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -100,10 +90,6 @@ public class Actor {
 
     public void initView(View root, Runnable updater) {
         this.root = root;
-        final ImageButton printKB = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_print_kb);
-//        printKB.setOnClickListener(printKBClickListener);
-//        printKB.setOnLongClickListener(infoLongClickListener);
-
         final ImageButton clearListButton = (ImageButton) root.findViewById(R.id.activity_nfc_sharkdemo_clear);
         clearListButton.setOnClickListener(clearClickListener);
         clearListButton.setOnLongClickListener(infoLongClickListener);
@@ -150,6 +136,7 @@ public class Actor {
         try {
             engine.stopNfc();
         } catch (SharkProtocolNotSupportedException e) {
+            NfcMainActivity.handleError(fragment.getActivity(), e);
         }
     }
 }

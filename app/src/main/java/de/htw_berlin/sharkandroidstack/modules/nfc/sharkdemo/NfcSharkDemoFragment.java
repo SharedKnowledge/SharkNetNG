@@ -23,7 +23,6 @@ import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys.Alice;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys.Bob;
-import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
 /**
  * Created by mn-io on 22.01.16.
@@ -101,9 +100,7 @@ public class NfcSharkDemoFragment extends Fragment {
             onTabSelectedListener.onTabSelected(tabLayout.getTabAt(0));
 
         } catch (SharkKBException | SharkProtocolNotSupportedException e) {
-            e.printStackTrace();
-            Toast.makeText(getActivity(), "Exception on init: '" + e.getMessage() + "'. Check Log for details.", Toast.LENGTH_LONG).show();
-            LogManager.addThrowable(NfcMainActivity.LOG_ID, e);
+            NfcMainActivity.handleError(getActivity(), e);
         }
 
         return root;
