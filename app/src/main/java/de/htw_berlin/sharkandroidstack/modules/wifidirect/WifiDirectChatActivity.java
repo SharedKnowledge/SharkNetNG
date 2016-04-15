@@ -18,7 +18,7 @@ public class WifiDirectChatActivity extends ParentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        _sharkWifiDirectManager = SharkWifiDirectManager.getInstance();
+        _sharkWifiDirectManager = SharkWifiDirectManager.getInstance(this);
         _peer = _sharkWifiDirectManager.getConnectedPeer();
 
         setTitle(_peer.getName());
