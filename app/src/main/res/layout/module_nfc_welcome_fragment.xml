@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/activity_nfc_enable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:text="@string/activity_nfc_enable"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/activity_nfc_enable_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/activity_nfc_benchmark_button_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:text="@string/activity_nfc_benchmark"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/activity_nfc_benchmark_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TODO"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/activity_nfc_sharkdemo_button_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:text="@string/activity_nfc_sharkdemo"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/activity_nfc_sharkdemo_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TODO"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/activity_nfc_pkidemo_button_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:text="@string/activity_nfc_pkidemo"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/activity_nfc_pkidemo_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TODO"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

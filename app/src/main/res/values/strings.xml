@@ -40,15 +40,16 @@
 
     <!--   nfc -->
     <string name="menu_nfc_log">Log</string>
-    <string name="menu_nfc_welcome">back to start</string>
-    <string name="menu_nfc_benchmark">Benchmark</string>
-    <string name="menu_nfc_sharkdemo">Demo</string>
+
+    <string name="activity_nfc_benchmark">Benchmark</string>
+    <string name="activity_nfc_sharkdemo">NFC Data Demo</string>
+    <string name="activity_nfc_pkidemo">NFC PKI Demo</string>
 
     <string name="activity_nfc_click_to_start">click here to start</string>
     <string name="activity_nfc_enable">Enable NFC first</string>
     <string name="activity_nfc_no_nfc_too_old">Your Android Version is too old (Found API: %1$d). Requires at least Kitkat (API:%2$d)</string>
     <string name="activity_nfc_no_nfc_no_adapter">NFC Adapter not found</string>
-    <string name="activity_nfc_no_nfc">NFC not support: %1$s</string>
+    <string name="activity_nfc_no_nfc">NFC not supported: %1$s</string>
 
     <string name="activity_nfc_benchmark_start">start benchmark</string>
     <string name="activity_nfc_benchmark_ready">benchmark prepared</string>
