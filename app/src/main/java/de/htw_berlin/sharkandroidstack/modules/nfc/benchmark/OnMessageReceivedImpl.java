@@ -21,31 +21,31 @@ public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageR
     }
 
     @Override
-    public void onMessage(byte[] message) {
+    public void handleMessageReceived(byte[] msg) {
         startTimer();
-        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, message);
-        if (message != null) {
-            countByte += message.length;
+        MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_DATA, msg);
+        if (msg != null) {
+            countByte += msg.length;
         }
         countMsg++;
         update(dataHolder);
     }
 
     @Override
-    public void onError(Exception exception) {
+    public void handleError(Exception exception) {
         exception.printStackTrace();
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_ERROR, exception.getMessage());
         update(dataHolder);
     }
 
     @Override
-    public void tagLost() {
+    public void handleTagLost() {
         MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_IN, MyDataHolder.TYPE_LOST_TAG, "");
         update(dataHolder);
     }
 
     @Override
-    public void newTag(Tag tag) {
+    public void handleNewTag(Tag tag) {
         startTimer();
         tagCount++;
         maxMsgSize = IsoDep.get(tag).getMaxTransceiveLength();
