@@ -1,5 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -8,12 +10,25 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import junit.framework.Assert;
+
 import net.sharkfw.asip.ASIPInformation;
+import net.sharkfw.asip.ASIPInformationSpace;
+import net.sharkfw.asip.ASIPKnowledge;
+import net.sharkfw.asip.ASIPSpace;
+import net.sharkfw.asip.engine.ASIPInMessage;
+import net.sharkfw.asip.engine.ASIPOutMessage;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SharkKB;
 import net.sharkfw.knowledgeBase.SharkKBException;
+import net.sharkfw.knowledgeBase.inmemory.InMemoASIPKnowledge;
+import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
@@ -107,17 +122,20 @@ public class Alice extends Actor {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void sendInformation() {
         try {
-            Iterator<ASIPInformation> information = knowledge.getInformation(asipSpace);
-            boolean hasOne = information.hasNext();
-            if (!hasOne) {
-                showToast("Cannot sent empty information. Please add something first.");
-                return;
-            }
+//            Iterator<ASIPInformationSpace> information = knowledge.informationSpaces();
+//            boolean hasOne = information.hasNext();
+//            if (!hasOne) {
+//                showToast("Cannot sent empty information. Please add something first.");
+//                return;
+//            }
 
             engine.startNfc();
-            engine.sendASIPKnowledge(knowledge, remotePeer, kp);
+//            engine.sendASIPKnowledge(knowledge, remotePeer, null);
+            InputStream is = new ByteArrayInputStream("Hello".getBytes(StandardCharsets.UTF_8));
+            engine.sendRaw(is, remotePeer, kp);
         } catch (Exception e) {
             NfcMainActivity.handleError(fragment.getActivity(), e);
         }

@@ -65,9 +65,9 @@ public class Actor {
                 case R.id.activity_nfc_sharkdemo_clear:
                     toastMsg = R.string.activity_nfc_sharkdemo_hint_clear;
                     break;
-                case R.id.activity_nfc_sharkdemo_print_kb:
-                    toastMsg = R.string.activity_nfc_sharkdemo_hint_print_kb;
-                    break;
+//                case R.id.activity_nfc_sharkdemo_print_kb:
+//                    toastMsg = R.string.activity_nfc_sharkdemo_hint_print_kb;
+//                    break;
                 case R.id.activity_nfc_sharkdemo_input_add:
                     toastMsg = R.string.activity_nfc_sharkdemo_hint_add;
                     break;
@@ -103,6 +103,7 @@ public class Actor {
 
     public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
         this.engine = engine;
+        engine.activateASIP();
         peer = InMemoSharkKB.createInMemoPeerSemanticTag(name, name + "Id", "tcp://");
     }
 

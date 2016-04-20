@@ -2,6 +2,8 @@ package de.htw_berlin.sharkandroidstack.sharkFW.protocols.nfc;
 
 import junit.framework.TestCase;
 
+import net.sharksystem.android.protocols.nfc.NfcMessageSendHandler;
+
 /**
  * Created by mn-io on 25.01.2016.
  */
