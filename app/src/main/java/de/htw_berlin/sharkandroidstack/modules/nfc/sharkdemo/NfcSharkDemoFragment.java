@@ -1,10 +1,8 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.design.widget.TabLayout;
@@ -107,15 +105,15 @@ public class NfcSharkDemoFragment extends Fragment {
     }
 
     private void createDialogPrompt() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.activity_nfc_sharkdemo_intro_title)
-                .setMessage(R.string.activity_nfc_sharkdemo_intro_body)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
-                .create().show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(R.string.activity_nfc_sharkdemo_intro_title)
+//                .setMessage(R.string.activity_nfc_sharkdemo_intro_body)
+//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.cancel();
+//                    }
+//                })
+//                .create().show();
     }
 }

@@ -72,6 +72,9 @@ public class MyResultAdapter extends BaseAdapter {
     }
 
     public void add(MyDataHolder dataHolder) {
+        if (!dataHolder.containsAnyData()) {
+            return;
+        }
         dataHolder.setCount(data.size() + 1);
         data.add(dataHolder);
     }
@@ -215,6 +218,12 @@ public class MyResultAdapter extends BaseAdapter {
 
         public String getData() {
             return data;
+        }
+
+        public boolean containsAnyData() {
+            boolean hasNoData = this.data == null || this.data.length() == 0;
+            boolean hasNoRawData = this.rawData == null || this.rawData.length == 0;
+            return !(hasNoData && hasNoRawData);
         }
 
         @Override
