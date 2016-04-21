@@ -2,9 +2,11 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
 import android.support.design.widget.TabLayout;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import net.sharkfw.asip.ASIPSpace;
@@ -20,7 +22,6 @@ import net.sharksystem.android.peer.AndroidSharkEngine;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
-import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.KnowledgePortAdapterListenerImpl;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
 
 /**
@@ -40,8 +41,6 @@ public class Actor {
 
     ASIPSpace asipSpace;
     InMemoKnowledge knowledge;
-
-    KnowledgePortAdapterListenerImpl knowledgePortListener;
 
     final View.OnClickListener clearClickListener = new View.OnClickListener() {
         @Override
@@ -96,9 +95,18 @@ public class Actor {
 
         msgList = (ListView) root.findViewById(R.id.activity_nfc_sharkdemo_msg_list);
 
-//        kbListAdapter = new MyKbListAdapter(fragment.getActivity());
-//        knowledgePortListener = new KnowledgePortAdapterListenerImpl(updater);
-//        msgList.setAdapter(kbListAdapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(fragment.getActivity(), R.layout.module_nfc_sharkdemo_list_entry, android.R.id.text1) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                final String item = this.getItem(position);
+                final View view = super.getView(position, convertView, parent);
+
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setText(item);
+                return view;
+            }
+        };
+        msgList.setAdapter(adapter);
     }
 
     public void initShark(AndroidSharkEngine engine) throws SharkKBException, SharkProtocolNotSupportedException {
@@ -117,11 +125,6 @@ public class Actor {
         InMemoSharkKB kb = new InMemoSharkKB();
         asipSpace = kb.createASIPSpace(topics, null, peers, peer, null, null, null, ASIPSpace.DIRECTION_OUT);
         knowledge = new InMemoKnowledge(kb.getVocabulary());
-    }
-
-    public void initKp() {
-        kp = new TestKP(engine);
-        kp.addListener(knowledgePortListener);
     }
 
     public void createTab(TabLayout tabLayout) {

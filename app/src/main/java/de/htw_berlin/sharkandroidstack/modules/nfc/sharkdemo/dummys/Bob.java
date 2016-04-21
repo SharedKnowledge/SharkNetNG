@@ -1,5 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
 
+import android.widget.ArrayAdapter;
+
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
@@ -17,7 +19,16 @@ public class Bob extends Actor {
 
     public void initShark(AndroidSharkEngine engine) throws SharkProtocolNotSupportedException, SharkKBException {
         super.initShark(engine);
-        super.initKp();
+        kp = new TestKP(engine, new Runnable() {
+            @Override
+            public void run() {
+                ArrayAdapter<String> adapter = (ArrayAdapter<String>) msgList.getAdapter();
+                adapter.clear();
+                adapter.addAll(kp.getReceivedData());
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public PeerSemanticTag getPeer() {
