@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,9 +37,6 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcSharkDemoFragment extends Fragment {
 
-    public static final String TOAST_CONNECT_NOW = "Added Information to Alice.\nConnect other device with Bob now.";
-    public static final String TOAST_NOTHING_TO_SEND = "Cannot sent empty information. Please add something first.";
-    public static final String EXCEPTION_DATA_NOT_WELL_SERIALIZED = "Data was not serialized / deserialized well.\nInput was: %s\nOutput was: %s";
     public static final PeerSemanticTag peerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag("dummy", "dummySi", "tcp://localhost");
 
     AndroidSharkEngine engine;
@@ -76,7 +74,7 @@ public class NfcSharkDemoFragment extends Fragment {
 
             inputText.setText(null);
             if (sendList.getCount() == 1 && !hasShownSendNowHint) {
-                showToast(TOAST_CONNECT_NOW);
+                showToast(getString(R.string.activity_nfc_toast_connect_now));
                 hasShownSendNowHint = true;
             }
         }
@@ -91,7 +89,7 @@ public class NfcSharkDemoFragment extends Fragment {
                 final int count = adapter.getCount();
 
                 if (count == 0) {
-                    showToast(TOAST_NOTHING_TO_SEND);
+                    showToast(getString(R.string.activity_nfc_toast_nothing_to_send));
                     return;
                 }
 
@@ -103,7 +101,11 @@ public class NfcSharkDemoFragment extends Fragment {
                 final byte[] serialized = SimpleRawKp.serialize(stringArray);
                 final String[] deserialized = SimpleRawKp.deserialize(serialized);
                 if (!Arrays.equals(stringArray, deserialized)) {
-                    throw new AssertionError(String.format(EXCEPTION_DATA_NOT_WELL_SERIALIZED, Arrays.toString(stringArray), Arrays.toString(deserialized)));
+                    final String msg = String.format(
+                            getString(R.string.activity_nfc_exception_data_not_well_serialized),
+                            Arrays.toString(stringArray),
+                            Arrays.toString(deserialized));
+                    throw new AssertionError(msg);
                 }
 
                 engine.startNfc();
@@ -191,7 +193,8 @@ public class NfcSharkDemoFragment extends Fragment {
         receivedClearButton.setOnClickListener(clearClickListener);
         receivedClearButton.setOnLongClickListener(infoLongClickListener);
 
-        final NfcDemoUxHandler uxHandler = new NfcDemoUxHandler(getActivity());
+        final ProgressDialog progressDialog = createProgressDialog();
+        final NfcDemoUxHandler uxHandler = new NfcDemoUxHandler(getActivity(), progressDialog);
 
         engine = new AndroidSharkEngine(getActivity());
         engine.activateASIP();
@@ -204,6 +207,7 @@ public class NfcSharkDemoFragment extends Fragment {
         } catch (SharkProtocolNotSupportedException e) {
             NfcMainActivity.handleError(getActivity(), e);
         }
+
 
         return root;
     }
@@ -244,5 +248,15 @@ public class NfcSharkDemoFragment extends Fragment {
 
     private void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    protected ProgressDialog createProgressDialog() {
+        final ProgressDialog d = new ProgressDialog(this.getActivity());
+        d.setTitle(R.string.activity_nfc_sending_dialog);
+        d.setIndeterminate(false);
+        d.setCancelable(false);
+        d.setProgressNumberFormat("%1d/%2d bytes");
+        d.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        return d;
     }
 }

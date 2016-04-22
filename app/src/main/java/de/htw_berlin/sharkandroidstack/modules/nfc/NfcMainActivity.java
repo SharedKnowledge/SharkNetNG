@@ -25,6 +25,10 @@ import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
 public class NfcMainActivity extends ParentActivity {
 
     public final static String LOG_ID = "NFC";
+
+    public static final String TOAST_NFC_ENABLE = "Please enable NFC";
+    public static final String TOAST_ERROR_SEE_LOG = "An error occurred: %s\nCheck Log for details";
+
     public final static String SETTINGS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ? ACTION_NFC_SETTINGS : ACTION_WIRELESS_SETTINGS;
 
     private boolean hasMainFragment;
@@ -81,11 +85,11 @@ public class NfcMainActivity extends ParentActivity {
             Intent intent = new Intent(SETTINGS);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-            Toast.makeText(context, "Please enable NFC.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, TOAST_NFC_ENABLE, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String text = "An error occurred: " + e.getMessage() + "\nCheck Log for details";
+        String text = String.format(TOAST_ERROR_SEE_LOG, e.getMessage());
         Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
         LogManager.addThrowable(LOG_ID, e);
         e.printStackTrace();
