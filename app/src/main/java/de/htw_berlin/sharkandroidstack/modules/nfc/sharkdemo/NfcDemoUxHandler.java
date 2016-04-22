@@ -2,6 +2,7 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 
 import android.app.Activity;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 
 import net.sharksystem.android.protocols.nfc.NfcUXHandler;
@@ -19,8 +20,10 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     public final static int VIBRATION_DURATION_SHORT = 250;
 
     private final Runnable vibrateShort;
-    private WeakReference<Activity> activity;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final WeakReference<Activity> activity;
+
+    private boolean hasVibratedForReceiving = false;
 
     public NfcDemoUxHandler(Activity activity) {
         this.activity = new WeakReference<>(activity);
@@ -54,14 +57,15 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     @Override
     public void receiving(int currentDataLength, int newTotalDataLength) {
         super.receiving(currentDataLength, newTotalDataLength);
+        if (newTotalDataLength > 0 && currentDataLength == 0 && !hasVibratedForReceiving) {
+            hasVibratedForReceiving = true;
+            handler.post(vibrateShort);
+            handler.postDelayed(vibrateShort, VIBRATION_DURATION_SHORT + 100);
+        }
     }
 
     @Override
     public void sending(int currentDataLength, int leftDataLength) {
-        if (leftDataLength == 0) {
-            handler.post(vibrateShort);
-            handler.postDelayed(vibrateShort, VIBRATION_DURATION_SHORT + 100);
-        }
         super.sending(currentDataLength, leftDataLength);
     }
 
@@ -73,6 +77,7 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     @Override
     public void tagGoneOnReceiver() {
         super.tagGoneOnReceiver();
+        hasVibratedForReceiving = false;
     }
 
     @Override
