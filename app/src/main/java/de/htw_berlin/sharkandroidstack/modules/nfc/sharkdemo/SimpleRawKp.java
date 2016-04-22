@@ -1,5 +1,7 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.dummys;
+package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Base64;
 
@@ -16,19 +18,24 @@ import net.sharkfw.peer.SharkEngine;
 import net.sharkfw.system.L;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 /**
- * Created by msc on 21.03.16.
+ * Created by mn-io on 21.04.16.
  */
-public class TestKP extends KnowledgePort {
+@TargetApi(Build.VERSION_CODES.KITKAT)
+public class SimpleRawKp extends KnowledgePort {
 
     private final Runnable updater;
     private String[] receivedData;
 
-    public TestKP(SharkEngine se, Runnable updater) {
+    public SimpleRawKp(SharkEngine se, Runnable updater) {
         super(se);
         this.updater = updater;
     }
@@ -51,15 +58,16 @@ public class TestKP extends KnowledgePort {
 
     @Override
     protected void handleRaw(InputStream is, ASIPConnection asipConnection) {
+        System.out.println("mario: raw0");
         ASIPInMessage inMessage = (ASIPInMessage) asipConnection;
         InputStream is2 = inMessage.getRaw();
         try {
             byte[] buffer = new byte[is2.available()];
             int result = is2.read(buffer);
             receivedData = deserialize(buffer);
-//            String rawContent = new String(buffer);
-//            System.out.println("mario: raw " + rawContent + " | " + result);
-//            System.out.println("mario: back " + Arrays.toString(deserialize));
+            String rawContent = new String(buffer);
+            System.out.println("mario: raw " + rawContent + " | " + result);
+            System.out.println("mario: back " + Arrays.toString(receivedData));
         } catch (Exception e) {
             L.d(e.getMessage());
             e.printStackTrace();
@@ -82,6 +90,19 @@ public class TestKP extends KnowledgePort {
         }
 
         return stringArray;
+    }
+
+    public static byte[] serialize(String[] stringArray) throws IOException {
+        final byte[][] bytes = new byte[stringArray.length][];
+        for (int i = 0; i < stringArray.length; i++) {
+            bytes[i] = stringArray[i].getBytes(StandardCharsets.UTF_8);
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        new ObjectOutputStream(out).writeObject(bytes);
+        byte[] byteArray = out.toByteArray();
+
+        return Base64.encode(byteArray, Base64.NO_WRAP);
     }
 
     public String[] getReceivedData() {

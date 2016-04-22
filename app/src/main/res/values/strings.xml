@@ -61,7 +61,7 @@
     <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
 
     <string name="activity_nfc_sharkdemo_start">Switch Identity / Toggle send-receive</string>
-    <string name="activity_nfc_sharkdemo_input_hint">Add information to KB</string>
+    <string name="activity_nfc_sharkdemo_input_hint">Add information</string>
     <string name="activity_nfc_sharkdemo_hint_add">Creates contextpoint if needed and adds information to Alice\'s knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current knowledgebase</string>
     <string name="activity_nfc_sharkdemo_hint_clear">Clears output list</string>
