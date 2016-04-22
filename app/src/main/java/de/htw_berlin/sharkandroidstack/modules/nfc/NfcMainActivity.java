@@ -1,13 +1,11 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -26,11 +24,9 @@ import static android.provider.Settings.ACTION_WIRELESS_SETTINGS;
  */
 public class NfcMainActivity extends ParentActivity {
 
-    public final static int VIBRATION_DURATION = 500;
     public final static String LOG_ID = "NFC";
     public final static String SETTINGS = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN ? ACTION_NFC_SETTINGS : ACTION_WIRELESS_SETTINGS;
 
-    public static Runnable vibrate;
     private boolean hasMainFragment;
     private NfcWelcomeFragment mainFragment;
 
@@ -43,15 +39,6 @@ public class NfcMainActivity extends ParentActivity {
 
         mainFragment = new NfcWelcomeFragment();
         changeFragment(mainFragment);
-
-        final Vibrator vibrator = ((Vibrator) getApplicationContext().getSystemService(Activity.VIBRATOR_SERVICE));
-        this.vibrate = new Runnable() {
-
-            @Override
-            public void run() {
-                vibrator.vibrate(VIBRATION_DURATION);
-            }
-        };
     }
 
     @Override

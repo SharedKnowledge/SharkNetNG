@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 /**
  * Created by mn-io on 21.04.16.
@@ -34,6 +33,7 @@ public class SimpleRawKp extends KnowledgePort {
 
     private final Runnable updater;
     private String[] receivedData;
+    private Handler handler = new Handler();
 
     public SimpleRawKp(SharkEngine se, Runnable updater) {
         super(se);
@@ -58,22 +58,18 @@ public class SimpleRawKp extends KnowledgePort {
 
     @Override
     protected void handleRaw(InputStream is, ASIPConnection asipConnection) {
-        System.out.println("mario: raw0");
         ASIPInMessage inMessage = (ASIPInMessage) asipConnection;
         InputStream is2 = inMessage.getRaw();
         try {
             byte[] buffer = new byte[is2.available()];
-            int result = is2.read(buffer);
+            is2.read(buffer);
             receivedData = deserialize(buffer);
-            String rawContent = new String(buffer);
-            System.out.println("mario: raw " + rawContent + " | " + result);
-            System.out.println("mario: back " + Arrays.toString(receivedData));
         } catch (Exception e) {
             L.d(e.getMessage());
             e.printStackTrace();
         }
 
-        new Handler().post(updater);
+        handler.post(updater);
 
         super.handleRaw(is, asipConnection);
     }

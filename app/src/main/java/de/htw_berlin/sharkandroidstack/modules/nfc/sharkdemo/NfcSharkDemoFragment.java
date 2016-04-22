@@ -21,6 +21,7 @@ import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
 import net.sharksystem.android.peer.AndroidSharkEngine;
+import net.sharksystem.android.protocols.nfc.NfcMessageStub;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -190,12 +191,16 @@ public class NfcSharkDemoFragment extends Fragment {
         receivedClearButton.setOnClickListener(clearClickListener);
         receivedClearButton.setOnLongClickListener(infoLongClickListener);
 
+        final NfcDemoUxHandler uxHandler = new NfcDemoUxHandler(getActivity());
+
         engine = new AndroidSharkEngine(getActivity());
         engine.activateASIP();
         kp = new SimpleRawKp(engine, kpUpdater);
 
         try {
             engine.stopNfc();
+            final NfcMessageStub protocolStub = (NfcMessageStub) engine.getProtocolStub(0);
+            protocolStub.setUxHandler(uxHandler);
         } catch (SharkProtocolNotSupportedException e) {
             NfcMainActivity.handleError(getActivity(), e);
         }
