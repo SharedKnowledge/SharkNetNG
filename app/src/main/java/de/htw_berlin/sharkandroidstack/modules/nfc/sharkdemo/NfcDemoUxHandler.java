@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
 
-import net.sharksystem.android.protocols.nfc.NfcUXHandler;
+import net.sharksystem.android.protocols.nfc.ux.TdmaNfcUxHandler;
 
 import java.lang.ref.WeakReference;
 
@@ -15,7 +15,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 /**
  * Created by m on 4/22/16.
  */
-public class NfcDemoUxHandler extends NfcUXHandler {
+public class NfcDemoUxHandler extends TdmaNfcUxHandler {
 
     public final static int VIBRATION_DURATION_SHORT = 250;
 
@@ -26,11 +26,10 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     public static final String DIALOG_IN_PROGRESS = "Sending in progress... Touch to abort.";
 
     final Runnable vibrateShort;
+    final WeakReference<NfcSharkDemoFragment> fragment;
     final Handler handler = new Handler(Looper.getMainLooper());
 
     int totalDataLength;
-    final WeakReference<NfcSharkDemoFragment> fragment;
-
     boolean hasVibratedForReceiving = false;
     boolean isShowingDoneMessage = false;
 
@@ -72,13 +71,6 @@ public class NfcDemoUxHandler extends NfcUXHandler {
         };
     }
 
-    @Override
-    public void preparedSending(final int totalDataLength) {
-        this.totalDataLength = totalDataLength;
-        this.hasVibratedForReceiving = false;
-        super.preparedSending(totalDataLength);
-    }
-
     public void showProgressDialog() {
         final Runnable prepareSendingProgressUpdate = new Runnable() {
             @Override
@@ -92,6 +84,13 @@ public class NfcDemoUxHandler extends NfcUXHandler {
         };
         isShowingDoneMessage = false;
         fragment.get().getActivity().runOnUiThread(prepareSendingProgressUpdate);
+    }
+
+    @Override
+    public void preparedSending(final int totalDataLength) {
+        this.totalDataLength = totalDataLength;
+        this.hasVibratedForReceiving = false;
+        super.preparedSending(totalDataLength);
     }
 
     @Override
