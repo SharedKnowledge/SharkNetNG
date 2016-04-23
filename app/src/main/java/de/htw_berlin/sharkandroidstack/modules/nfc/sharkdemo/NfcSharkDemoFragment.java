@@ -103,7 +103,8 @@ public class NfcSharkDemoFragment extends Fragment {
                     return;
                 }
 
-                engine.startNfc();
+//                engine.startNfc();
+                uxHandler.startReaderModeNegotiation();
                 uxHandler.showProgressDialog();
             } catch (Exception e) {
                 NfcMainActivity.handleError(getActivity(), e);
@@ -163,6 +164,7 @@ public class NfcSharkDemoFragment extends Fragment {
         @Override
         public void onCancel(DialogInterface dialog) {
             try {
+                uxHandler.stopNegotiation();
                 engine.stopNfc();
             } catch (SharkProtocolNotSupportedException e) {
                 NfcMainActivity.handleError(getActivity(), e);
