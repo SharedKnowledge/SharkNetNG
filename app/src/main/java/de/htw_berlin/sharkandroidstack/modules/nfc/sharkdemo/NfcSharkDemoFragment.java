@@ -20,11 +20,14 @@ import android.widget.Toast;
 
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
+import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.knowledgeBase.inmemory.InMemoSharkKB;
+import net.sharkfw.system.SharkSecurityException;
 import net.sharksystem.android.peer.AndroidSharkEngine;
 import net.sharksystem.android.protocols.nfc.NfcMessageStub;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 
@@ -47,7 +50,6 @@ public class NfcSharkDemoFragment extends Fragment {
     ListView sendList;
     ListView receivedList;
     NfcDemoUxHandler uxHandler;
-    //    Handler handler = new Handler();
     ProgressDialog progressDialog;
 
     boolean hasShownSendNowHint = false;
@@ -81,6 +83,12 @@ public class NfcSharkDemoFragment extends Fragment {
                 showToast(getString(R.string.activity_nfc_toast_connect_now));
                 hasShownSendNowHint = true;
             }
+
+            try {
+                prepareSending();
+            } catch (Exception e) {
+                NfcMainActivity.handleError(getActivity(), e);
+            }
         }
     };
 
@@ -89,33 +97,14 @@ public class NfcSharkDemoFragment extends Fragment {
         @Override
         public void onClick(View v) {
             try {
-                final ArrayAdapter<String> adapter = (ArrayAdapter) sendList.getAdapter();
-                final int count = adapter.getCount();
-
+                final int count = sendList.getCount();
                 if (count == 0) {
                     showToast(getString(R.string.activity_nfc_toast_nothing_to_send));
                     return;
                 }
 
-                final String[] stringArray = new String[count];
-                for (int i = 0; i < count; i++) {
-                    stringArray[i] = adapter.getItem(i);
-                }
-
-                final byte[] serialized = SimpleRawKp.serialize(stringArray);
-                final String[] deserialized = SimpleRawKp.deserialize(serialized);
-                if (!Arrays.equals(stringArray, deserialized)) {
-                    final String msg = String.format(
-                            getString(R.string.activity_nfc_exception_data_not_well_serialized),
-                            Arrays.toString(stringArray),
-                            Arrays.toString(deserialized));
-                    throw new AssertionError(msg);
-                }
-
                 engine.startNfc();
-                final InputStream is = new ByteArrayInputStream(serialized);
-                engine.sendRaw(is, peerSemanticTag, null);
-                uxHandler.preparedSendingOnClick();
+                uxHandler.showProgressDialog();
             } catch (Exception e) {
                 NfcMainActivity.handleError(getActivity(), e);
             }
@@ -243,6 +232,29 @@ public class NfcSharkDemoFragment extends Fragment {
                 return view;
             }
         };
+    }
+
+    void prepareSending() throws IOException, ClassNotFoundException, SharkSecurityException, SharkKBException {
+        final ArrayAdapter<String> adapter = (ArrayAdapter) sendList.getAdapter();
+        final int count = adapter.getCount();
+
+        final String[] stringArray = new String[count];
+        for (int i = 0; i < count; i++) {
+            stringArray[i] = adapter.getItem(i);
+        }
+
+        final byte[] serialized = SimpleRawKp.serialize(stringArray);
+        final String[] deserialized = SimpleRawKp.deserialize(serialized);
+        if (!Arrays.equals(stringArray, deserialized)) {
+            final String msg = String.format(
+                    getString(R.string.activity_nfc_exception_data_not_well_serialized),
+                    Arrays.toString(stringArray),
+                    Arrays.toString(deserialized));
+            throw new AssertionError(msg);
+        }
+
+        final InputStream is = new ByteArrayInputStream(serialized);
+        engine.sendRaw(is, peerSemanticTag, null);
     }
 
     void createDialogPrompt() {

@@ -23,7 +23,7 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     public static final String DIALOG_TAG_GONE = "Tag is gone. Touch to dismiss.";
     public static final String DIALOG_DONE = "Done. Touch to dismiss.";
     public static final String DIALOG_INTERRUPTED = "Sending was interrupted. Touch to dismiss.";
-    public static final String DIALOG_IN_PROGRESS = "Sending in progress...";
+    public static final String DIALOG_IN_PROGRESS = "Sending in progress... Touch to abort.";
 
     final Runnable vibrateShort;
     final Handler handler = new Handler(Looper.getMainLooper());
@@ -75,10 +75,11 @@ public class NfcDemoUxHandler extends NfcUXHandler {
     @Override
     public void preparedSending(final int totalDataLength) {
         this.totalDataLength = totalDataLength;
+        this.hasVibratedForReceiving = false;
         super.preparedSending(totalDataLength);
     }
 
-    public void preparedSendingOnClick() {
+    public void showProgressDialog() {
         final Runnable prepareSendingProgressUpdate = new Runnable() {
             @Override
             public void run() {
@@ -131,13 +132,14 @@ public class NfcDemoUxHandler extends NfcUXHandler {
         if (isShowingDoneMessage) {
             return;
         }
+        hasVibratedForReceiving = false;
         isShowingDoneMessage = true;
         fragment.get().getActivity().runOnUiThread(sendingTagGoneUpdateProgress);
     }
 
     @Override
-    public void sendingNotDoneCompletely() {
-        super.sendingNotDoneCompletely();
+    public void sendingNotDoneCompletely(byte[] byteBuffer) {
+        super.sendingNotDoneCompletely(byteBuffer);
         if (isShowingDoneMessage) {
             return;
         }
@@ -157,13 +159,14 @@ public class NfcDemoUxHandler extends NfcUXHandler {
 
     @Override
     public void handleErrorOnReceiving(Exception exception) {
+        this.hasVibratedForReceiving = false;
         NfcMainActivity.handleError(fragment.get().getActivity(), exception);
         super.handleErrorOnReceiving(exception);
     }
 
     @Override
     public void tagGoneOnReceiver() {
+        this.hasVibratedForReceiving = false;
         super.tagGoneOnReceiver();
-        hasVibratedForReceiving = false;
     }
 }
