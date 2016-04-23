@@ -98,7 +98,8 @@ public class SimpleRawKp extends KnowledgePort {
         new ObjectOutputStream(out).writeObject(bytes);
         byte[] byteArray = out.toByteArray();
 
-        return Base64.encode(byteArray, Base64.NO_WRAP);
+        byte[] asBytes = Base64.encode(byteArray, Base64.NO_WRAP);
+        return asBytes;
     }
 
     public String[] getReceivedData() {

@@ -38,6 +38,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 public class NfcSharkDemoFragment extends Fragment {
 
     public static final PeerSemanticTag peerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag("dummy", "dummySi", "tcp://localhost");
+    public static final String DIALOG_PROGRESS_FORMAT = "%1d/%2d bytes";
 
     AndroidSharkEngine engine;
     SimpleRawKp kp;
@@ -45,6 +46,9 @@ public class NfcSharkDemoFragment extends Fragment {
     EditText inputText;
     ListView sendList;
     ListView receivedList;
+    NfcDemoUxHandler uxHandler;
+    //    Handler handler = new Handler();
+    ProgressDialog progressDialog;
 
     boolean hasShownSendNowHint = false;
 
@@ -111,6 +115,7 @@ public class NfcSharkDemoFragment extends Fragment {
                 engine.startNfc();
                 final InputStream is = new ByteArrayInputStream(serialized);
                 engine.sendRaw(is, peerSemanticTag, null);
+                uxHandler.preparedSendingOnClick();
             } catch (Exception e) {
                 NfcMainActivity.handleError(getActivity(), e);
             }
@@ -165,6 +170,17 @@ public class NfcSharkDemoFragment extends Fragment {
         }
     };
 
+    final DialogInterface.OnCancelListener onProgressDialogCancelListener = new DialogInterface.OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            try {
+                engine.stopNfc();
+            } catch (SharkProtocolNotSupportedException e) {
+                NfcMainActivity.handleError(getActivity(), e);
+            }
+        }
+    };
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
 
@@ -193,8 +209,7 @@ public class NfcSharkDemoFragment extends Fragment {
         receivedClearButton.setOnClickListener(clearClickListener);
         receivedClearButton.setOnLongClickListener(infoLongClickListener);
 
-        final ProgressDialog progressDialog = createProgressDialog();
-        final NfcDemoUxHandler uxHandler = new NfcDemoUxHandler(getActivity(), progressDialog);
+        uxHandler = new NfcDemoUxHandler(this);
 
         engine = new AndroidSharkEngine(getActivity());
         engine.activateASIP();
@@ -212,7 +227,7 @@ public class NfcSharkDemoFragment extends Fragment {
         return root;
     }
 
-    private ArrayAdapter<String> prepareAdapter() {
+    ArrayAdapter<String> prepareAdapter() {
         final Activity a = getActivity();
         final int l = R.layout.module_nfc_sharkdemo_list_entry;
         final int t = android.R.id.text1;
@@ -230,7 +245,7 @@ public class NfcSharkDemoFragment extends Fragment {
         };
     }
 
-    private void createDialogPrompt() {
+    void createDialogPrompt() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         final DialogInterface.OnClickListener closeDialogListener = new DialogInterface.OnClickListener() {
             @Override
@@ -246,17 +261,23 @@ public class NfcSharkDemoFragment extends Fragment {
                 .show();
     }
 
-    private void showToast(String msg) {
+    void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
-    protected ProgressDialog createProgressDialog() {
-        final ProgressDialog d = new ProgressDialog(this.getActivity());
-        d.setTitle(R.string.activity_nfc_sending_dialog);
-        d.setIndeterminate(false);
-        d.setCancelable(false);
-        d.setProgressNumberFormat("%1d/%2d bytes");
-        d.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        return d;
+    ProgressDialog getProgressDialogInstance() {
+        if (progressDialog == null) {
+            final ProgressDialog d = new ProgressDialog(this.getActivity());
+            d.setTitle(R.string.activity_nfc_sending_dialog);
+            d.setIndeterminate(false);
+            d.setCancelable(true);
+            d.setProgress(0);
+            d.setProgressNumberFormat(DIALOG_PROGRESS_FORMAT);
+            d.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            d.setOnCancelListener(onProgressDialogCancelListener);
+            progressDialog = d;
+        }
+
+        return progressDialog;
     }
 }
