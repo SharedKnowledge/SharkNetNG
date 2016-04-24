@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo.CertManagerListTab xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone">
+
+    <ListView
+        android:id="@+id/module_pki_cert_mananager_cert_list"
+        android:layout_below="@+id/module_pki_cert_mananager_share_cert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo.CertManagerListTab>

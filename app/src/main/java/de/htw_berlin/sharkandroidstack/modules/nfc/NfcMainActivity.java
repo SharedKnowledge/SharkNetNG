@@ -40,7 +40,6 @@ public class NfcMainActivity extends ParentActivity {
         LogManager.registerLog(LOG_ID, "NFC");
         setOptionsMenu(R.menu.module_nfc_menu);
 
-
         mainFragment = new NfcWelcomeFragment();
         changeFragment(mainFragment);
     }

@@ -74,6 +74,12 @@
     <string name="activity_nfc_toast_connect_now">Prepare sending by pressing the arrow button.</string>
     <string name="activity_nfc_exception_data_not_well_serialized">Data was not serialized / deserialized well.\nInput was: %1$s\nOutput was: %2$s</string>
 
+    <string name="pki_menu_item_show_log">Show Log</string>
+    <string name="pki_menu_item_create_cert">Create new cert.</string>
+    <string name="pki_menu_item_certs_share">Share certs.</string>
+    <string name="fragment_pki_cert_manager_peer_si_add_hint">Add Subject Identifier</string>
+    <string name="fragment_pki_cert_manager_peer_address_add_hint">Add Address</string>
+
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
 

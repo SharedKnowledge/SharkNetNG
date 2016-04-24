@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.NfcBenchmarkFragment;
+import de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo.PkiDemoFragment;
 import de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo.NfcSharkDemoFragment;
 import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 
@@ -44,15 +45,15 @@ public class NfcWelcomeFragment extends Fragment {
         @Override
         public void onClick(View v) {
 
+            final NfcMainActivity activity = (NfcMainActivity) NfcWelcomeFragment.this.getActivity();
             switch (v.getId()) {
                 case R.id.activity_nfc_benchmark_button_start:
-                    ((NfcMainActivity) NfcWelcomeFragment.this.getActivity()).changeFragment(new NfcBenchmarkFragment());
+                    activity.changeFragment(new NfcBenchmarkFragment());
                     break;
                 case R.id.activity_nfc_sharkdemo_button_start:
-                    ((NfcMainActivity) NfcWelcomeFragment.this.getActivity()).changeFragment(new NfcSharkDemoFragment());
+                    activity.changeFragment(new NfcSharkDemoFragment());
                 case R.id.activity_nfc_pkidemo_button_start:
-//                    clearView();
-//                    setFragment(new NfcSharkDemoFragment());
+                    activity.changeFragment(new PkiDemoFragment());
             }
         }
     };
