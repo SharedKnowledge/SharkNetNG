@@ -89,7 +89,18 @@
                 android:src="@android:drawable/ic_menu_add" />
 
         </LinearLayout>
-    </LinearLayout>
 
+        <include
+            android:id="@+id/module_pki_cert_list_entry"
+            layout="@layout/module_pki_cert_list_entry" />
+
+        <Button
+            android:id="@+id/module_pki_cert_manager_create_cert_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
+            android:text="@string/fragment_pki_cert_manager_create_cert" />
+
+    </LinearLayout>
 
 </de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo.CertManagerMyIdentityTab>

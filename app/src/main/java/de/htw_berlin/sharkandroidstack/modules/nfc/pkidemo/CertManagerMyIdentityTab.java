@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -34,6 +35,8 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
     ListView peerAddressList;
     EditText peerAddressNew;
     ImageButton peerAddressAddButton;
+
+    View myCertView;
 
     CertManager certManager;
 
@@ -90,6 +93,19 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
         }
     };
 
+    final OnClickListener createCertClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+                certManager.createOrOverwriteSelfSignedCertificate();
+                certManager.fillCertView(myCertView);
+            } catch (SharkKBException e) {
+                NfcMainActivity.handleError(getContext(), e);
+            }
+        }
+    };
+
     public CertManagerMyIdentityTab(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -115,6 +131,11 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
         peerAddressNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_new);
         peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_button);
         peerAddressAddButton.setOnClickListener(addAddressClickListener);
+
+        final View createCertButton = container.findViewById(R.id.module_pki_cert_manager_create_cert_button);
+        createCertButton.setOnClickListener(createCertClickListener);
+
+        myCertView = container.findViewById(R.id.module_pki_cert_list_entry);
     }
 
     @Override
@@ -135,6 +156,8 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
         ArrayAdapter siAdapter = (ArrayAdapter) peerSiList.getAdapter();
         siAdapter.addAll(identity.getSI());
         siAdapter.notifyDataSetChanged();
+
+        certManager.fillCertView(myCertView);
     }
 
     private ArrayAdapter<String> initAdapterForSis() {
@@ -202,11 +225,6 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
         };
 
         return adapter;
-    }
-
-    @Override
-    public void setVisibility(int visibility) {
-        super.setVisibility(visibility);
     }
 
     @Override

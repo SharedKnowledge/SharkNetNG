@@ -81,9 +81,6 @@ public class PkiDemoFragment extends Fragment {
         }
     }
 
-//    case R.id.pki_menu_item_create_cert:
-//      SharkCertificate certificate = PkiMainActivity.certManager.createSelfSignedCertificate();
-//      text = "Cert created with fingerprint: " + Arrays.toString(certificate.getFingerprint());
 
 //    case R.id.pki_menu_item_share_certs:
 //      PkiMainActivity.certManager.sendMyCertificate();
