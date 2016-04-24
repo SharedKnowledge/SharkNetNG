@@ -219,10 +219,19 @@ public class NfcSharkDemoFragment extends Fragment {
 
     ArrayAdapter<String> prepareAdapter() {
         final Activity a = getActivity();
-        final int l = R.layout.module_nfc_sharkdemo_list_entry;
+        final int l = R.layout.simple_list_item_with_delete;
         final int t = android.R.id.text1;
 
         return new ArrayAdapter<String>(a, l, t) {
+            final View.OnClickListener deleteItemClickListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = (String) v.getTag();
+                    remove(text);
+                    notifyDataSetChanged();
+                }
+            };
+
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 final String item = this.getItem(position);
@@ -230,6 +239,10 @@ public class NfcSharkDemoFragment extends Fragment {
 
                 final TextView textView = (TextView) view.findViewById(android.R.id.text1);
                 textView.setText(item);
+
+                View deleteButton = view.findViewById(R.id.delete_item_button);
+                deleteButton.setTag(item);
+                deleteButton.setOnClickListener(deleteItemClickListener);
                 return view;
             }
         };
