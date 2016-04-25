@@ -9,7 +9,7 @@ import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 public class OnMessageSendImpl extends OnAdapterUpdate implements OnMessageSend {
 

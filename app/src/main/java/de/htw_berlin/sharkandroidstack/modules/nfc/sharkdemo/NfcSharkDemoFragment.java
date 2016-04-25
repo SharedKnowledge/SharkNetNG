@@ -36,7 +36,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
 import de.htw_berlin.sharkandroidstack.modules.nfc.UxFragment;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class NfcSharkDemoFragment extends UxFragment {

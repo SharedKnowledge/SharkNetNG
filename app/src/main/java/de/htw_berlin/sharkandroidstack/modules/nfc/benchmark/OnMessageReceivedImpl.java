@@ -9,7 +9,7 @@ import net.sharksystem.android.protocols.nfc.OnMessageReceived;
 import de.htw_berlin.sharkandroidstack.modules.nfc.benchmark.MyResultAdapter.MyDataHolder;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 public class OnMessageReceivedImpl extends OnAdapterUpdate implements OnMessageReceived {
 

@@ -11,7 +11,7 @@ import net.sharksystem.android.protocols.nfc.ux.TdmaNfcUxHandler;
 import java.lang.ref.WeakReference;
 
 /**
- * Created by m on 4/22/16.
+ * Created by Mario Neises (mn-io) on 22.04.16
  */
 public class ProgressAndVibrateUxHandler extends TdmaNfcUxHandler {
 

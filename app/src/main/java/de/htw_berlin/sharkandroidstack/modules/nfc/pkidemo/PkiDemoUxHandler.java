@@ -8,7 +8,7 @@ import de.htw_berlin.sharkandroidstack.modules.nfc.ProgressAndVibrateUxHandler;
 import de.htw_berlin.sharkandroidstack.modules.nfc.UxFragment;
 
 /**
- * Created by m on 4/25/16.
+ * Created by Mario Neises (mn-io) on 25.04.16
  */
 public class PkiDemoUxHandler extends ProgressAndVibrateUxHandler {
     private final Handler handler = new Handler();

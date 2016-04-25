@@ -43,11 +43,23 @@ import static android.view.View.OnClickListener;
 import static android.view.View.VISIBLE;
 
 /**
- * Created by m on 4/24/16.
+ * Created by Mario Neises (mn-io) on 24.04.16
  */
 public class CertManager {
 
+    public static final String ERROR_NEGATIVE_NUMBER = "Has to be a positive number";
+    public static final String EXCEPTION_ON_SAVING = "Could not save keys";
+
+    public static final String PRINT_ISSUER_ME = "(me) Issuer Name: %s";
+    public static final String PRINT_ISSUER = "Issuer Name: %s";
+    public static final String PRINT_NAME = "   Name: ";
+    public static final String PRINT_SIS = "   SIs: ";
+    public static final String PRINT_ADDRESSES = "   Addresses: ";
+    public static final String PRINT_NL = "\n";
+    public static final String PRINT_NA_ERROR = "N/A, error: ";
+
     public static final String FILE_NAME_KEY_STORE = "sharkKeyStorage";
+
     private final PeerSemanticTag identity;
     private SharkKeyStorage sharkKeyStorage;
 
@@ -185,7 +197,7 @@ public class CertManager {
 
     static Date getDate(int yearsInFuture) throws IllegalArgumentException {
         if (yearsInFuture <= 0) {
-            throw new IllegalArgumentException("Has to be a positive number");
+            throw new IllegalArgumentException(ERROR_NEGATIVE_NUMBER);
         }
 
         Calendar cal = Calendar.getInstance();
@@ -213,7 +225,7 @@ public class CertManager {
         String filePath = getStorageFilePath(context, fileName);
         final boolean save = new FSSharkKeyStorage(filePath).save(sharkKeyStorage);
         if (!save) {
-            throw new IOException("Could not save keys");
+            throw new IOException(EXCEPTION_ON_SAVING);
         }
     }
 
@@ -240,10 +252,10 @@ public class CertManager {
         boolean hasSamePublicKey = cert.getSubjectPublicKey().toString().equals(sharkKeyStorage.getPublicKey().toString());
         if (hasSamePublicKey) {
             header.setTextColor(view.getResources().getColor(android.R.color.holo_blue_dark));
-            header.setText(String.format("(me) Issuer Name: %s", cert.getIssuer().getName()));
+            header.setText(String.format(PRINT_ISSUER_ME, cert.getIssuer().getName()));
         } else {
             header.setTextColor(view.getResources().getColor(android.R.color.black));
-            header.setText(String.format("Issuer Name: %s", cert.getIssuer().getName()));
+            header.setText(String.format(PRINT_ISSUER, cert.getIssuer().getName()));
         }
 
         final View content = view.findViewById(R.id.module_pki_cert_list_entry_content);
@@ -269,7 +281,7 @@ public class CertManager {
         try {
             itemFingerprint = Arrays.toString(cert.getFingerprint());
         } catch (SharkException e) {
-            itemFingerprint = "N/A, error: " + e.toString();
+            itemFingerprint = PRINT_NA_ERROR + e.toString();
         }
         fingerprint.setText(itemFingerprint);
 
@@ -285,15 +297,15 @@ public class CertManager {
     private String peerSemanticTagAsString(PeerSemanticTag tag) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("   Name: ").append(tag.getName()).append("\n");
+        builder.append(PRINT_NAME).append(tag.getName()).append(PRINT_NL);
 
         String sis = Arrays.toString(tag.getSI());
         sis = sis.substring(1, sis.length() - 1);
-        builder.append("   SIs: ").append(sis).append("\n");
+        builder.append(PRINT_SIS).append(sis).append(PRINT_NL);
 
         String addresses = Arrays.toString(tag.getAddresses());
         addresses = addresses.substring(1, addresses.length() - 1);
-        builder.append("   Addresses: ").append(addresses);
+        builder.append(PRINT_ADDRESSES).append(addresses);
 
         return builder.toString();
     }

@@ -15,7 +15,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 class NfcBenchmarkState {
     static final int STATE_RESET = 1;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
 
 /**
- * Created by m on 4/25/16.
+ * Created by Mario Neises (mn-io) on 25.04.16
  */
 public class CertificateRawKp extends RawKp {
 
@@ -30,7 +30,6 @@ public class CertificateRawKp extends RawKp {
         ASIPInMessage inMessage = (ASIPInMessage) asipConnection;
         InputStream is2 = inMessage.getRaw();
 
-
         try {
             byte[] buffer = new byte[is2.available()];
             is2.read(buffer);
@@ -40,7 +39,6 @@ public class CertificateRawKp extends RawKp {
             L.d(e.getMessage());
             e.printStackTrace();
         }
-
 
         super.handleRaw(is, asipConnection);
     }

@@ -19,7 +19,7 @@ import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
 
 /**
- * Created by mn-io on 06.04.16.
+ * Created by Mario Neises (mn-io) on 06.04.16
  */
 public class CertManagerListTab extends RelativeLayout implements CertManager.CertManagerAble {
 

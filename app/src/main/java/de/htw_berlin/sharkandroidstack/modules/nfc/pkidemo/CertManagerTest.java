@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- * Created by m on 4/24/16.
+ * Created by Mario Neises (mn-io) on 24.04.16
  */
 public class CertManagerTest extends TestCase {
 

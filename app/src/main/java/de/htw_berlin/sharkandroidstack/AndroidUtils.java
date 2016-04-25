@@ -6,7 +6,7 @@ import android.content.Intent;
 import java.util.Random;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 public final class AndroidUtils {
 

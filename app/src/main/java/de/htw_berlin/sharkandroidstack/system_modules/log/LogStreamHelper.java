@@ -10,7 +10,7 @@ import java.util.Locale;
 import de.htw_berlin.sharkandroidstack.system_modules.settings.SettingsManager;
 
 /**
- * Created by mn-io on 25.01.2016.
+ * Created by Mario Neises (mn-io) on 25.01.2016.
  */
 public class LogStreamHelper extends PrintStream {
 

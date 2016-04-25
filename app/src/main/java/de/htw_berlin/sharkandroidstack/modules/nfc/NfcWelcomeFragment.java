@@ -21,7 +21,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 /**
- * Created by m on 4/20/16.
+ * Created by Mario Neises (mn-io) on 20.04.16
  */
 public class NfcWelcomeFragment extends Fragment {
 

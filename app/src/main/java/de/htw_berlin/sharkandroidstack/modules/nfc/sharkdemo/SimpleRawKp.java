@@ -12,7 +12,7 @@ import java.io.InputStream;
 import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
 
 /**
- * Created by m on 4/25/16.
+ * Created by Mario Neises (mn-io) on 25.04.16.
  */
 public class SimpleRawKp extends RawKp {
 

@@ -18,7 +18,7 @@ import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.android.ParentActivity;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  * open certain log on activity start by intent extra:
  * intent.putExtra(LogActivity.OPEN_LOG_ID_ON_START, LOG_ID);
  */

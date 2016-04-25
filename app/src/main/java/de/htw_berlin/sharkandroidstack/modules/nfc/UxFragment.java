@@ -7,7 +7,7 @@ import android.content.DialogInterface;
 import de.htw_berlin.sharkandroidstack.R;
 
 /**
- * Created by m on 4/25/16.
+ * Created by Mario Neises (mn-io) on 25.04.16
  */
 public class UxFragment extends Fragment {
 

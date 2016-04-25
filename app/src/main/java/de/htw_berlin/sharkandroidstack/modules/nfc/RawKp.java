@@ -18,7 +18,7 @@ import java.io.ObjectOutputStream;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Created by mn-io on 21.04.16.
+ * Created by Mario Neises (mn-io) on 21.04.16
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
 public class RawKp extends KnowledgePort {

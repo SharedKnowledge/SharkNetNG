@@ -22,7 +22,7 @@ import static android.view.View.VISIBLE;
 import static io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16
  */
 public class PkiDemoFragment extends UxFragment {
 

@@ -26,7 +26,7 @@ import de.htw_berlin.sharkandroidstack.system_modules.log.LogManager;
 import static android.support.design.widget.NavigationView.OnNavigationItemSelectedListener;
 
 /**
- * Created by mn-io on 22.01.16.
+ * Created by Mario Neises (mn-io) on 22.01.16.
  */
 public class ParentActivity extends AppCompatActivity implements OnNavigationItemSelectedListener {
 
