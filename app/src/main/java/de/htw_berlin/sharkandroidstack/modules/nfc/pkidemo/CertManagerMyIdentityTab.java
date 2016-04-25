@@ -100,7 +100,7 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
                 v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 certManager.createOrOverwriteSelfSignedCertificate();
                 certManager.fillCertView(myCertView);
-            } catch (SharkKBException e) {
+            } catch (Exception e) {
                 NfcMainActivity.handleError(getContext(), e);
             }
         }

@@ -1,7 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.view.LayoutInflater;
@@ -16,6 +15,7 @@ import java.util.HashMap;
 import de.htw_berlin.sharkandroidstack.AndroidUtils;
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.UxFragment;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -24,16 +24,19 @@ import static io.fabric.sdk.android.services.common.CommonUtils.hideKeyboard;
 /**
  * Created by mn-io on 22.01.16.
  */
-public class PkiDemoFragment extends Fragment {
+public class PkiDemoFragment extends UxFragment {
 
     private final static PeerSemanticTag defaultIdentity = InMemoSharkKB.createInMemoPeerSemanticTag(AndroidUtils.deviceId, AndroidUtils.deviceId + "_Id", "tcp://" + AndroidUtils.deviceId);
     private final HashMap<String, View> tabs = new HashMap<>();
-    public CertManager certManager;
+
+    CertManager certManager;
 
     final private TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
         @Override
         public void onTabSelected(TabLayout.Tab tab) {
             String selectedName = tab.getText().toString();
+
+            certManager.stopSharing();
 
             View view = getView();
             if (view != null) {
@@ -64,6 +67,8 @@ public class PkiDemoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_pki_cert_manager_fragment, container, false);
 
+        uxHandler = new PkiDemoUxHandler(this);
+
         createCertManagerIfNeeded();
         initTabs(root);
 
@@ -74,17 +79,12 @@ public class PkiDemoFragment extends Fragment {
         if (certManager == null) {
             final Activity activity = this.getActivity();
             try {
-                certManager = new CertManager(activity, defaultIdentity);
+                certManager = new CertManager(activity, defaultIdentity, (PkiDemoUxHandler) uxHandler);
             } catch (Exception e) {
                 NfcMainActivity.handleError(activity, e);
             }
         }
     }
-
-
-//    case R.id.pki_menu_item_share_certs:
-//      PkiMainActivity.certManager.sendMyCertificate();
-//      text = "Done.";
 
     private void initTabs(View root) {
         tabs.put("Me", root.findViewById(R.id.info));

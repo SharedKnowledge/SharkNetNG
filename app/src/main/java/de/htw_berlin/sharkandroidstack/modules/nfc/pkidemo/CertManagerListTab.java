@@ -6,13 +6,14 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.security.pki.SharkCertificate;
 
-import java.util.ArrayList;
+import java.util.Collection;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
@@ -29,11 +30,22 @@ public class CertManagerListTab extends RelativeLayout implements CertManager.Ce
         @Override
         public void run() {
             try {
-                final ArrayList<SharkCertificate> certificates = certManager.getCertificates();
+                final Collection<SharkCertificate> certificates = certManager.getCertificates();
                 adapter.clear();
                 adapter.addAll(certificates);
                 adapter.notifyDataSetChanged();
             } catch (SharkKBException e) {
+                NfcMainActivity.handleError(getContext(), e);
+            }
+        }
+    };
+
+    final OnClickListener shareCertsClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            try {
+                certManager.startSharing();
+            } catch (Exception e) {
                 NfcMainActivity.handleError(getContext(), e);
             }
         }
@@ -47,22 +59,12 @@ public class CertManagerListTab extends RelativeLayout implements CertManager.Ce
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        ListView certList = (ListView) this.findViewById(R.id.module_pki_cert_mananager_cert_list);
+        Button shareCertsButton = (Button) findViewById(R.id.module_pki_cert_manager_share_cert);
+        shareCertsButton.setOnClickListener(shareCertsClickListener);
+
+        ListView certList = (ListView) findViewById(R.id.module_pki_cert_manager_cert_list);
         adapter = initAdapter();
         certList.setAdapter(adapter);
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        update();
-//        PkiMainActivity.certManager.addKBListener(kbListener);
-        super.onAttachedToWindow();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-//        PkiMainActivity.certManager.removeKBListener(kbListener);
-        super.onDetachedFromWindow();
     }
 
     void update() {
@@ -93,5 +95,6 @@ public class CertManagerListTab extends RelativeLayout implements CertManager.Ce
     @Override
     public void setCertManager(CertManager certManager) {
         this.certManager = certManager;
+        certManager.addUpdateCallback(updateHandler);
     }
 }

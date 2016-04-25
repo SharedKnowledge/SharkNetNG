@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.TextView;
 
+import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
 import net.sharkfw.security.key.SharkKeyGenerator;
@@ -15,19 +16,27 @@ import net.sharkfw.security.key.storage.filesystem.FSSharkKeyStorage;
 import net.sharkfw.security.pki.Certificate;
 import net.sharkfw.security.pki.SharkCertificate;
 import net.sharkfw.system.SharkException;
+import net.sharkfw.system.SharkSecurityException;
 import net.sharksystem.android.peer.AndroidSharkEngine;
+import net.sharksystem.android.protocols.nfc.NfcMessageStub;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import de.htw_berlin.sharkandroidstack.R;
+import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
 
 import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
@@ -40,16 +49,15 @@ public class CertManager {
 
     public static final String FILE_NAME_KEY_STORE = "sharkKeyStorage";
     private final PeerSemanticTag identity;
-
-    private final AndroidSharkEngine engine;
-
     private SharkKeyStorage sharkKeyStorage;
 
-    private ArrayList<SharkCertificate> certificates = new ArrayList<>();
-    private SharkCertificate myCertificate;
+    private HashMap<String, SharkCertificate> certificates = new HashMap<>();
     //    private final SharkPkiKP kp;
     //    private final SharkPkiStorage store;
     //    private final ContextCoordinates topic;
+
+    private final AndroidSharkEngine engine;
+    private final PkiDemoUxHandler uxHandler;
 
     final static OnClickListener headerClickListener = new OnClickListener() {
         @Override
@@ -61,16 +69,29 @@ public class CertManager {
         }
     };
 
-    public CertManager(Activity activity, PeerSemanticTag identityPeer) throws SharkKBException, NoSuchAlgorithmException, IOException {
+    public CertManager(Activity activity, PeerSemanticTag identityPeer, PkiDemoUxHandler uxHandler) throws SharkKBException, NoSuchAlgorithmException, IOException {
         Context applicationContext = activity.getApplicationContext();
 
-        identity = identityPeer;
-        engine = new AndroidSharkEngine(activity);
+        this.identity = identityPeer;
 
-        sharkKeyStorage = restoreKeysFromFile(applicationContext, FILE_NAME_KEY_STORE);
-        if (sharkKeyStorage == null) {
-            sharkKeyStorage = createKeys(SharkKeyPairAlgorithm.RSA, 1024);
-            saveKeysAsFile(applicationContext, sharkKeyStorage, FILE_NAME_KEY_STORE);
+        this.sharkKeyStorage = restoreKeysFromFile(applicationContext, FILE_NAME_KEY_STORE);
+        if (this.sharkKeyStorage == null) {
+            this.sharkKeyStorage = createKeys(SharkKeyPairAlgorithm.RSA, 1024);
+            saveKeysAsFile(applicationContext, this.sharkKeyStorage, FILE_NAME_KEY_STORE);
+        }
+
+        this.engine = new AndroidSharkEngine(activity);
+        this.engine.activateASIP();
+        this.uxHandler = uxHandler;
+
+        new CertificateRawKp(engine, this);
+
+        try {
+            this.engine.stopNfc();
+            final NfcMessageStub protocolStub = (NfcMessageStub) engine.getProtocolStub(0);
+            protocolStub.setUxHandler(uxHandler);
+        } catch (SharkProtocolNotSupportedException e) {
+            NfcMainActivity.handleError(activity, e);
         }
 
 //        topic = InMemoSharkKB.createInMemoContextCoordinates(
@@ -91,10 +112,9 @@ public class CertManager {
 //            store.deleteSharkCertificate(previousCertificate);
 //        }
 
-        certificates.remove(myCertificate);
+        certificates.remove(sharkKeyStorage.getPublicKey().toString());
         SharkCertificate certificate = createNewSelfSignedCertificate(identity, sharkKeyStorage.getPublicKey(), 10);
-        myCertificate = certificate;
-        certificates.add(certificate);
+        certificates.put(certificate.getSubjectPublicKey().toString(), certificate);
 
 //        store.addSharkCertificate(certificate);
 
@@ -105,20 +125,65 @@ public class CertManager {
         return identity;
     }
 
-    public ArrayList<SharkCertificate> getCertificates() throws SharkKBException {
+    public Collection<SharkCertificate> getCertificates() throws SharkKBException {
 //        HashSet<SharkCertificate> set = store.getSharkCertificateList();
-        return certificates;
+        return certificates.values();
     }
 
-    private static SharkCertificate createNewSelfSignedCertificate(PeerSemanticTag identity, PublicKey publicKey, int validForYears) {
+    public void updateCertificates(ArrayList<SharkCertificate> certificates) {
+        for (SharkCertificate newCertificate : certificates) {
+            SharkCertificate oldCertificate = this.certificates.put(newCertificate.getSubjectPublicKey().toString(), newCertificate);
+            if (oldCertificate != null) {
+                //TODO: show hint that cert was replaced/updated?
+            }
+        }
+
+        uxHandler.fireCertificatesUpdateCallback();
+    }
+
+    public void startSharing() throws IOException, SharkSecurityException, SharkKBException {
+        final byte[] bytes = serializeCertificates(certificates);
+        InputStream is = new ByteArrayInputStream(bytes);
+
+        engine.sendRaw(is, identity, null);
+        uxHandler.startReaderModeNegotiation();
+        uxHandler.showProgressDialog();
+    }
+
+    @NonNull
+    static byte[] serializeCertificates(HashMap<String, SharkCertificate> certificates) throws IOException {
+        byte[][] serialized = new byte[certificates.size()][];
+
+        int i = 0;
+        for (SharkCertificate certificate : certificates.values()) {
+            serialized[i] = certificate.serialize();
+            i++;
+        }
+
+        byte[] unified = RawKp.serialize(serialized);
+        return unified;
+    }
+
+    public void stopSharing() {
+        uxHandler.forceStop();
+    }
+
+    public void addUpdateCallback(Runnable updateHandler) {
+        this.uxHandler.addUpdateCallback(updateHandler);
+    }
+
+    public void removeUpdateCallback(Runnable updateHandler) {
+        this.uxHandler.removeUpdateCallback(updateHandler);
+    }
+
+    static SharkCertificate createNewSelfSignedCertificate(PeerSemanticTag identity, PublicKey publicKey, int validForYears) {
         final LinkedList<PeerSemanticTag> peerList = new LinkedList<>();
         peerList.addFirst(identity);
         Date date = getDate(validForYears);
         return new SharkCertificate(identity, identity, peerList, Certificate.TrustLevel.FULL, publicKey, date);
     }
 
-
-    private static Date getDate(int yearsInFuture) throws IllegalArgumentException {
+    static Date getDate(int yearsInFuture) throws IllegalArgumentException {
         if (yearsInFuture <= 0) {
             throw new IllegalArgumentException("Has to be a positive number");
         }
@@ -128,7 +193,7 @@ public class CertManager {
         return cal.getTime();
     }
 
-    private static SharkKeyStorage createKeys(SharkKeyPairAlgorithm algorithm, int keySize) {
+    static SharkKeyStorage createKeys(SharkKeyPairAlgorithm algorithm, int keySize) {
         final SharkKeyGenerator keyGenerator = new SharkKeyGenerator(algorithm, keySize);
 
         SharkKeyStorage sharkKeyStorage = new SharkKeyStorage();
@@ -158,6 +223,8 @@ public class CertManager {
     }
 
     public void fillCertView(View myCertView) {
+        SharkCertificate myCertificate = certificates.get(sharkKeyStorage.getPublicKey().toString());
+
         if (myCertificate == null) {
             myCertView.setVisibility(GONE);
         } else {
@@ -169,7 +236,9 @@ public class CertManager {
     public void fillCertView(View view, SharkCertificate cert) {
         final TextView header = (TextView) view.findViewById(android.R.id.text1);
         header.setOnClickListener(headerClickListener);
-        if (getIdentity().equals(cert.getIssuer())) {
+
+        boolean hasSamePublicKey = cert.getSubjectPublicKey().toString().equals(sharkKeyStorage.getPublicKey().toString());
+        if (hasSamePublicKey) {
             header.setTextColor(view.getResources().getColor(android.R.color.holo_blue_dark));
             header.setText(String.format("(me) Issuer Name: %s", cert.getIssuer().getName()));
         } else {
