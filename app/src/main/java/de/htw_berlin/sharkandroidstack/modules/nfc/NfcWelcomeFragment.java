@@ -101,11 +101,11 @@ public class NfcWelcomeFragment extends Fragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             reason = String.format(getString(R.string.activity_nfc_no_nfc_too_old), Build.VERSION.SDK_INT, Build.VERSION_CODES.KITKAT);
         } else if (nfcAdapter == null) {
-            reason = getString(R.string.activity_nfc_no_nfc_no_adapter);
+            reason = getString(R.string.activity_nfc_no_nfc_adapter_not_found);
         }
 
         if (null != reason) {
-            reason = String.format(getString(R.string.activity_nfc_no_nfc), reason);
+            reason = String.format(getString(R.string.activity_nfc_no_nfc_support), reason);
             LogManager.addEntry(NfcMainActivity.LOG_ID, reason, 1);
             enableNfcHint.setText(reason);
             enableNfcHint.setVisibility(VISIBLE);

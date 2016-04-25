@@ -5,15 +5,15 @@
     android:visibility="gone">
 
     <Button
-        android:id="@+id/module_pki_cert_manager_share_cert"
+        android:id="@+id/module_nfc_pki_share_cert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:drawable/dialog_holo_light_frame"
-        android:text="@string/fragment_pki_cert_manager_share_cert" />
+        android:text="@string/activity_nfc_pki_share_cert" />
 
     <ListView
-        android:id="@+id/module_pki_cert_manager_cert_list"
-        android:layout_below="@+id/module_pki_cert_manager_share_cert"
+        android:id="@+id/module_nfc_pki_cert_list"
+        android:layout_below="@+id/module_nfc_pki_share_cert"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

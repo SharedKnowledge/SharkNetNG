@@ -2,8 +2,6 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,7 +76,7 @@ public class NfcSharkDemoFragment extends UxFragment {
 
             inputText.setText(null);
             if (sendList.getCount() == 1 && !hasShownSendNowHint) {
-                showToast(getString(R.string.activity_nfc_toast_connect_now));
+                showToast(getString(R.string.activity_nfc_sharkdemo_toast_connect_now));
                 hasShownSendNowHint = true;
             }
 
@@ -97,7 +95,7 @@ public class NfcSharkDemoFragment extends UxFragment {
             try {
                 final int count = sendList.getCount();
                 if (count == 0) {
-                    showToast(getString(R.string.activity_nfc_toast_nothing_to_send));
+                    showToast(getString(R.string.activity_nfc_sharkdemo_toast_nothing_to_send));
                     return;
                 }
 
@@ -136,12 +134,10 @@ public class NfcSharkDemoFragment extends UxFragment {
         public boolean onLongClick(View v) {
             int toastMsg = 0;
             switch (v.getId()) {
-//                case R.id.activity_nfc_sharkdemo_clear:
-//                    toastMsg = R.string.activity_nfc_sharkdemo_hint_clear;
-//                    break;
-//                case R.id.activity_nfc_sharkdemo_print_kb:
-//                    toastMsg = R.string.activity_nfc_sharkdemo_hint_print_kb;
-//                    break;
+                case R.id.activity_nfc_sharkdemo_received_clear:
+                case R.id.activity_nfc_sharkdemo_send_clear:
+                    toastMsg = R.string.activity_nfc_sharkdemo_hint_clear;
+                    break;
                 case R.id.activity_nfc_sharkdemo_input_add:
                     toastMsg = R.string.activity_nfc_sharkdemo_hint_add;
                     break;
@@ -159,8 +155,6 @@ public class NfcSharkDemoFragment extends UxFragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
-
-//        createDialogPrompt();
 
         final View inputContainer = root.findViewById(R.id.activity_nfc_sharkdemo_input_container);
         inputText = (EditText) inputContainer.findViewById(R.id.activity_nfc_sharkdemo_input);
@@ -246,7 +240,7 @@ public class NfcSharkDemoFragment extends UxFragment {
         final String[] deserialized = RawKp.deserializeAsStrings(serialized);
         if (!Arrays.equals(stringArray, deserialized)) {
             final String msg = String.format(
-                    getString(R.string.activity_nfc_exception_data_not_well_serialized),
+                    getString(R.string.activity_nfc_sharkdemo_exception_data_not_well_serialized),
                     Arrays.toString(stringArray),
                     Arrays.toString(deserialized));
             throw new AssertionError(msg);
@@ -254,22 +248,6 @@ public class NfcSharkDemoFragment extends UxFragment {
 
         final InputStream is = new ByteArrayInputStream(serialized);
         engine.sendRaw(is, peerSemanticTag, null);
-    }
-
-    void createDialogPrompt() {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        final DialogInterface.OnClickListener closeDialogListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        };
-
-        builder.setTitle(R.string.activity_nfc_sharkdemo_intro_title)
-                .setMessage(R.string.activity_nfc_sharkdemo_intro_body)
-                .setPositiveButton(android.R.string.ok, closeDialogListener)
-                .create()
-                .show();
     }
 
     void showToast(String msg) {

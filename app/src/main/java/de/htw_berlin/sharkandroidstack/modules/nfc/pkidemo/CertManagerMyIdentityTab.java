@@ -114,25 +114,25 @@ public class CertManagerMyIdentityTab extends ScrollView implements CertManager.
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        View container = this.findViewById(R.id.module_pki_cert_manager_peer_info_container);
-        peerName = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_name_edit);
+        View container = this.findViewById(R.id.module_nfc_pki_peer_info_container);
+        peerName = (EditText) container.findViewById(R.id.module_nfc_pki_peer_name_edit);
         peerName.addTextChangedListener(onTextChangedListener);
 
-        peerSiList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_si_list);
+        peerSiList = (ListView) container.findViewById(R.id.module_nfc_pki_peer_si_list);
         ArrayAdapter<String> sisAdapter = initAdapterForSis();
         peerSiList.setAdapter(sisAdapter);
-        peerSiNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_new);
-        peerSiAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_si_add_button);
+        peerSiNew = (EditText) container.findViewById(R.id.module_nfc_pki_peer_si_add_new);
+        peerSiAddButton = (ImageButton) container.findViewById(R.id.module_nfc_pki_peer_si_add_button);
         peerSiAddButton.setOnClickListener(addSiClickListener);
 
-        peerAddressList = (ListView) container.findViewById(R.id.module_pki_cert_manager_peer_address_list);
+        peerAddressList = (ListView) container.findViewById(R.id.module_nfc_pki_peer_address_list);
         ArrayAdapter<String> addressAdapter = initAdapterForAddresses();
         peerAddressList.setAdapter(addressAdapter);
-        peerAddressNew = (EditText) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_new);
-        peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_pki_cert_manager_peer_address_add_button);
+        peerAddressNew = (EditText) container.findViewById(R.id.module_nfc_pki_peer_address_add_new);
+        peerAddressAddButton = (ImageButton) container.findViewById(R.id.module_nfc_pki_peer_address_add_button);
         peerAddressAddButton.setOnClickListener(addAddressClickListener);
 
-        final View createCertButton = container.findViewById(R.id.module_pki_cert_manager_create_cert_button);
+        final View createCertButton = container.findViewById(R.id.module_nfc_pki_create_cert_button);
         createCertButton.setOnClickListener(createCertClickListener);
 
         myCertView = container.findViewById(R.id.module_pki_cert_list_entry);

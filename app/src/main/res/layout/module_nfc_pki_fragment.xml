@@ -16,14 +16,14 @@
 
     <include
         android:id="@+id/info"
-        layout="@layout/module_pki_cert_manager_tab_info"
+        layout="@layout/module_nfc_pki_tab_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/sliding_tabs" />
 
     <include
         android:id="@+id/certs"
-        layout="@layout/module_pki_cert_manager_tab_certs"
+        layout="@layout/module_nfc_pki_tab_certs"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/sliding_tabs" />

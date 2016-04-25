@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -95,7 +96,15 @@ public class NfcBenchmarkFragment extends Fragment {
         }
     };
 
-    OnClickListener backButtonClickListener = new OnClickListener() {
+    final static View.OnLongClickListener infoLongClickListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            Toast.makeText(v.getContext(), R.string.activity_nfc_benchmark_start_button_hint, Toast.LENGTH_LONG).show();
+            return true;
+        }
+    };
+
+    final OnClickListener backButtonClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
             benchmarkState.resetState();
@@ -185,6 +194,7 @@ public class NfcBenchmarkFragment extends Fragment {
 
         startSendingButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_start);
         startSendingButton.setOnClickListener(startButtonClickListener);
+        startSendingButton.setOnLongClickListener(infoLongClickListener);
 
         backFromReceivingButton = (Button) root.findViewById(R.id.activity_nfc_benchmark_button_back);
         backFromReceivingButton.setOnClickListener(backButtonClickListener);
@@ -196,7 +206,6 @@ public class NfcBenchmarkFragment extends Fragment {
         durationInput = (SeekBar) root.findViewById(R.id.activity_nfc_benchmark_duration_input);
         durationInput.setOnSeekBarChangeListener(durationChangeListener);
         durationInput.setProgress(DEFAULT_DURATION_IN_SEC);
-
 
         return root;
     }
@@ -271,9 +280,6 @@ public class NfcBenchmarkFragment extends Fragment {
         String msg = calcStats() +
                 calcStats(onMessageSendCallback) + MSG_NEW_LINE + MSG_NEW_LINE +
                 calcStats(onMessageReceivedCallback) + MSG_TIME_HINT;
-
-        System.out.println("-------------------------------------------------------------------");
-        System.out.println(msg);
 
         final MyDataHolder dataHolder = new MyDataHolder(MyDataHolder.DIRECTION_NONE, MyDataHolder.TYPE_RESULT, msg);
         resultAdapter.add(dataHolder);

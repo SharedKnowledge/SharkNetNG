@@ -5,7 +5,7 @@
     android:visibility="gone">
 
     <LinearLayout
-        android:id="@+id/module_pki_cert_manager_peer_info_container"
+        android:id="@+id/module_nfc_pki_peer_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -13,11 +13,11 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Peer Name"
+            android:text="@string/activity_nfc_pki_peer_name"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/module_pki_cert_manager_peer_name_edit"
+            android:id="@+id/module_nfc_pki_peer_name_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -25,30 +25,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_horizontal"
-            android:text="List of subject identifiers"
+            android:text="@string/activity_nfc_pki_peer_sis"
             android:textStyle="bold" />
 
         <ListView
-            android:id="@+id/module_pki_cert_manager_peer_si_list"
+            android:id="@+id/module_nfc_pki_peer_si_list"
             android:layout_width="match_parent"
             android:layout_height="100dip"
             android:transcriptMode="alwaysScroll" />
 
         <LinearLayout
-            android:id="@+id/module_pki_cert_manager_peer_si_add_container"
+            android:id="@+id/module_nfc_pki_peer_si_add_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/module_pki_cert_manager_peer_si_add_new"
+                android:id="@+id/module_nfc_pki_peer_si_add_new"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="@string/fragment_pki_cert_manager_peer_si_add_hint" />
+                android:hint="@string/activity_nfc_pki_peer_si_add_hint" />
 
             <ImageButton
-                android:id="@+id/module_pki_cert_manager_peer_si_add_button"
+                android:id="@+id/module_nfc_pki_peer_si_add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -59,30 +59,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_horizontal"
-            android:text="List of addresses"
+            android:text="@string/activity_nfc_pki_peer_addresses"
             android:textStyle="bold" />
 
         <ListView
-            android:id="@+id/module_pki_cert_manager_peer_address_list"
+            android:id="@+id/module_nfc_pki_peer_address_list"
             android:layout_width="match_parent"
             android:layout_height="100dip"
             android:transcriptMode="alwaysScroll" />
 
         <LinearLayout
-            android:id="@+id/module_pki_cert_manager_peer_address_add_container"
+            android:id="@+id/module_nfc_pki_peer_address_add_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
-                android:id="@+id/module_pki_cert_manager_peer_address_add_new"
+                android:id="@+id/module_nfc_pki_peer_address_add_new"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="@string/fragment_pki_cert_manager_peer_address_add_hint" />
+                android:hint="@string/activity_nfc_pki_peer_address_add_hint" />
 
             <ImageButton
-                android:id="@+id/module_pki_cert_manager_peer_address_add_button"
+                android:id="@+id/module_nfc_pki_peer_address_add_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -95,11 +95,11 @@
             layout="@layout/module_pki_cert_list_entry" />
 
         <Button
-            android:id="@+id/module_pki_cert_manager_create_cert_button"
+            android:id="@+id/module_nfc_pki_create_cert_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/dialog_holo_light_frame"
-            android:text="@string/fragment_pki_cert_manager_create_cert" />
+            android:text="@string/activity_nfc_pki_create_cert" />
 
     </LinearLayout>
 

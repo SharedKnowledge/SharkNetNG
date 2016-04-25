@@ -65,7 +65,7 @@ public class PkiDemoFragment extends UxFragment {
     };
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View root = inflater.inflate(R.layout.module_pki_cert_manager_fragment, container, false);
+        final View root = inflater.inflate(R.layout.module_nfc_pki_fragment, container, false);
 
         uxHandler = new PkiDemoUxHandler(this);
 
@@ -87,8 +87,10 @@ public class PkiDemoFragment extends UxFragment {
     }
 
     private void initTabs(View root) {
-        tabs.put("Me", root.findViewById(R.id.info));
-        tabs.put("Certs", root.findViewById(R.id.certs));
+        String tab0 = getString(R.string.activity_nfc_pki_tab_me);
+        String tab1 = getString(R.string.activity_nfc_pki_tab_cert_list);
+        tabs.put(tab0, root.findViewById(R.id.info));
+        tabs.put(tab1, root.findViewById(R.id.certs));
 
         TabLayout tabLayout = (TabLayout) root.findViewById(R.id.sliding_tabs);
         for (View tab : tabs.values()) {
@@ -97,9 +99,8 @@ public class PkiDemoFragment extends UxFragment {
             }
         }
 
-        for (String name : tabs.keySet()) {
-            tabLayout.addTab(tabLayout.newTab().setText(name));
-        }
+        tabLayout.addTab(tabLayout.newTab().setText(tab0));
+        tabLayout.addTab(tabLayout.newTab().setText(tab1));
 
         tabLayout.setOnTabSelectedListener(onTabSelectedListener);
         onTabSelectedListener.onTabSelected(tabLayout.getTabAt(0));

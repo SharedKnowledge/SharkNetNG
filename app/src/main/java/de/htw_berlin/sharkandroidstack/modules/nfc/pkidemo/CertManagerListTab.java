@@ -1,6 +1,7 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
@@ -59,16 +60,19 @@ public class CertManagerListTab extends RelativeLayout implements CertManager.Ce
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        Button shareCertsButton = (Button) findViewById(R.id.module_pki_cert_manager_share_cert);
+        Button shareCertsButton = (Button) findViewById(R.id.module_nfc_pki_share_cert);
         shareCertsButton.setOnClickListener(shareCertsClickListener);
 
-        ListView certList = (ListView) findViewById(R.id.module_pki_cert_manager_cert_list);
+        ListView certList = (ListView) findViewById(R.id.module_nfc_pki_cert_list);
         adapter = initAdapter();
         certList.setAdapter(adapter);
     }
 
     void update() {
-        getHandler().postDelayed(updateHandler, 100);
+        Handler handler = getHandler();
+        if (handler != null) {
+            handler.postDelayed(updateHandler, 100);
+        }
     }
 
     @NonNull

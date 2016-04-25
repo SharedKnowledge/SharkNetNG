@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/dialog_holo_light_frame"
-            android:text="@string/activity_nfc_enable"
+            android:text="@string/activity_nfc_welcome_enable"
             android:visibility="gone" />
 
         <TextView
@@ -32,15 +32,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/dialog_holo_light_frame"
-            android:text="@string/activity_nfc_benchmark"
+            android:text="@string/activity_nfc_welcome_benchmark"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/activity_nfc_benchmark_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:text="TODO"
+            android:text="@string/activity_nfc_welcome_benchmark_hint"
             android:visibility="gone" />
 
         <Button
@@ -48,15 +49,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/dialog_holo_light_frame"
-            android:text="@string/activity_nfc_sharkdemo"
+            android:text="@string/activity_nfc_welcome_sharkdemo"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/activity_nfc_sharkdemo_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:gravity="center"
-            android:text="TODO"
+            android:text="@string/activity_nfc_welcome_sharkdemo_hint"
             android:visibility="gone" />
 
         <Button
@@ -64,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:drawable/dialog_holo_light_frame"
-            android:text="@string/activity_nfc_pkidemo"
+            android:text="@string/activity_nfc_welcome_pkidemo"
             android:visibility="gone" />
 
         <TextView
@@ -72,10 +74,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="TODO"
+            android:text="@string/activity_nfc_welcome_pkidemo_hint"
             android:visibility="gone" />
 
     </LinearLayout>
 
+    <TextView
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/activity_nfc_welcome_credits_hint" />
 
 </RelativeLayout>

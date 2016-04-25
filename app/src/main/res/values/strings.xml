@@ -41,15 +41,18 @@
     <!--   nfc -->
     <string name="menu_nfc_log">Log</string>
 
-    <string name="activity_nfc_benchmark">Benchmark</string>
-    <string name="activity_nfc_sharkdemo">NFC Data Demo</string>
-    <string name="activity_nfc_pkidemo">NFC PKI Demo</string>
+    <string name="activity_nfc_welcome_benchmark">Benchmark</string>
+    <string name="activity_nfc_welcome_benchmark_hint">Test pure NFC interface and measure data throughput with different package sizes.</string>
+    <string name="activity_nfc_welcome_sharkdemo">NFC Data Demo</string>
+    <string name="activity_nfc_welcome_sharkdemo_hint">Test NFC with SharkFW/ASIP to transfer text messages.</string>
+    <string name="activity_nfc_welcome_pkidemo">NFC PKI Demo</string>
+    <string name="activity_nfc_welcome_pkidemo_hint">Test NFC with SharkFW/ASIP to exchange Shark PKI certificates.</string>
+    <string name="activity_nfc_welcome_credits_hint">Developed by Mario Neises.</string>
 
-    <string name="activity_nfc_click_to_start">click here to start</string>
-    <string name="activity_nfc_enable">Enable NFC first</string>
+    <string name="activity_nfc_welcome_enable">Enable NFC first</string>
     <string name="activity_nfc_no_nfc_too_old">Your Android Version is too old (Found API: %1$d). Requires at least Kitkat (API:%2$d)</string>
-    <string name="activity_nfc_no_nfc_no_adapter">NFC Adapter not found</string>
-    <string name="activity_nfc_no_nfc">NFC not supported: %1$s</string>
+    <string name="activity_nfc_no_nfc_adapter_not_found">NFC Adapter not found</string>
+    <string name="activity_nfc_no_nfc_support">NFC not supported: %1$s</string>
 
     <string name="activity_nfc_benchmark_start">start benchmark</string>
     <string name="activity_nfc_benchmark_ready">benchmark prepared</string>
@@ -57,28 +60,27 @@
     <string name="activity_nfc_benchmark_abort">reset benchmark</string>
     <string name="activity_nfc_benchmark_back">go back</string>
 
-    <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically. Benchmark will start immediately after connection is setup.\nBenchmark results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 1024 bytes</string>
+    <string name="activity_nfc_benchmark_start_button_hint">Toggle benchmark state here. Other device will detect benchmark automatically, therefore you do not need to prepare anything. Technically the PREPARED device will be an NFC Reader, the other one acts as SmartCard.</string>
+    <string name="activity_nfc_benchmark_description">Press button to prepare your device. Connect other device physically with this screen open (but DO NOT press start button).\n\nBenchmark will start immediately after connection is setup and results will be reported to Log.\n\nAdjust message size (in byte) send within each tag detection. Default: 1024 bytes</string>
     <string name="activity_nfc_benchmark_description2">Set duration of benchmark in seconds. Default: 30s</string>
 
-    <string name="activity_nfc_sharkdemo_start">Switch Identity / Toggle send-receive</string>
     <string name="activity_nfc_sharkdemo_input_hint">Add information</string>
-    <string name="activity_nfc_sharkdemo_hint_add">Creates contextpoint if needed and adds information to Alice\'s knowledgebase</string>
-    <string name="activity_nfc_sharkdemo_hint_print_kb">Prints current knowledgebase</string>
-    <string name="activity_nfc_sharkdemo_hint_clear">Clears output list</string>
-    <string name="activity_nfc_sharkdemo_hint_send">Starts NFC and sends knowledge when connected.</string>
-    <string name="activity_nfc_sharkdemo_intro_title">Shark NFC Demo</string>
-    <string name="activity_nfc_sharkdemo_intro_body">Usage:\n\nAlice stores information and you can add new one to her KB. As Alice you can send your knowledge to Bob. Bob can receive information from Alice and assimilates his knowledge.\n\nHint: Press long on a button to get some help.\n\nCoded by Mario Neises (mario.neises@student.htw-berlin.de)</string>
+    <string name="activity_nfc_sharkdemo_hint_add">Adds texts to internal storage</string>
+    <string name="activity_nfc_sharkdemo_hint_clear">Clears current list</string>
+    <string name="activity_nfc_sharkdemo_hint_send">Starts negotiating about nfc mode - ether act as SmartCard or Reader. After that it will exchange information stored.</string>
+    <string name="activity_nfc_sharkdemo_toast_nothing_to_send">Cannot sent empty information. Please add something first.</string>
+    <string name="activity_nfc_sharkdemo_toast_connect_now">Prepare sending by pressing the arrow button.</string>
+    <string name="activity_nfc_sharkdemo_exception_data_not_well_serialized">Data was not serialized / deserialized well.\nInput was: %1$s\nOutput was: %2$s</string>
 
-    <string name="activity_nfc_sending_dialog">Sending progress</string>
-    <string name="activity_nfc_toast_nothing_to_send">Cannot sent empty information. Please add something first.</string>
-    <string name="activity_nfc_toast_connect_now">Prepare sending by pressing the arrow button.</string>
-    <string name="activity_nfc_exception_data_not_well_serialized">Data was not serialized / deserialized well.\nInput was: %1$s\nOutput was: %2$s</string>
-
-    <string name="fragment_pki_cert_manager_peer_si_add_hint">Add Subject Identifier</string>
-    <string name="fragment_pki_cert_manager_peer_address_add_hint">Add Address</string>
-
-    <string name="fragment_pki_cert_manager_create_cert">Create new certificate</string>
-    <string name="fragment_pki_cert_manager_share_cert">Share certificates</string>
+    <string name="activity_nfc_pki_tab_me">My peer</string>
+    <string name="activity_nfc_pki_tab_cert_list">Certs</string>
+    <string name="activity_nfc_pki_peer_name">Peer Name</string>
+    <string name="activity_nfc_pki_peer_addresses">List of addresses</string>
+    <string name="activity_nfc_pki_peer_address_add_hint">Add Address</string>
+    <string name="activity_nfc_pki_peer_sis">List of subject identifiers</string>
+    <string name="activity_nfc_pki_peer_si_add_hint">Add Subject Identifier</string>
+    <string name="activity_nfc_pki_create_cert">Create new certificate</string>
+    <string name="activity_nfc_pki_share_cert">Share certificates</string>
 
     <string name="service_description">APDU service</string>
     <string name="aid_description">AID description</string>
@@ -89,6 +91,5 @@
     <string name="menu_wifidirect_refresh">Refresh</string>
     <string name="menu_wifidirect_log">Log</string>
     <string name="menu_wifidirect_back">Close</string>
-
 
 </resources>
