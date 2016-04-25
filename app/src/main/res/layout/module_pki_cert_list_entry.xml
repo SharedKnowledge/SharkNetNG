@@ -22,9 +22,9 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/colorAccent"
+            android:layout_marginBottom="@dimen/padding_horizontal"
             android:layout_marginTop="@dimen/padding_horizontal"
-            android:layout_marginBottom="@dimen/padding_horizontal" />
+            android:background="@color/colorAccent" />
 
         <TextView
             android:layout_width="match_parent"
@@ -91,6 +91,12 @@
             android:layout_height="wrap_content"
             android:text="Fingerprint: "
             android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/module_pki_cert_list_entry_fingerprint_canvas"
+            android:layout_width="150dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="150dp" />
 
         <TextView
             android:id="@+id/module_pki_cert_list_entry_fingerprint"

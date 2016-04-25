@@ -2,10 +2,13 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.pkidemo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import net.glxn.qrgen.android.QRCode;
 import net.sharkfw.kep.SharkProtocolNotSupportedException;
 import net.sharkfw.knowledgeBase.PeerSemanticTag;
 import net.sharkfw.knowledgeBase.SharkKBException;
@@ -277,9 +280,15 @@ public class CertManager {
         validity.setText(cert.getValidity().toString());
 
         final TextView fingerprint = (TextView) content.findViewById(R.id.module_pki_cert_list_entry_fingerprint);
+        final ImageView fingerprintImage = (ImageView) content.findViewById(R.id.module_pki_cert_list_entry_fingerprint_canvas);
+
         String itemFingerprint;
         try {
-            itemFingerprint = Arrays.toString(cert.getFingerprint());
+            byte[] fingerprintAsBytes = cert.getFingerprint();
+            Bitmap myBitmap = QRCode.from(String.valueOf(fingerprintAsBytes)).bitmap();
+            fingerprintImage.setImageBitmap(myBitmap);
+            itemFingerprint = Arrays.toString(fingerprintAsBytes);
+            itemFingerprint = itemFingerprint.substring(1, itemFingerprint.length() - 1);
         } catch (SharkException e) {
             itemFingerprint = PRINT_NA_ERROR + e.toString();
         }
@@ -294,7 +303,7 @@ public class CertManager {
         transmitters.setText(itemTransmitters);
     }
 
-    private String peerSemanticTagAsString(PeerSemanticTag tag) {
+    private static String peerSemanticTagAsString(PeerSemanticTag tag) {
         StringBuilder builder = new StringBuilder();
 
         builder.append(PRINT_NAME).append(tag.getName()).append(PRINT_NL);
@@ -310,7 +319,7 @@ public class CertManager {
         return builder.toString();
     }
 
-    private String peerSemanticTagAsString(PeerSemanticTag[] tags) {
+    private static String peerSemanticTagAsString(PeerSemanticTag[] tags) {
 
         String[] asStrings = new String[tags.length];
         int i = 0;
