@@ -1,4 +1,4 @@
-package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
+package de.htw_berlin.sharkandroidstack.modules.nfc;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,12 +10,10 @@ import net.sharksystem.android.protocols.nfc.ux.TdmaNfcUxHandler;
 
 import java.lang.ref.WeakReference;
 
-import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
-
 /**
  * Created by m on 4/22/16.
  */
-public class NfcDemoUxHandler extends TdmaNfcUxHandler {
+public class ProgressAndVibrateUxHandler extends TdmaNfcUxHandler {
 
     public final static int VIBRATION_DURATION_SHORT = 250;
 
@@ -26,7 +24,7 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
     public static final String DIALOG_IN_PROGRESS = "Sending in progress... Touch to abort.";
 
     final Runnable vibrateShort;
-    final WeakReference<NfcSharkDemoFragment> fragment;
+    final WeakReference<UxFragment> fragment;
     final Handler handler = new Handler(Looper.getMainLooper());
 
     int totalDataLength;
@@ -61,10 +59,10 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
         }
     };
 
-    public NfcDemoUxHandler(NfcSharkDemoFragment nfcSharkDemoFragment) {
-        fragment = new WeakReference(nfcSharkDemoFragment);
+    public ProgressAndVibrateUxHandler(UxFragment fragment) {
+        this.fragment = new WeakReference(fragment);
 
-        final Vibrator vibrator = ((Vibrator) fragment.get().getActivity().getSystemService(Activity.VIBRATOR_SERVICE));
+        final Vibrator vibrator = ((Vibrator) this.fragment.get().getActivity().getSystemService(Activity.VIBRATOR_SERVICE));
         this.vibrateShort = new Runnable() {
 
             @Override

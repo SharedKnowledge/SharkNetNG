@@ -1,5 +1,6 @@
 package de.htw_berlin.sharkandroidstack.modules.nfc;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
@@ -79,19 +80,31 @@ public class NfcMainActivity extends ParentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static void handleError(Context context, Throwable e) {
-        if (e.getMessage().equals(NfcMessageStub.EXCEPTION_NFC_NOT_ENABLED)) {
-            Intent intent = new Intent(SETTINGS);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            Toast.makeText(context, TOAST_NFC_ENABLE, Toast.LENGTH_SHORT).show();
-            return;
-        }
+    public static void handleError(final Context context, final Throwable e) {
+        Runnable task = new Runnable() {
+            @Override
+            public void run() {
+                if (e.getMessage().equals(NfcMessageStub.EXCEPTION_NFC_NOT_ENABLED)) {
+                    Intent intent = new Intent(SETTINGS);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                    Toast.makeText(context, TOAST_NFC_ENABLE, Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        String text = String.format(TOAST_ERROR_SEE_LOG, e.getMessage());
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-        LogManager.addThrowable(LOG_ID, e);
-        e.printStackTrace();
+                String text = String.format(TOAST_ERROR_SEE_LOG, e.getMessage());
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                LogManager.addThrowable(LOG_ID, e);
+                e.printStackTrace();
+            }
+        };
+
+        if (context instanceof Activity) {
+            Activity asActivity = (Activity) context;
+            asActivity.runOnUiThread(task);
+        } else {
+            task.run();
+        }
     }
 
     public void changeFragment(Fragment fragment) {

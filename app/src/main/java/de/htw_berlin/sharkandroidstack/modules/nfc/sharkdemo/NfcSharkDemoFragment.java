@@ -3,8 +3,6 @@ package de.htw_berlin.sharkandroidstack.modules.nfc.sharkdemo;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,16 +31,17 @@ import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.ProgressAndVibrateUxHandler;
 import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
+import de.htw_berlin.sharkandroidstack.modules.nfc.UxFragment;
 
 /**
  * Created by mn-io on 22.01.16.
  */
 @TargetApi(Build.VERSION_CODES.KITKAT)
-public class NfcSharkDemoFragment extends Fragment {
+public class NfcSharkDemoFragment extends UxFragment {
 
     public static final PeerSemanticTag peerSemanticTag = InMemoSharkKB.createInMemoPeerSemanticTag("dummy", "dummySi", "tcp://localhost");
-    public static final String DIALOG_PROGRESS_FORMAT = "%1d/%2d bytes";
 
     AndroidSharkEngine engine;
     SimpleRawKp kp;
@@ -50,8 +49,6 @@ public class NfcSharkDemoFragment extends Fragment {
     EditText inputText;
     ListView sendList;
     ListView receivedList;
-    NfcDemoUxHandler uxHandler;
-    ProgressDialog progressDialog;
 
     boolean hasShownSendNowHint = false;
 
@@ -160,18 +157,6 @@ public class NfcSharkDemoFragment extends Fragment {
         }
     };
 
-    final DialogInterface.OnCancelListener onProgressDialogCancelListener = new DialogInterface.OnCancelListener() {
-        @Override
-        public void onCancel(DialogInterface dialog) {
-            try {
-                uxHandler.stopNegotiation();
-                engine.stopNfc();
-            } catch (SharkProtocolNotSupportedException e) {
-                NfcMainActivity.handleError(getActivity(), e);
-            }
-        }
-    };
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.module_nfc_sharkdemo_fragment, container, false);
 
@@ -200,7 +185,7 @@ public class NfcSharkDemoFragment extends Fragment {
         receivedClearButton.setOnClickListener(clearClickListener);
         receivedClearButton.setOnLongClickListener(infoLongClickListener);
 
-        uxHandler = new NfcDemoUxHandler(this);
+        uxHandler = new ProgressAndVibrateUxHandler(this);
 
         engine = new AndroidSharkEngine(getActivity());
         engine.activateASIP();
@@ -289,21 +274,5 @@ public class NfcSharkDemoFragment extends Fragment {
 
     void showToast(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
-    }
-
-    ProgressDialog getProgressDialogInstance() {
-        if (progressDialog == null) {
-            final ProgressDialog d = new ProgressDialog(this.getActivity());
-            d.setTitle(R.string.activity_nfc_sending_dialog);
-            d.setIndeterminate(false);
-            d.setCancelable(true);
-            d.setProgress(0);
-            d.setProgressNumberFormat(DIALOG_PROGRESS_FORMAT);
-            d.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            d.setOnCancelListener(onProgressDialogCancelListener);
-            progressDialog = d;
-        }
-
-        return progressDialog;
     }
 }
