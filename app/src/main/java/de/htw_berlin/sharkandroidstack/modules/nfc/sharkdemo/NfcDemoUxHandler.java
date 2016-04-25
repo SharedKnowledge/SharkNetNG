@@ -19,7 +19,7 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
 
     public final static int VIBRATION_DURATION_SHORT = 250;
 
-    public static final String DIALOG_INIT = "Please connect now. Touch to abort.";
+    public static final String DIALOG_INIT = "Please connect now. NFC is negotiating which device is acting as reader or smartCard. Touch to abort.";
     public static final String DIALOG_TAG_GONE = "Tag is gone. Touch to dismiss.";
     public static final String DIALOG_DONE = "Done. Touch to dismiss.";
     public static final String DIALOG_INTERRUPTED = "Sending was interrupted. Touch to dismiss.";
@@ -30,7 +30,10 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
     final Handler handler = new Handler(Looper.getMainLooper());
 
     int totalDataLength;
-    boolean hasVibratedForReceiving = false;
+    boolean canVibrateForReceiving = false;
+    boolean canVibrateForSending = false;
+    boolean hasVibrated = false;
+
     boolean isShowingDoneMessage = false;
 
     final Runnable sendingDoneUpdateProgress = new Runnable() {
@@ -76,6 +79,7 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
             @Override
             public void run() {
                 final ProgressDialog d = fragment.get().getProgressDialogInstance();
+                d.dismiss();
                 d.setMessage(DIALOG_INIT);
                 d.show();
                 d.setProgress(0);
@@ -89,7 +93,7 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
     @Override
     public void preparedSending(final int totalDataLength) {
         this.totalDataLength = totalDataLength;
-        this.hasVibratedForReceiving = false;
+        resetVibrateFlags();
         super.preparedSending(totalDataLength);
     }
 
@@ -102,6 +106,11 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
     @Override
     public void sending(final int currentDataLength, int leftDataLength) {
         super.sending(currentDataLength, leftDataLength);
+
+        if (leftDataLength == 0) {
+            canVibrateForSending = true;
+            vibrateIfReady();
+        }
 
         if (isShowingDoneMessage) {
             return;
@@ -131,7 +140,7 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
         if (isShowingDoneMessage) {
             return;
         }
-        hasVibratedForReceiving = false;
+        resetVibrateFlags();
         isShowingDoneMessage = true;
         fragment.get().getActivity().runOnUiThread(sendingTagGoneUpdateProgress);
     }
@@ -149,23 +158,38 @@ public class NfcDemoUxHandler extends TdmaNfcUxHandler {
     @Override
     public void receiving(int currentDataLength, int newTotalDataLength) {
         super.receiving(currentDataLength, newTotalDataLength);
-        if (newTotalDataLength > 0 && currentDataLength == 0 && !hasVibratedForReceiving) {
-            hasVibratedForReceiving = true;
-            handler.post(vibrateShort);
-            handler.postDelayed(vibrateShort, VIBRATION_DURATION_SHORT + 100);
+        if (newTotalDataLength > 0 && currentDataLength == 0) {
+            canVibrateForReceiving = true;
+            vibrateIfReady();
         }
+    }
+
+    private void vibrateIfReady() {
+        if (!canVibrateForReceiving || !canVibrateForSending || hasVibrated) {
+            return;
+        }
+
+        hasVibrated = true;
+        handler.post(vibrateShort);
+        handler.postDelayed(vibrateShort, VIBRATION_DURATION_SHORT + 100);
     }
 
     @Override
     public void handleErrorOnReceiving(Exception exception) {
-        this.hasVibratedForReceiving = false;
+        resetVibrateFlags();
         NfcMainActivity.handleError(fragment.get().getActivity(), exception);
         super.handleErrorOnReceiving(exception);
     }
 
     @Override
     public void tagGoneOnReceiver() {
-        this.hasVibratedForReceiving = false;
+        resetVibrateFlags();
         super.tagGoneOnReceiver();
+    }
+
+    private void resetVibrateFlags() {
+        hasVibrated = false;
+        canVibrateForReceiving = false;
+        canVibrateForSending = false;
     }
 }

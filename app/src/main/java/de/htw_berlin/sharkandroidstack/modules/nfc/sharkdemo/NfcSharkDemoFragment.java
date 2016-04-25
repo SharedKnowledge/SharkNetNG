@@ -33,6 +33,7 @@ import java.util.Arrays;
 
 import de.htw_berlin.sharkandroidstack.R;
 import de.htw_berlin.sharkandroidstack.modules.nfc.NfcMainActivity;
+import de.htw_berlin.sharkandroidstack.modules.nfc.RawKp;
 
 /**
  * Created by mn-io on 22.01.16.
@@ -54,7 +55,7 @@ public class NfcSharkDemoFragment extends Fragment {
 
     boolean hasShownSendNowHint = false;
 
-    private Runnable kpUpdater = new Runnable() {
+    final Runnable kpUpdater = new Runnable() {
         @Override
         public void run() {
             ArrayAdapter<String> adapter = (ArrayAdapter<String>) receivedList.getAdapter();
@@ -213,7 +214,6 @@ public class NfcSharkDemoFragment extends Fragment {
             NfcMainActivity.handleError(getActivity(), e);
         }
 
-
         return root;
     }
 
@@ -257,8 +257,8 @@ public class NfcSharkDemoFragment extends Fragment {
             stringArray[i] = adapter.getItem(i);
         }
 
-        final byte[] serialized = SimpleRawKp.serialize(stringArray);
-        final String[] deserialized = SimpleRawKp.deserialize(serialized);
+        final byte[] serialized = RawKp.serialize(stringArray);
+        final String[] deserialized = RawKp.deserializeAsStrings(serialized);
         if (!Arrays.equals(stringArray, deserialized)) {
             final String msg = String.format(
                     getString(R.string.activity_nfc_exception_data_not_well_serialized),

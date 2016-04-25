@@ -52,8 +52,10 @@ public class NfcWelcomeFragment extends Fragment {
                     break;
                 case R.id.activity_nfc_sharkdemo_button_start:
                     activity.changeFragment(new NfcSharkDemoFragment());
+                    break;
                 case R.id.activity_nfc_pkidemo_button_start:
                     activity.changeFragment(new PkiDemoFragment());
+                    break;
             }
         }
     };
