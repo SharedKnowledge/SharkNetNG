@@ -250,10 +250,10 @@ public class CertManager {
         content.setVisibility(GONE);
 
         final TextView issuer = (TextView) content.findViewById(R.id.module_pki_cert_list_entry_issuer);
-        issuer.setText(cert.getIssuer().toString());
+        issuer.setText(peerSemanticTagAsString(cert.getIssuer()));
 
         final TextView subject = (TextView) content.findViewById(R.id.module_pki_cert_list_entry_subject);
-        subject.setText(cert.getSubject().toString());
+        subject.setText(peerSemanticTagAsString(cert.getSubject()));
 
         final TextView subjectPK = (TextView) content.findViewById(R.id.module_pki_cert_list_entry_subject_pk);
         subjectPK.setText(cert.getSubjectPublicKey().toString());
@@ -273,15 +273,45 @@ public class CertManager {
         }
         fingerprint.setText(itemFingerprint);
 
-        StringBuilder itemTransmitters = new StringBuilder();
-        for (PeerSemanticTag transmitter : cert.getTransmitterList()) {
-            itemTransmitters.append(transmitter).append(", ");
-        }
-        itemTransmitters.deleteCharAt(itemTransmitters.length() - 1);
-        itemTransmitters.deleteCharAt(itemTransmitters.length() - 1);
+        LinkedList<PeerSemanticTag> transmitterList = cert.getTransmitterList();
+        PeerSemanticTag[] tags = new PeerSemanticTag[transmitterList.size()];
+        transmitterList.toArray(tags);
+        String itemTransmitters = peerSemanticTagAsString(tags);
 
         final TextView transmitters = (TextView) content.findViewById(R.id.module_pki_cert_list_entry_transmitters);
         transmitters.setText(itemTransmitters);
+    }
+
+    private String peerSemanticTagAsString(PeerSemanticTag tag) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("   Name: ").append(tag.getName()).append("\n");
+
+        String sis = Arrays.toString(tag.getSI());
+        sis = sis.substring(1, sis.length() - 1);
+        builder.append("   SIs: ").append(sis).append("\n");
+
+        String addresses = Arrays.toString(tag.getAddresses());
+        addresses = addresses.substring(1, addresses.length() - 1);
+        builder.append("   Addresses: ").append(addresses);
+
+        return builder.toString();
+    }
+
+    private String peerSemanticTagAsString(PeerSemanticTag[] tags) {
+
+        String[] asStrings = new String[tags.length];
+        int i = 0;
+        for (PeerSemanticTag tag : tags) {
+            String asString = peerSemanticTagAsString(tag);
+            asStrings[i] = i + asString.substring(2, asString.length());
+            i++;
+        }
+
+        String joined = Arrays.toString(asStrings);
+        joined = joined.substring(1, joined.length() - 1);
+
+        return joined;
     }
 
     public interface CertManagerAble {
