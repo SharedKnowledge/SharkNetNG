@@ -148,7 +148,9 @@ public class CertManager {
     public void updateCertificates(ArrayList<SharkCertificate> certificates) {
         for (SharkCertificate newCertificate : certificates) {
             SharkCertificate oldCertificate = this.certificates.put(newCertificate.getSubjectPublicKey().toString(), newCertificate);
-            if (oldCertificate != null) {
+            if (oldCertificate == null) {
+                newCertificate.getTransmitterList().add(identity);
+            } else {
                 //TODO: show hint that cert was replaced/updated?
             }
         }
@@ -325,12 +327,13 @@ public class CertManager {
         int i = 0;
         for (PeerSemanticTag tag : tags) {
             String asString = peerSemanticTagAsString(tag);
-            asStrings[i] = i + asString.substring(2, asString.length());
+            asStrings[i] = i + asString.substring(2, asString.length()) + PRINT_NL;
             i++;
         }
 
         String joined = Arrays.toString(asStrings);
         joined = joined.substring(1, joined.length() - 1);
+        joined = joined.replace(PRINT_NL + ", ", PRINT_NL);
 
         return joined;
     }
